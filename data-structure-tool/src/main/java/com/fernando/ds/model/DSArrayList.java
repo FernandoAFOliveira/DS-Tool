@@ -6,10 +6,4 @@ public class DSArrayList extends DataStructure {
         super("ArrayList", false, true, false, false, false, 8, 9, 7, 0);
 		setAlternative("ArrayDeque");
     }
-
-    @Override
-    public double calculateMatchScore(UserRequirements req) {
-        // Your logic will now consistently access these in a set order.
-		return 0.0;
-    }
 }

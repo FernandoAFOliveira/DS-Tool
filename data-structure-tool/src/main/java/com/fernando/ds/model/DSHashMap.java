@@ -6,10 +6,4 @@ public class DSHashMap extends DataStructure {
         super("HashMap", false, true, true, false, false, 10, 10, 5, 0);
 		setAlternative("ArrayDeque");
     }
-
-    @Override
-    public double calculateMatchScore(UserRequirements req) {
-        // Your logic will now consistently access these in a set order.
-		return 0.0;
-    }
 }
