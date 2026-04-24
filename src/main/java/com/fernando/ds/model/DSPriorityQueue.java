@@ -1,9 +1,45 @@
 package com.fernando.ds.model;
 
 public class DSPriorityQueue extends DataStructure {
+
+    private static final String EXPLANATION =
+        "PriorityQueue stores elements so that the highest-priority or lowest-priority item can be removed first.";
+
+    private static final String EXAMPLE_USE =
+        "Use PriorityQueue for scheduling tasks, processing jobs by priority, or algorithms that repeatedly need the next smallest item.";
+
+    private static final String API_OVERVIEW =
+        "add(E e), offer(E e), poll(), peek(), remove(Object o), size()";
+
+    private static final String CODE_EXAMPLE =  
+        """
+        PriorityQueue<Integer> pq = new PriorityQueue<>();
+
+        pq.add(5);
+        pq.add(2);
+        pq.add(8);
+
+        System.out.println(pq.poll()); // 2 (the smallest element)
+        System.out.println(pq.peek()); // 5 (the next smallest element)
+        """;
+
     public DSPriorityQueue() {
-		// Name, legacy | duplicates, keys, navigable, doubleEnded | lookup, addDelete, memory, sorted
-        super("PriorityQueue", false, true, false, false, false, 2, 6, 6, 8);
-		setAlternative("ArrayDeque");
+        super(
+            "PriorityQueue",  // name
+            false,            // legacy
+            true,             // duplicates
+            false,            // keys
+            false,            // navigable
+            false,            // doubleEnded
+            2,                // lookup
+            6,                // addDelete
+            6,                // memory
+            8,                // sorted
+            EXPLANATION,
+            EXAMPLE_USE,
+            API_OVERVIEW,
+            CODE_EXAMPLE,
+            "TreeSet"
+        );
     }
-}
+}   

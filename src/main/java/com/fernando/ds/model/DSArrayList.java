@@ -1,9 +1,46 @@
 package com.fernando.ds.model;
 
 public class DSArrayList extends DataStructure {
+
+    private static final String EXPLANATION =
+        "Resizable array implementation of the List interface. Provides fast random access but slower insertions/deletions in the middle.";
+
+    private static final String EXAMPLE_USE =
+        "Use ArrayList when storing items where you often access elements by index, such as a list of users, products, or scores.";
+
+    private static final String API_OVERVIEW =
+        "Key methods: add(), get(), set(), remove(), size(), contains()";
+    
+    private static final String CODE_EXAMPLE =
+        """
+        ArrayList<String> list = new ArrayList<>();
+
+        list.add("Alice");
+        list.add("Bob");
+
+        System.out.println(list.get(0)); // Alice
+
+        list.remove("Bob");
+        System.out.println(list.size()); // 1
+        """;
+
     public DSArrayList() {
-		// Name, legacy | duplicates, keys, navigable, doubleEnded | lookup, addDelete, memory, sorted
-        super("ArrayList", false, true, false, false, false, 8, 9, 7, 0);
-		setAlternative("ArrayDeque");
+        super(
+            "ArrayList",  // name
+            false,        // legacy
+            true,         // duplicates
+            false,        // keys
+            false,        // navigable
+            false,        // doubleEnded
+            8,            // lookup
+            9,            // addDelete
+            7,            // memory
+            0,            // sorted
+            EXPLANATION,
+            EXAMPLE_USE,
+            API_OVERVIEW,
+            "ArrayDeque",
+            CODE_EXAMPLE
+        );
     }
 }

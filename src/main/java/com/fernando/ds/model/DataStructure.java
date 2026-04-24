@@ -14,13 +14,32 @@ public abstract class DataStructure implements Comparable<DataStructure>{
 	private final int addDelete;
 	private final int memory;
 	private final int sorted;
-
 	// Temporary field for sorting
     private double lastCalculatedScore;
-
-	private String alternative;
+	protected final String alternative;
+	protected final String explanation;
+	protected final String exampleUse;
+	protected final String api_overview;
+	protected final String codeExample;
 	
-	public DataStructure(String name, boolean legacy, boolean duplicates, boolean keys ,boolean navigable, boolean doubleEnded , int lookup, int addDelete, int memory,  int sorted) {
+	
+	public DataStructure(
+		String name, 
+		boolean legacy, 
+		boolean duplicates, 
+		boolean keys,
+		boolean navigable, 
+		boolean doubleEnded, 
+		int lookup, 
+		int addDelete, 
+		int memory,  
+		int sorted,
+	    String explanation,
+    	String exampleUse,
+    	String api_overview,		
+		String codeExample,
+		String alternative
+		) {
 		
 		this.name = name;
 		this.legacy = legacy;
@@ -31,7 +50,12 @@ public abstract class DataStructure implements Comparable<DataStructure>{
 		this.lookup = lookup;
 		this.addDelete = addDelete;
 		this.memory = memory;		
-		this.sorted = sorted;		
+		this.sorted = sorted;
+		this.explanation = explanation;
+		this.exampleUse = exampleUse;
+		this.api_overview = api_overview;
+		this.alternative = alternative;
+		this.codeExample = codeExample;		
 	}
 	
 	@Override
@@ -41,8 +65,20 @@ public abstract class DataStructure implements Comparable<DataStructure>{
         return Double.compare(other.lastCalculatedScore, this.lastCalculatedScore);
     }
 
-	public String getAlternative() { return alternative; }
-	public void setAlternative(String alternative) { this.alternative = alternative; }
+	public String getAlternative() { 
+		return alternative; 
+	}
+	public String getExplanation() {
+		return explanation;
+	}
+
+	public String getExampleUse() {
+		return exampleUse;
+	}
+
+	public String getApiOverview() {
+		return api_overview;
+	}
 
 	// Getter AND Setter for the temporary score
     public double getLastCalculatedScore() { return lastCalculatedScore; }
@@ -87,5 +123,8 @@ public abstract class DataStructure implements Comparable<DataStructure>{
 
 	public int getSorted() {
 		return sorted;
+	}
+	public String getCodeExample() {
+		return codeExample;
 	}	
 }

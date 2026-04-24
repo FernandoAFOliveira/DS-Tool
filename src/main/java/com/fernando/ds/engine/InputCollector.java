@@ -5,43 +5,106 @@ import java.util.Scanner;
 import com.fernando.ds.requirements.UserRequirements;
 
 public class InputCollector {
+
     private final Scanner scanner;
+
+    public InputCollector() {
+        this.scanner = new Scanner(System.in);
+    }
 
     public InputCollector(Scanner scanner) {
         this.scanner = scanner;
     }
 
-    public UserRequirements collect() {
-        UserRequirements req = new UserRequirements();
+    public UserRequirements collectRequirements() {
+        boolean keyValue = askYesNo("Do you need Key-Value mapping? (y/n): ");
+        boolean allowDuplicates = askYesNo("Do you allow duplicate elements? (y/n): ");
+        boolean sorted = askYesNo("Do you need elements sorted (e.g., natural order)? (y/n): ");
+        int sortWeight = sorted ? 5 : 0;
 
-        System.out.println("\n--- Data Structure Advisor ---");
-        
-        // 1. Map vs Collection
-        System.out.print("Do you need Key-Value mapping? (y/n): ");
-        boolean needsKeys = scanner.nextLine().equalsIgnoreCase("y");
-        req.setHaveKeys(needsKeys);
-
-        // 2. Uniqueness
-        System.out.print("Must elements be unique? (y/n): ");
-        req.setBeUnique(scanner.nextLine().equalsIgnoreCase("y"));
-
-        // 3. Sorting
-        System.out.print("Do you need elements sorted (e.g., natural order)? (y/n): ");
-        if (scanner.nextLine().equalsIgnoreCase("y")) {
-            req.setSortWeight(5); // Assign default high weight
-        }
-
-        // 4. Performance Weights
         System.out.println("\n--- Performance Priorities (1-5, where 5 is critical) ---");
-        System.out.print("Importance of Lookup Speed: ");
-        req.setLookupWeight(Integer.parseInt(scanner.nextLine()));
-        
-        System.out.print("Importance of Add/Delete Speed: ");
-        req.setInsertWeight(Integer.parseInt(scanner.nextLine()));
 
-        System.out.print("Importance of Memory Efficiency: ");
-        req.setMemoryWeight(Integer.parseInt(scanner.nextLine()));
+        int lookup = askPriority("Importance of Lookup Speed: ", 1, 5);
+        int addDelete = askPriority("Importance of Add/Delete Speed: ", 1, 5);
+        int memory = askPriority("Importance of Memory Efficiency: ", 1, 5);
 
-        return req;
+        return new UserRequirements(keyValue, allowDuplicates, sortWeight, lookup, addDelete, memory);
+    }
+
+    private boolean askYesNo(String prompt) {
+        while (true) {
+            System.out.print(prompt);
+            String input = scanner.nextLine().trim().toLowerCase();
+
+            if (input.equals("y") || input.equals("yes")) return true;
+            if (input.equals("n") || input.equals("no")) return false;
+
+            System.out.println("Invalid input. Please enter y or n.");
+        }
+    }
+
+    private int askPriority(String prompt, int min, int max) {
+        while (true) {
+            System.out.print(prompt);
+            String input = scanner.nextLine().trim();
+
+            try {
+                int value = Integer.parseInt(input);
+                if (value >= min && value <= max) {
+                    return value;
+                }
+                System.out.println("Invalid input. Enter a number from " + min + " to " + max + ".");
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter a whole number.");
+            }
+        }
+    }
+
+    public int askChoiceFromList(int maxOption) {
+        while (true) {
+            System.out.print("Select an option (1-" + maxOption + "): ");
+            String input = scanner.nextLine().trim();
+
+            try {
+                int choice = Integer.parseInt(input);
+
+                if (choice >= 1 && choice <= maxOption) {
+                    return choice;
+                }
+
+                System.out.println("Invalid choice. Try again.");
+
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter a number.");
+            }
+        }
+    }
+
+    public int askMenuChoice() {
+        while (true) {
+            System.out.println("\n--- Data Structure Advisor ---");
+            System.out.println("1. Start advisor");
+            System.out.println("2. Exit");
+            System.out.print("Choose an option: ");
+
+            String input = scanner.nextLine().trim();
+
+            try {
+                int choice = Integer.parseInt(input);
+
+                if (choice == 1 || choice == 2) {
+                    return choice;
+                }
+
+                System.out.println("Invalid choice. Please enter 1 or 2.");
+
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter a number.");
+            }
+        }
+    }
+
+        public void close() {
+        scanner.close();
     }
 }
