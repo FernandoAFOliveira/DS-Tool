@@ -26,6 +26,7 @@ public class DSListPanel extends JPanel {
         dsList.setCellRenderer((list, value, index, isSelected, cellHasFocus) -> {
             JLabel label = new JLabel(value.getName());
             label.setOpaque(true);
+            label.setBorder(BorderFactory.createEmptyBorder(2, 8, 2, 2));
 
             if (isSelected) {
                 label.setBackground(list.getSelectionBackground());
@@ -37,6 +38,7 @@ public class DSListPanel extends JPanel {
 
             return label;
         });
+        
         dsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
         add(new JScrollPane(dsList), BorderLayout.CENTER);
