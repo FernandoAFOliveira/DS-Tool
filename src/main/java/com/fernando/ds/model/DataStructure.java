@@ -16,11 +16,11 @@ public abstract class DataStructure implements Comparable<DataStructure>{
 	private final int sorted;
 	// Temporary field for sorting
     private double lastCalculatedScore;
-	protected final String alternative;
 	protected final String explanation;
 	protected final String exampleUse;
-	protected final String api_overview;
+	protected final String apiOverview;
 	protected final String codeExample;
+	protected final String alternative;
 	
 	
 	public DataStructure(
@@ -36,7 +36,7 @@ public abstract class DataStructure implements Comparable<DataStructure>{
 		int sorted,
 	    String explanation,
     	String exampleUse,
-    	String api_overview,		
+    	String apiOverview,		
 		String codeExample,
 		String alternative
 		) {
@@ -52,18 +52,15 @@ public abstract class DataStructure implements Comparable<DataStructure>{
 		this.memory = memory;		
 		this.sorted = sorted;
 		this.explanation = explanation;
-		this.exampleUse = exampleUse;
-		this.api_overview = api_overview;
-		this.alternative = alternative;
-		this.codeExample = codeExample;		
+		this.exampleUse   = exampleUse;
+		this.apiOverview = apiOverview;
+		this.codeExample = codeExample;
+		this.alternative = alternative;		
 	}
-	
-	@Override
-    public int compareTo(DataStructure other) {
-        // Sort by the calculated score (highest score first)
-        // You'll need to store the score temporarily after calculation
-        return Double.compare(other.lastCalculatedScore, this.lastCalculatedScore);
-    }
+
+	public String getDisplayName() {
+		return name;
+	}
 
 	public String getAlternative() { 
 		return alternative; 
@@ -77,7 +74,7 @@ public abstract class DataStructure implements Comparable<DataStructure>{
 	}
 
 	public String getApiOverview() {
-		return api_overview;
+		return apiOverview;
 	}
 
 	// Getter AND Setter for the temporary score
@@ -126,5 +123,29 @@ public abstract class DataStructure implements Comparable<DataStructure>{
 	}
 	public String getCodeExample() {
 		return codeExample;
-	}	
+	}
+	
+		@Override
+	public int compareTo(DataStructure other) {
+		int scoreCompare = Double.compare(
+			other.lastCalculatedScore,
+			this.lastCalculatedScore
+		);
+
+		if (scoreCompare != 0) {
+			return scoreCompare;
+		}
+
+		return this.name.compareTo(other.name);
+	}
+
+	@Override
+	public String toString() {
+		return "Best choice: " + name + "\n\n" +
+			"Why:\n" + explanation + "\n\n" +
+			"Example:\n" + exampleUse + "\n\n" +
+			"API Overview:\n" + apiOverview + "\n\n" +
+			"Code:\n" + codeExample + "\n\n" +
+			"Alternative:\n" + alternative;
+	}
 }

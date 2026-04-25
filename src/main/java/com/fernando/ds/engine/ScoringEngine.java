@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import com.fernando.ds.model.DSRequirements;
 import com.fernando.ds.model.DataStructure;
-import com.fernando.ds.requirements.UserRequirements;
+import com.fernando.ds.model.Preference;
+
 
 public class ScoringEngine {
 
@@ -15,7 +17,7 @@ public class ScoringEngine {
         this.library = DataStructureLibrary.getAll();
     }
 
-    public void evaluateAndPrint(UserRequirements req, InputCollector input) {
+    public void evaluateAndPrint(DSRequirements req, InputCollector input) {
         for (DataStructure ds : library) {
             double score = calculate(ds, req);
             ds.setLastCalculatedScore(score);
@@ -59,26 +61,39 @@ public class ScoringEngine {
         System.out.println(selected);
     }
     
-     public double calculate(DataStructure ds, UserRequirements req) {
-        // 1. HARD FILTERS (Dealbreakers)
-        if (!req.isAllowDuplicates() && ds.isDuplicates()) return -1.0;
-        if (req.isHaveKeys() && !ds.isKeys()) return -1.0;
-        if (!req.isHaveKeys() && ds.isKeys()) return -1.0;
-
-        // 2. WEIGHTED SCORING
+     public double calculate(DataStructure ds, DSRequirements req) {
         double score = 0.0;
-        score += (ds.getLookup() * req.getLookupWeight());
-        score += (ds.getAddDelete() * req.getInsertWeight());
-        score += (ds.getMemory() * req.getMemoryWeight());
 
-        // 3. TIE-BREAKERS
-        if (!ds.isLegacy()) {
-            score += 5.0;
+        // Key-value mapping
+        if (req.getKeyValuePreference() == Preference.YES && !ds.isKeys()) {
+            return -1.0;
         }
 
-        if (req.getSortWeight() > 0 && ds.getSorted() > 0) {
-            score += (ds.getSorted() * req.getSortWeight());
+        if (req.getKeyValuePreference() == Preference.NO && ds.isKeys()) {
+            return -1.0;
         }
+
+        // Duplicates
+        if (req.getDuplicatePreference() == Preference.YES && !ds.isDuplicates()) {
+            return -1.0;
+        }
+
+        if (req.getDuplicatePreference() == Preference.NO && ds.isDuplicates()) {
+            return -1.0;
+        }
+
+        // Sorted
+        if (req.getSortedPreference() == Preference.YES && ds.getSorted() == 0) {
+            return -1.0;
+        }
+
+        if (req.getSortedPreference() == Preference.NO && ds.getSorted() > 0) {
+            return -1.0;
+        }
+
+        score += ds.getLookup() * req.getLookupWeight();
+        score += ds.getAddDelete() * req.getAddDeleteWeight();
+        score += ds.getMemory() * req.getMemoryWeight();
 
         return score;
     }

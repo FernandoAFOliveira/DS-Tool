@@ -39,8 +39,8 @@ public class DSArrayList extends DataStructure {
             EXPLANATION,
             EXAMPLE_USE,
             API_OVERVIEW,
-            "ArrayDeque",
-            CODE_EXAMPLE
+            CODE_EXAMPLE,
+             "ArrayDeque (faster insert/remove at ends)"
         );
     }
 }

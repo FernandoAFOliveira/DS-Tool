@@ -2,7 +2,8 @@ package com.fernando.ds.engine;
 
 import java.util.Scanner;
 
-import com.fernando.ds.requirements.UserRequirements;
+import com.fernando.ds.model.DSRequirements;
+import com.fernando.ds.model.Preference;
 
 public class InputCollector {
 
@@ -16,11 +17,10 @@ public class InputCollector {
         this.scanner = scanner;
     }
 
-    public UserRequirements collectRequirements() {
+    public DSRequirements collectRequirements() {
         boolean keyValue = askYesNo("Do you need Key-Value mapping? (y/n): ");
         boolean allowDuplicates = askYesNo("Do you allow duplicate elements? (y/n): ");
         boolean sorted = askYesNo("Do you need elements sorted (e.g., natural order)? (y/n): ");
-        int sortWeight = sorted ? 5 : 0;
 
         System.out.println("\n--- Performance Priorities (1-5, where 5 is critical) ---");
 
@@ -28,7 +28,27 @@ public class InputCollector {
         int addDelete = askPriority("Importance of Add/Delete Speed: ", 1, 5);
         int memory = askPriority("Importance of Memory Efficiency: ", 1, 5);
 
-        return new UserRequirements(keyValue, allowDuplicates, sortWeight, lookup, addDelete, memory);
+        DSRequirements req = new DSRequirements();
+
+        // Convert boolean → Preference
+        req.setKeyValuePreference(
+            keyValue ? Preference.YES : Preference.NO
+        );
+
+        req.setDuplicatePreference(
+            allowDuplicates ? Preference.YES : Preference.NO
+        );
+
+        req.setSortedPreference(
+            sorted ? Preference.YES : Preference.NO
+        );
+
+        // Set weights
+        req.setLookupWeight(lookup);
+        req.setAddDeleteWeight(addDelete);
+        req.setMemoryWeight(memory);
+
+        return req;
     }
 
     private boolean askYesNo(String prompt) {
