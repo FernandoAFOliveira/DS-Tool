@@ -4,6 +4,7 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -18,7 +19,6 @@ public class MainFrame extends JFrame {
         setMinimumSize(new Dimension(900, 600));
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
-        setJMenuBar(createMenuBar());
 
         DetailPanel detailPanel = new DetailPanel();
         QuestionPanel questionPanel = new QuestionPanel();
@@ -26,18 +26,23 @@ public class MainFrame extends JFrame {
 
         LeftPanel leftPanel = new LeftPanel(questionPanel, dsListPanel);
 
-        new AppController(questionPanel, dsListPanel, detailPanel);
+        AppController controller = new AppController(questionPanel, dsListPanel, detailPanel);
+
+        setJMenuBar(createMenuBar(controller, detailPanel));
+
+        detailPanel.showWelcome();
 
         add(leftPanel, BorderLayout.WEST);
         add(detailPanel, BorderLayout.CENTER);
     }
-        private JMenuBar createMenuBar() {
+    private JMenuBar createMenuBar(AppController controller, DetailPanel detailPanel){
         JMenuBar menuBar = new JMenuBar();
 
         JMenu fileMenu = new JMenu("File");
         JMenuItem resetItem = new JMenuItem("Reset selections");
         JMenuItem exitItem = new JMenuItem("Exit");
 
+        resetItem.addActionListener(e -> controller.reset());
         exitItem.addActionListener(e -> dispose());
 
         fileMenu.add(resetItem);
@@ -47,16 +52,64 @@ public class MainFrame extends JFrame {
         JMenu viewMenu = new JMenu("View");
         JMenu themeMenu = new JMenu("Theme");
 
-        themeMenu.add(new JMenuItem("Light"));
-        themeMenu.add(new JMenuItem("Soft Blue"));
-        themeMenu.add(new JMenuItem("Dark"));
+        JMenuItem lightThemeItem = new JMenuItem("Light");
+        JMenuItem softBlueThemeItem = new JMenuItem("Soft Blue");
+        JMenuItem darkThemeItem = new JMenuItem("Dark");
+        JMenuItem darkBlueThemeItem = new JMenuItem("Dark Blue");
+
+        themeMenu.add(lightThemeItem);
+        themeMenu.add(softBlueThemeItem);
+        themeMenu.add(darkThemeItem);
+        themeMenu.add(darkBlueThemeItem);
 
         viewMenu.add(themeMenu);
 
+        JMenu helpMenu = new JMenu("Help");
+        JMenuItem aboutItem = new JMenuItem("About");
+
+        aboutItem.addActionListener(e -> showAboutDialog());
+
+        helpMenu.add(aboutItem);
+
         menuBar.add(fileMenu);
         menuBar.add(viewMenu);
+        menuBar.add(helpMenu);
+
+        lightThemeItem.addActionListener(e -> {
+            ThemeManager.applyTheme(this, Theme.LIGHT);
+            detailPanel.applyTheme(Theme.LIGHT);
+        });
+
+        softBlueThemeItem.addActionListener(e -> {
+            ThemeManager.applyTheme(this, Theme.SOFT_BLUE);
+            detailPanel.applyTheme(Theme.SOFT_BLUE);
+        });
+
+        darkThemeItem.addActionListener(e -> {
+            ThemeManager.applyTheme(this, Theme.DARK);
+            detailPanel.applyTheme(Theme.DARK);
+        });
+
+        darkBlueThemeItem.addActionListener(e -> {
+            ThemeManager.applyTheme(this, Theme.DARK_BLUE);
+            detailPanel.applyTheme(Theme.DARK_BLUE);
+        });
 
         return menuBar;
+    }
+
+    private void showAboutDialog() {
+        JOptionPane.showMessageDialog(
+            this,
+            "Data Structure Advisor\n\n"
+            + "Created by Fernando Oliveira\n"
+            + "COP 3330 Object-Oriented Programming\n\n"
+            + "This app helps students compare common Java data structures.\n"
+            + "Use the questions and sliders to filter and sort the structures,\n"
+            + "then select a data structure to view details and example code.",
+            "About Data Structure Advisor",
+            JOptionPane.INFORMATION_MESSAGE
+        );
     }
     
 }

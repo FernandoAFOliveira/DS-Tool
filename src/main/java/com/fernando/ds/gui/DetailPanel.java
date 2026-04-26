@@ -15,6 +15,8 @@ public class DetailPanel extends JPanel {
     private Style normal;
     private Style title;
     private Style sectionHeader;
+    private QuestionInfo currentQuestion;
+    private DataStructure currentDataStructure;
 
     public DetailPanel() {
         setLayout(new BorderLayout());
@@ -65,13 +67,18 @@ public class DetailPanel extends JPanel {
         }
 
     public void showQuestion(QuestionInfo question) {
+        currentQuestion = question;
+        currentDataStructure = null;
+
         textPane.setText("");
 
         StyledDocument doc = textPane.getStyledDocument();
 
         try {
-            doc.insertString(doc.getLength(), question.getShortText() + "\n\n", bold);
-            doc.insertString(doc.getLength(), question.getLongText(), normal);
+            appendCenteredTitle(doc, question.getShortText());
+
+            appendSection(doc, "What this means:", question.getLongText(), normal);
+
         } catch (BadLocationException e) {
             textPane.setText("Error displaying question information.");
         }
@@ -79,28 +86,65 @@ public class DetailPanel extends JPanel {
 
     public void showDataStructure(DataStructure ds) {
         textPane.setText("");
+        currentDataStructure = ds;
+        currentQuestion = null;
 
         StyledDocument doc = textPane.getStyledDocument();
 
         try {
             appendCenteredTitle(doc, ds.getName());
 
-            append(doc, "Description:\n", sectionHeader);
-            append(doc, ds.getExplanation() + "\n\n", normal);
+            appendSection(doc, "Description:", ds.getExplanation(), normal);
 
-            append(doc, "Example:\n", sectionHeader);
-            append(doc, ds.getExampleUse() + "\n\n", normal);
+            appendSection(doc, "Example:", ds.getExampleUse(), normal);
 
-            append(doc, "API Overview:\n", sectionHeader);
-            append(doc, ds.getApiOverview() + "\n\n", normal);
+            appendSection(doc, "API Overview:", ds.getApiOverview(), normal);
 
-            append(doc, "Code:\n", sectionHeader);
-            append(doc, ds.getCodeExample() + "\n\n", code);
+            appendSection(doc, "Code:", ds.getCodeExample(), code);
             //doc.insertString(doc.getLength(), "Alternative:\n", bold);
             //doc.insertString(doc.getLength(), ds.getAlternative(), normal);
 
         } catch (BadLocationException e) {
             textPane.setText("Error displaying data structure information.");
+        }
+    }
+
+    public void showWelcome() {
+        textPane.setText("");
+        currentQuestion = null;
+        currentDataStructure = null;
+
+        StyledDocument doc = textPane.getStyledDocument();
+
+        try {
+            appendCenteredTitle(doc, "Data Structure Advisor");
+
+            appendSection(doc, "Description:", "This app helps compare common Java data structures based on the needs of a programming task.", normal);
+
+            appendSection(doc, "How to use it:", "Use the questions on the left to describe what your program needs. "
+                + "The data structure list will update as you choose options. "
+                + "Click a data structure name to see its description, common methods, and example code.", normal);
+
+            appendSection(doc, "Tip:", "Choose Any when a feature does not matter for your problem. "
+                + "Use the sliders to sort choices by lookup speed, add/delete speed, or memory efficiency.", normal);
+
+        } catch (BadLocationException e) {
+            textPane.setText("Error displaying welcome information.");
+        }
+    }
+
+    public void showMessage(String titleText, String message) {
+        currentQuestion = null;
+        currentDataStructure = null;
+        textPane.setText("");
+
+        StyledDocument doc = textPane.getStyledDocument();
+
+        try {
+            appendCenteredTitle(doc, titleText);
+            appendSection(doc, "Note:",  message, normal);
+        } catch (BadLocationException e) {
+            textPane.setText("Error displaying message.");
         }
     }
 
@@ -115,5 +159,30 @@ public class DetailPanel extends JPanel {
         String fullText = text + "\n\n";
         doc.insertString(start, fullText, title);
         doc.setParagraphAttributes(start, fullText.length(), title, false);
+    }
+    private void appendSection(StyledDocument doc, String heading, String body, Style bodyStyle)
+            throws BadLocationException {
+        append(doc, heading + "\n", sectionHeader);
+        append(doc, body + "\n\n", bodyStyle);
+    }
+
+    public void applyTheme(Theme theme) {
+        textPane.setBackground(theme.getBackground());
+        textPane.setForeground(theme.getForeground());
+
+        StyleConstants.setForeground(normal, theme.getForeground());
+        StyleConstants.setForeground(sectionHeader, theme.getForeground());
+        StyleConstants.setForeground(title, theme.getForeground());
+        StyleConstants.setForeground(code, theme.getForeground());
+
+        if (currentDataStructure != null) {
+            showDataStructure(currentDataStructure);
+        } else if (currentQuestion != null) {
+            showQuestion(currentQuestion);
+        } else {
+            showWelcome();
+        }
+
+        repaint();
     }
 }

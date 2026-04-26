@@ -25,20 +25,25 @@ public class DSHashSet extends DataStructure {
 
     public DSHashSet() {
         super(
-            "HashSet",     // name
-            false,         // legacy
-            false,         // duplicates
-            false,         // keys
-            false,         // navigable
-            false,         // doubleEnded
-            9,             // lookup
-            9,             // addDelete
-            6,             // memory
-            0,             // sorted
+            "HashSet",                 // name
+
+            false,                     // keyValue
+            false,                     // allowsDuplicates
+            false,                     // indexed
+            false,                     // navigable
+            RemovalOrder.ANY,          // removalOrder
+
+            9,                         // lookup
+            9,                         // addDelete
+            6,                         // memory
+            0,                         // sorted
+
+            false,                     // legacy
+
             EXPLANATION,
             EXAMPLE_USE,
             API_OVERVIEW,
-            CODE_EXAMPLE,       
+            CODE_EXAMPLE,
             "TreeSet"
         );
     }

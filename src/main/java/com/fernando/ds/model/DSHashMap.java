@@ -24,16 +24,21 @@ public class DSHashMap extends DataStructure {
 
     public DSHashMap() {
         super(
-            "HashMap",     // name
-            false,         // legacy
-            true,          // duplicates
-            true,          // keys
-            false,         // navigable
-            false,         // doubleEnded
-            10,            // lookup
-            10,            // addDelete
-            5,             // memory
-            0,             // sorted
+            "HashMap",                 // name
+
+            true,                      // keyValue
+            true,                      // allowsDuplicates for values
+            false,                     // indexed
+            false,                     // navigable
+            RemovalOrder.ANY,          // removalOrder
+
+            10,                        // lookup
+            10,                        // addDelete
+            5,                         // memory
+            0,                         // sorted
+
+            false,                     // legacy
+
             EXPLANATION,
             EXAMPLE_USE,
             API_OVERVIEW,

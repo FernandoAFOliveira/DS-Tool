@@ -24,16 +24,21 @@ public class DSArrayDeque extends DataStructure {
 
     public DSArrayDeque() {
         super(
-            "ArrayDeque",  // name
-            false,         // legacy
-            true,          // duplicates
-            false,         // keys
-            false,         // navigable
-            true,          // doubleEnded
-            3,             // lookup
-            9,             // addDelete
-            7,             // memory
-            0,             // sorted
+            "ArrayDeque",              // name
+
+            false,                     // keyValue
+            true,                      // allowsDuplicates
+            false,                     // indexed
+            false,                     // navigable
+            RemovalOrder.DOUBLE_ENDED, // removalOrder
+
+            3,                         // lookup
+            9,                         // addDelete
+            7,                         // memory
+            0,                         // sorted
+
+            false,                     // legacy
+
             EXPLANATION,
             EXAMPLE_USE,
             API_OVERVIEW,

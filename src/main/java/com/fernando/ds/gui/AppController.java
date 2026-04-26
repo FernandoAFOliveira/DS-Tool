@@ -8,6 +8,7 @@ import com.fernando.ds.library.DataStructureLibrary;
 import com.fernando.ds.model.DSRequirements;
 import com.fernando.ds.model.DataStructure;
 import com.fernando.ds.model.Preference;
+import com.fernando.ds.model.RemovalOrder;
 import com.fernando.ds.engine.ScoringEngine;
 
 public class AppController {
@@ -16,29 +17,34 @@ public class AppController {
     private final ScoringEngine scoringEngine = new ScoringEngine();
     private final DSListPanel dsListPanel;
     private final DetailPanel detailPanel;
+    private final QuestionPanel questionPanel;
 
     public AppController(
         QuestionPanel questionPanel,
         DSListPanel dsListPanel,
         DetailPanel detailPanel
     ) {
+        this.questionPanel = questionPanel;
         this.dsListPanel = dsListPanel;
-        this.detailPanel = detailPanel;
+        this.detailPanel = detailPanel;        
         dsListPanel.setSelectionListener(detailPanel::showDataStructure);
         questionPanel.setQuestionSelectionListener(this::handleQuestionChange);
         questionPanel.setPreferenceSelectionListener(this::updatePreference);
         questionPanel.setWeightSelectionListener(this::updateWeight);
+        questionPanel.setRemovalOrderSelectionListener(this::updateRemovalOrder);
+    }
+
+    private void updateRemovalOrder(QuestionInfo q, RemovalOrder value) {
+        requirements.setRemovalOrderPreference(value);
+        refreshDataStructureList();
     }
 
     private void refreshDataStructureList() {
         List<DataStructure> all = DataStructureLibrary.getAll();
         List<DataStructure> valid = new ArrayList<>();
 
-        System.out.println("---- Scores ----");
-
         for (DataStructure ds : all) {
             double score = scoringEngine.calculate(ds, requirements);
-            System.out.println(ds.getName() + " = " + score);
 
             if (score >= 0) {
                 ds.setLastCalculatedScore(score);
@@ -61,10 +67,26 @@ public class AppController {
     private void updatePreference(QuestionInfo q, Preference value) {
         if (q.getId() == QuestionInfo.QuestionId.KEY_VALUE) {
             requirements.setKeyValuePreference(value);
+
+            if (value == Preference.YES) {
+                requirements.setDuplicatePreference(Preference.ANY);
+                questionPanel.setDuplicateQuestionEnabled(false);
+                detailPanel.showMessage(
+                    "Key-value mapping selected",
+                    "Keys must be unique in Java maps. Different keys may still point to the same value, so the duplicate question has been set to Any."
+                );
+            } else {
+                questionPanel.setDuplicateQuestionEnabled(true);
+            }
+
         } else if (q.getId() == QuestionInfo.QuestionId.DUPLICATES) {
             requirements.setDuplicatePreference(value);
+
         } else if (q.getId() == QuestionInfo.QuestionId.SORTED) {
             requirements.setSortedPreference(value);
+        }
+        else if (q.getId() == QuestionInfo.QuestionId.INDEXED) {
+            requirements.setIndexedPreference(value);
         }
 
         refreshDataStructureList();
@@ -78,8 +100,19 @@ public class AppController {
         } else if (q.getId() == QuestionInfo.QuestionId.MEMORY) {
             requirements.setMemoryWeight(value);
         }
-        System.out.println(q.getShortText() + " = " + value);  //Debug Printing. Delete later
 
         refreshDataStructureList();
     }
-}
+
+    public void reset() {
+        requirements.reset();
+        questionPanel.resetSelections();
+        detailPanel.showWelcome();
+        refreshDataStructureList();
+    }
+
+    public void applyTheme(Theme theme) {
+        ThemeManager.applyThemeToComponent(detailPanel, theme);
+        detailPanel.applyTheme(theme);
+    }
+    }

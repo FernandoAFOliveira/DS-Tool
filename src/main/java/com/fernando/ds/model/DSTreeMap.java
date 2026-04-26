@@ -27,16 +27,21 @@ public class DSTreeMap extends DataStructure {
 
     public DSTreeMap() {
         super(
-            "TreeMap",     // name
-            false,         // legacy
-            true,          // duplicates
-            true,          // keys
-            true,          // navigable
-            false,         // doubleEnded
-            7,             // lookup
-            7,             // addDelete
-            5,             // memory
-            10,            // sorted
+            "TreeMap",                 // name
+
+            true,                      // keyValue
+            true,                      // allowsDuplicates for values
+            false,                     // indexed
+            true,                      // navigable
+            RemovalOrder.ANY,          // removalOrder
+
+            7,                         // lookup
+            7,                         // addDelete
+            5,                         // memory
+            10,                        // sorted
+
+            false,                     // legacy
+
             EXPLANATION,
             EXAMPLE_USE,
             API_OVERVIEW,
@@ -44,4 +49,4 @@ public class DSTreeMap extends DataStructure {
             "HashMap"
         );
     }
-}
+    }

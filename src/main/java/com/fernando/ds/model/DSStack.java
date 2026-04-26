@@ -24,16 +24,21 @@ public class DSStack extends DataStructure {
 
     public DSStack() {
         super(
-            "Stack",       // name
-            true,          // legacy
-            true,          // duplicates
-            false,         // keys
-            false,         // navigable
-            false,         // doubleEnded
-            2,             // lookup
-            8,             // addDelete
-            5,             // memory
-            0,             // sorted
+            "Stack",                   // name
+
+            false,                     // keyValue
+            true,                      // allowsDuplicates
+            false,                     // indexed
+            false,                     // navigable
+            RemovalOrder.LIFO,         // removalOrder
+
+            2,                         // lookup
+            8,                         // addDelete
+            5,                         // memory
+            0,                         // sorted
+
+            true,                      // legacy
+
             EXPLANATION,
             EXAMPLE_USE,
             API_OVERVIEW,

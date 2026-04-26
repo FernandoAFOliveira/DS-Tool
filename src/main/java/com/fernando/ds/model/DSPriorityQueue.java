@@ -25,16 +25,21 @@ public class DSPriorityQueue extends DataStructure {
 
     public DSPriorityQueue() {
         super(
-            "PriorityQueue",  // name
-            false,            // legacy
-            true,             // duplicates
-            false,            // keys
-            false,            // navigable
-            false,            // doubleEnded
-            2,                // lookup
-            6,                // addDelete
-            6,                // memory
-            8,                // sorted
+            "PriorityQueue",           // name
+
+            false,                     // keyValue
+            true,                      // allowsDuplicates
+            false,                     // indexed
+            false,                     // navigable
+            RemovalOrder.PRIORITY,     // removalOrder
+
+            2,                         // lookup
+            6,                         // addDelete
+            6,                         // memory
+            8,                         // sorted / priority-based ordering
+
+            false,                     // legacy
+
             EXPLANATION,
             EXAMPLE_USE,
             API_OVERVIEW,

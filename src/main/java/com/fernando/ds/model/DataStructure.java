@@ -3,19 +3,24 @@ package com.fernando.ds.model;
 public abstract class DataStructure implements Comparable<DataStructure>{
 	
 	private final String name;
-	private final boolean legacy;  // Tie-breaking attribute	
-	//Categorization attributes
-	private final boolean duplicates;
-	private final boolean keys; // e.g., Map vs List/Set
+
+	// Main behavior/category attributes
+	private final boolean keyValue;
+	private final boolean allowsDuplicates;
+	private final boolean indexed;
 	private final boolean navigable;
-	private final boolean doubleEnded;	
-	// Scoring Attributes (Scale: 0 to 10)
+	private final RemovalOrder removalOrder;
+
+	// Scoring attributes
 	private final int lookup;
 	private final int addDelete;
 	private final int memory;
 	private final int sorted;
-	// Temporary field for sorting
-    private double lastCalculatedScore;
+
+	// Tie-breaking / display
+	private final boolean legacy;
+	private double lastCalculatedScore;
+
 	protected final String explanation;
 	protected final String exampleUse;
 	protected final String apiOverview;
@@ -24,38 +29,46 @@ public abstract class DataStructure implements Comparable<DataStructure>{
 	
 	
 	public DataStructure(
-		String name, 
-		boolean legacy, 
-		boolean duplicates, 
-		boolean keys,
-		boolean navigable, 
-		boolean doubleEnded, 
-		int lookup, 
-		int addDelete, 
-		int memory,  
+		String name,
+
+		boolean keyValue,
+		boolean allowsDuplicates,
+		boolean indexed,
+		boolean navigable,
+		RemovalOrder removalOrder,
+
+		int lookup,
+		int addDelete,
+		int memory,
 		int sorted,
-	    String explanation,
-    	String exampleUse,
-    	String apiOverview,		
+
+		boolean legacy,
+
+		String explanation,
+		String exampleUse,
+		String apiOverview,
 		String codeExample,
 		String alternative
-		) {
-		
+	) {
 		this.name = name;
-		this.legacy = legacy;
-		this.duplicates = duplicates;
-		this.keys = keys;
+		this.keyValue = keyValue;
+		this.allowsDuplicates = allowsDuplicates;
+		this.indexed = indexed;
 		this.navigable = navigable;
-		this.doubleEnded = doubleEnded;
+		this.removalOrder = removalOrder;
+
 		this.lookup = lookup;
 		this.addDelete = addDelete;
-		this.memory = memory;		
+		this.memory = memory;
 		this.sorted = sorted;
+
+		this.legacy = legacy;
+
 		this.explanation = explanation;
-		this.exampleUse   = exampleUse;
+		this.exampleUse = exampleUse;
 		this.apiOverview = apiOverview;
 		this.codeExample = codeExample;
-		this.alternative = alternative;		
+		this.alternative = alternative;
 	}
 
 	public String getDisplayName() {
@@ -91,19 +104,23 @@ public abstract class DataStructure implements Comparable<DataStructure>{
 	}
 
 	public boolean isDuplicates() {
-		return duplicates;
+		return allowsDuplicates;
 	}
 
 	public boolean isKeys() {
-		return keys;
+		return keyValue;
+	}
+
+	public boolean isIndexed() {
+		return indexed;
 	}
 
 	public boolean isNavigable() {
 		return navigable;
 	}
 
-	public boolean isDoubleEnded() {
-		return doubleEnded;
+	public RemovalOrder getRemovalOrder() {
+		return removalOrder	;
 	}
 
 	public int getLookup() {

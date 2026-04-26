@@ -26,21 +26,26 @@ public class DSArrayList extends DataStructure {
 
     public DSArrayList() {
         super(
-            "ArrayList",  // name
-            false,        // legacy
-            true,         // duplicates
-            false,        // keys
-            false,        // navigable
-            false,        // doubleEnded
-            8,            // lookup
-            9,            // addDelete
-            7,            // memory
-            0,            // sorted
+            "ArrayList",               // name
+
+            false,                     // keyValue
+            true,                      // allowsDuplicates
+            true,                      // indexed
+            false,                     // navigable
+            RemovalOrder.ANY,          // removalOrder
+
+            9,                         // lookup
+            5,                         // addDelete
+            8,                         // memory
+            0,                         // sorted
+
+            false,                     // legacy
+
             EXPLANATION,
             EXAMPLE_USE,
             API_OVERVIEW,
             CODE_EXAMPLE,
-             "ArrayDeque (faster insert/remove at ends)"
+            "ArrayDeque (faster insert/remove at ends)"
         );
     }
 }

@@ -5,10 +5,13 @@ import com.fernando.ds.library.QuestionLibrary;
 import javax.swing.*;
 import java.awt.*;
 import java.util.function.Consumer;
+import java.util.ArrayList;
+import java.util.List;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.function.BiConsumer;
 import com.fernando.ds.model.Preference;
+import com.fernando.ds.model.RemovalOrder;
 
 public class QuestionPanel extends JPanel {
 
@@ -16,6 +19,12 @@ public class QuestionPanel extends JPanel {
     private JPanel selectedCard = null;
     private BiConsumer<QuestionInfo, Preference> preferenceSelectionListener;
     private BiConsumer<QuestionInfo, Integer> weightSelectionListener;
+    private final List<JRadioButton> anyButtons = new ArrayList<>();
+    private final List<JSlider> sliders = new ArrayList<>();
+    private JRadioButton duplicateYesButton;
+    private JRadioButton duplicateNoButton;
+    private JRadioButton duplicateAnyButton;
+    private BiConsumer<QuestionInfo, RemovalOrder> removalOrderSelectionListener;
 
     public QuestionPanel() {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -31,6 +40,8 @@ public class QuestionPanel extends JPanel {
 
         if (q.getType() == QuestionInfo.QuestionType.YES_NO) {
             row = createYesNoRow(q);
+        } else if (q.getType() == QuestionInfo.QuestionType.REMOVAL_ORDER) {
+            row = createRemovalOrderRow(q);
         } else if (q.getType() == QuestionInfo.QuestionType.SCALE) {
             row = createSliderRow(q);
         } else {
@@ -42,6 +53,10 @@ public class QuestionPanel extends JPanel {
         addCardClickBehavior(card, card, q);
         }
         
+    }
+
+    public void setRemovalOrderSelectionListener(BiConsumer<QuestionInfo, RemovalOrder> listener) {
+        this.removalOrderSelectionListener = listener;
     }
 
     public void setPreferenceSelectionListener(BiConsumer<QuestionInfo, Preference> listener) {
@@ -67,6 +82,13 @@ public class QuestionPanel extends JPanel {
         JRadioButton yes = new JRadioButton("Yes");
         JRadioButton no = new JRadioButton("No");
         JRadioButton any = new JRadioButton("Any", true);
+            anyButtons.add(any);
+
+        if (q.getId() == QuestionInfo.QuestionId.DUPLICATES) {
+            duplicateYesButton = yes;
+            duplicateNoButton = no;
+            duplicateAnyButton = any;
+        }
 
         ButtonGroup group = new ButtonGroup();
         group.add(yes);
@@ -98,6 +120,8 @@ public class QuestionPanel extends JPanel {
             }
         });
 
+
+
         return row;
     }
 
@@ -107,7 +131,8 @@ public class QuestionPanel extends JPanel {
 
         JLabel label = createClickableQuestionLabel(q);
 
-        JSlider slider = new JSlider(0, 5, 0);
+        JSlider slider = new JSlider(0, 5, 5);
+        sliders.add(slider);
         slider.setMajorTickSpacing(1);
         slider.setPaintTicks(true);
         slider.setPaintLabels(true);
@@ -184,6 +209,118 @@ public class QuestionPanel extends JPanel {
                 addCardClickBehavior(child, card, q);
             }
         }
+    }
+
+    public void resetSelections() {
+        for (JRadioButton anyButton : anyButtons) {
+            anyButton.setSelected(true);
+        }
+
+        for (JSlider slider : sliders) {
+            slider.setValue(5);
+        }
+
+        if (selectedCard != null) {
+            selectedCard.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createEtchedBorder(),
+                BorderFactory.createEmptyBorder(6, 8, 6, 8)
+            ));
+
+            selectedCard = null;
+        }
+    }
+
+    public void setDuplicateQuestionEnabled(boolean enabled) {
+        if (duplicateYesButton != null) {
+            duplicateYesButton.setEnabled(enabled);
+        }
+
+        if (duplicateNoButton != null) {
+            duplicateNoButton.setEnabled(enabled);
+        }
+
+        if (duplicateAnyButton != null) {
+            duplicateAnyButton.setEnabled(enabled);
+            duplicateAnyButton.setSelected(true);
+        }
+    }
+
+    private JPanel createRemovalOrderRow(QuestionInfo q) {
+        JPanel row = new JPanel(new BorderLayout(2, 2));
+        row.setBorder(BorderFactory.createEmptyBorder(2, 8, 2, 8));
+
+        JLabel label = createClickableQuestionLabel(q);
+
+        JPanel options = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 0));
+
+        JRadioButton any = new JRadioButton("Any", true);
+        JRadioButton fifo = new JRadioButton("FIFO");
+        JRadioButton lifo = new JRadioButton("LIFO");
+        JRadioButton deque = new JRadioButton("DE");
+        JRadioButton priority = new JRadioButton("PRI");
+
+        ButtonGroup group = new ButtonGroup();
+        group.add(any);
+        group.add(fifo);
+        group.add(lifo);
+        group.add(deque);
+        group.add(priority);
+
+        options.add(any);
+        options.add(fifo);
+        options.add(lifo);
+        options.add(deque);
+        options.add(priority);
+
+        row.add(label, BorderLayout.NORTH);
+        row.add(options, BorderLayout.CENTER);
+
+        any.addActionListener(e -> {
+            if (removalOrderSelectionListener != null) {
+                removalOrderSelectionListener.accept(q, RemovalOrder.ANY);
+            }
+            if (questionSelectionListener != null) {
+                questionSelectionListener.accept(q);
+            }
+        });
+
+        fifo.addActionListener(e -> {
+            if (removalOrderSelectionListener != null) {
+                removalOrderSelectionListener.accept(q, RemovalOrder.FIFO);
+            }
+            if (questionSelectionListener != null) {
+                questionSelectionListener.accept(q);
+            }
+        });
+
+        lifo.addActionListener(e -> {
+            if (removalOrderSelectionListener != null) {
+                removalOrderSelectionListener.accept(q, RemovalOrder.LIFO);
+            }
+            if (questionSelectionListener != null) {
+                questionSelectionListener.accept(q);
+            }
+        });
+
+        deque.addActionListener(e -> {
+            if (removalOrderSelectionListener != null) {
+                removalOrderSelectionListener.accept(q, RemovalOrder.DOUBLE_ENDED);
+            }
+            if (questionSelectionListener != null) {
+                questionSelectionListener.accept(q);
+            }
+        });
+
+        priority.addActionListener(e -> {
+            if (removalOrderSelectionListener != null) {
+                removalOrderSelectionListener.accept(q, RemovalOrder.PRIORITY);
+            }
+            if (questionSelectionListener != null) {
+                questionSelectionListener.accept(q);
+            }
+        });
+
+        return row;
     }
 
 }

@@ -20,12 +20,15 @@ public class QuestionInfo {
         SORTED,
         LOOKUP,
         ADD_DELETE,
-        MEMORY
+        MEMORY,
+        INDEXED,
+        REMOVAL_ORDER
     }
 
     public enum QuestionType {
         YES_NO,
-        SCALE
+        SCALE,
+        REMOVAL_ORDER
     }
 
     public String getShortText() {

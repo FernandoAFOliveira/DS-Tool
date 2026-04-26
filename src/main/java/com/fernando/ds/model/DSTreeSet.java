@@ -27,16 +27,21 @@ public class DSTreeSet extends DataStructure {
 
     public DSTreeSet() {
         super(
-            "TreeSet",     // name
-            false,         // legacy
-            false,         // duplicates
-            false,         // keys
-            true,          // navigable
-            false,         // doubleEnded
-            7,             // lookup
-            7,             // addDelete
-            5,             // memory
-            10,            // sorted
+            "TreeSet",                 // name
+
+            false,                     // keyValue
+            false,                     // allowsDuplicates
+            false,                     // indexed
+            true,                      // navigable
+            RemovalOrder.ANY,          // removalOrder
+
+            7,                         // lookup
+            7,                         // addDelete
+            5,                         // memory
+            10,                        // sorted
+
+            false,                     // legacy
+
             EXPLANATION,
             EXAMPLE_USE,
             API_OVERVIEW,

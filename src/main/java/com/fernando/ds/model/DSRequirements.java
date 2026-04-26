@@ -5,19 +5,15 @@ public class DSRequirements {
     private Preference keyValuePreference;
     private Preference duplicatePreference;
     private Preference sortedPreference;
+    private Preference indexedPreference;
 
     private int lookupWeight;
     private int addDeleteWeight;
     private int memoryWeight;
+    private RemovalOrder removalOrderPreference;
 
     public DSRequirements() {
-        keyValuePreference = Preference.ANY;
-        duplicatePreference = Preference.ANY;
-        sortedPreference = Preference.ANY;
-
-        lookupWeight = 0;
-        addDeleteWeight = 0;
-        memoryWeight = 0;
+        reset();
     }
 
     public Preference getKeyValuePreference() {
@@ -66,5 +62,33 @@ public class DSRequirements {
 
     public void setMemoryWeight(int memoryWeight) {
         this.memoryWeight = memoryWeight;
+    }
+
+    public void setIndexedPreference(Preference indexedPreference) {
+        this.indexedPreference = indexedPreference;
+    }
+
+    public Preference getIndexedPreference() {
+        return this.indexedPreference;
+    }
+
+    public RemovalOrder getRemovalOrderPreference() {
+        return removalOrderPreference;
+    }
+
+    public void setRemovalOrderPreference(RemovalOrder removalOrderPreference) {
+        this.removalOrderPreference = removalOrderPreference;
+    }
+
+    public void reset() {
+        keyValuePreference = Preference.ANY;
+        duplicatePreference = Preference.ANY;
+        sortedPreference = Preference.ANY;
+        removalOrderPreference = RemovalOrder.ANY;
+        indexedPreference = Preference.ANY;
+
+        lookupWeight = 5;
+        addDeleteWeight = 5;
+        memoryWeight = 5;
     }
 }
