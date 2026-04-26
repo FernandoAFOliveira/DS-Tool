@@ -59,8 +59,6 @@ public class AppController {
     private void handleQuestionChange(QuestionInfo q) {
         detailPanel.showQuestion(q);
 
-        // You will later update preferences here
-        // For now just refresh:
         refreshDataStructureList();
     }
 

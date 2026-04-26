@@ -29,7 +29,6 @@ public class DSArrayDeque extends DataStructure {
             false,                     // keyValue
             true,                      // allowsDuplicates
             false,                     // indexed
-            false,                     // navigable
             RemovalOrder.DOUBLE_ENDED, // removalOrder
 
             3,                         // lookup
@@ -42,8 +41,7 @@ public class DSArrayDeque extends DataStructure {
             EXPLANATION,
             EXAMPLE_USE,
             API_OVERVIEW,
-            CODE_EXAMPLE,
-            "ArrayList"
+            CODE_EXAMPLE
         );
     }
 }

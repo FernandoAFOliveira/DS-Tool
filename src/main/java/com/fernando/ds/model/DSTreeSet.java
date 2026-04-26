@@ -32,7 +32,6 @@ public class DSTreeSet extends DataStructure {
             false,                     // keyValue
             false,                     // allowsDuplicates
             false,                     // indexed
-            true,                      // navigable
             RemovalOrder.ANY,          // removalOrder
 
             7,                         // lookup
@@ -45,8 +44,7 @@ public class DSTreeSet extends DataStructure {
             EXPLANATION,
             EXAMPLE_USE,
             API_OVERVIEW,
-            CODE_EXAMPLE,
-            "HashSet"
+            CODE_EXAMPLE
         );
     }
 }

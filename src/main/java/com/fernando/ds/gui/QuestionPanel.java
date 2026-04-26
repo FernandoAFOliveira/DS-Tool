@@ -258,6 +258,7 @@ public class QuestionPanel extends JPanel {
         JRadioButton lifo = new JRadioButton("LIFO");
         JRadioButton deque = new JRadioButton("DE");
         JRadioButton priority = new JRadioButton("PRI");
+        anyButtons.add(any);
 
         ButtonGroup group = new ButtonGroup();
         group.add(any);

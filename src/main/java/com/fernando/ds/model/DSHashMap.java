@@ -29,7 +29,6 @@ public class DSHashMap extends DataStructure {
             true,                      // keyValue
             true,                      // allowsDuplicates for values
             false,                     // indexed
-            false,                     // navigable
             RemovalOrder.ANY,          // removalOrder
 
             10,                        // lookup
@@ -42,8 +41,7 @@ public class DSHashMap extends DataStructure {
             EXPLANATION,
             EXAMPLE_USE,
             API_OVERVIEW,
-            CODE_EXAMPLE,
-            "TreeMap"
+            CODE_EXAMPLE
         );
     }
 }

@@ -30,7 +30,6 @@ public class DSHashSet extends DataStructure {
             false,                     // keyValue
             false,                     // allowsDuplicates
             false,                     // indexed
-            false,                     // navigable
             RemovalOrder.ANY,          // removalOrder
 
             9,                         // lookup
@@ -43,8 +42,7 @@ public class DSHashSet extends DataStructure {
             EXPLANATION,
             EXAMPLE_USE,
             API_OVERVIEW,
-            CODE_EXAMPLE,
-            "TreeSet"
+            CODE_EXAMPLE
         );
     }
 }

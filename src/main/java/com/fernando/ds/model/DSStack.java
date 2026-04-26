@@ -29,7 +29,6 @@ public class DSStack extends DataStructure {
             false,                     // keyValue
             true,                      // allowsDuplicates
             false,                     // indexed
-            false,                     // navigable
             RemovalOrder.LIFO,         // removalOrder
 
             2,                         // lookup
@@ -42,8 +41,7 @@ public class DSStack extends DataStructure {
             EXPLANATION,
             EXAMPLE_USE,
             API_OVERVIEW,
-            CODE_EXAMPLE,
-            "ArrayDeque"
+            CODE_EXAMPLE
         );
     }
 }

@@ -32,7 +32,6 @@ public class DSTreeMap extends DataStructure {
             true,                      // keyValue
             true,                      // allowsDuplicates for values
             false,                     // indexed
-            true,                      // navigable
             RemovalOrder.ANY,          // removalOrder
 
             7,                         // lookup
@@ -45,8 +44,7 @@ public class DSTreeMap extends DataStructure {
             EXPLANATION,
             EXAMPLE_USE,
             API_OVERVIEW,
-            CODE_EXAMPLE,
-            "HashMap"
+            CODE_EXAMPLE
         );
     }
     }

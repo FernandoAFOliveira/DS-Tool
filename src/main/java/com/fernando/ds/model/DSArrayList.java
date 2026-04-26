@@ -31,7 +31,6 @@ public class DSArrayList extends DataStructure {
             false,                     // keyValue
             true,                      // allowsDuplicates
             true,                      // indexed
-            false,                     // navigable
             RemovalOrder.ANY,          // removalOrder
 
             9,                         // lookup
@@ -44,8 +43,7 @@ public class DSArrayList extends DataStructure {
             EXPLANATION,
             EXAMPLE_USE,
             API_OVERVIEW,
-            CODE_EXAMPLE,
-            "ArrayDeque (faster insert/remove at ends)"
+            CODE_EXAMPLE
         );
     }
 }

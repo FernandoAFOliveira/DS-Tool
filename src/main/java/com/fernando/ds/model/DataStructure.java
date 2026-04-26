@@ -8,7 +8,6 @@ public abstract class DataStructure implements Comparable<DataStructure>{
 	private final boolean keyValue;
 	private final boolean allowsDuplicates;
 	private final boolean indexed;
-	private final boolean navigable;
 	private final RemovalOrder removalOrder;
 
 	// Scoring attributes
@@ -25,7 +24,6 @@ public abstract class DataStructure implements Comparable<DataStructure>{
 	protected final String exampleUse;
 	protected final String apiOverview;
 	protected final String codeExample;
-	protected final String alternative;
 	
 	
 	public DataStructure(
@@ -34,7 +32,6 @@ public abstract class DataStructure implements Comparable<DataStructure>{
 		boolean keyValue,
 		boolean allowsDuplicates,
 		boolean indexed,
-		boolean navigable,
 		RemovalOrder removalOrder,
 
 		int lookup,
@@ -47,14 +44,12 @@ public abstract class DataStructure implements Comparable<DataStructure>{
 		String explanation,
 		String exampleUse,
 		String apiOverview,
-		String codeExample,
-		String alternative
+		String codeExample
 	) {
 		this.name = name;
 		this.keyValue = keyValue;
 		this.allowsDuplicates = allowsDuplicates;
 		this.indexed = indexed;
-		this.navigable = navigable;
 		this.removalOrder = removalOrder;
 
 		this.lookup = lookup;
@@ -68,16 +63,12 @@ public abstract class DataStructure implements Comparable<DataStructure>{
 		this.exampleUse = exampleUse;
 		this.apiOverview = apiOverview;
 		this.codeExample = codeExample;
-		this.alternative = alternative;
 	}
 
 	public String getDisplayName() {
 		return name;
 	}
 
-	public String getAlternative() { 
-		return alternative; 
-	}
 	public String getExplanation() {
 		return explanation;
 	}
@@ -115,12 +106,8 @@ public abstract class DataStructure implements Comparable<DataStructure>{
 		return indexed;
 	}
 
-	public boolean isNavigable() {
-		return navigable;
-	}
-
 	public RemovalOrder getRemovalOrder() {
-		return removalOrder	;
+		return removalOrder;
 	}
 
 	public int getLookup() {
@@ -162,7 +149,6 @@ public abstract class DataStructure implements Comparable<DataStructure>{
 			"Why:\n" + explanation + "\n\n" +
 			"Example:\n" + exampleUse + "\n\n" +
 			"API Overview:\n" + apiOverview + "\n\n" +
-			"Code:\n" + codeExample + "\n\n" +
-			"Alternative:\n" + alternative;
+			"Code:\n" + codeExample + "\n\n" ;
 	}
 }
