@@ -1,4 +1,3 @@
-package com.fernando.ds.gui;
 
 import javax.swing.*;
 import javax.swing.text.*;
@@ -6,8 +5,6 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-import com.fernando.ds.library.QuestionInfo;
-import com.fernando.ds.model.DataStructure;
 public class DetailPanel extends JPanel {
 
     private JTextPane textPane;
@@ -58,6 +55,13 @@ public class DetailPanel extends JPanel {
             StyleConstants.setAlignment(normal, StyleConstants.ALIGN_LEFT);
             StyleConstants.setLeftIndent(normal, 35);
             StyleConstants.setRightIndent(normal, 20);
+
+        bold = textPane.addStyle("Bold", null);
+            StyleConstants.setBold(bold, true);
+            StyleConstants.setAlignment(bold, StyleConstants.ALIGN_LEFT);
+            StyleConstants.setLeftIndent(bold, 20);
+            StyleConstants.setSpaceAbove(bold, 10);
+            StyleConstants.setSpaceBelow(bold, 4);
 
         code = textPane.addStyle("Code", null);
             StyleConstants.setFontFamily(code, "Monospaced");
@@ -163,7 +167,7 @@ public class DetailPanel extends JPanel {
     public void showDiagram(String dsName, Theme theme) {
         String themeStr = (theme == Theme.DARK || theme == Theme.DARK_BLUE) ? "dark" : "light";
         String fileName = dsName.toLowerCase() + "_" + themeStr + ".png";
-        String resourcePath = "/diagrams/" + themeStr + "/" + fileName;
+        String resourcePath = themeStr + "/" + fileName;
 
         try {
             java.net.URL imageUrl = getClass().getResource(resourcePath);

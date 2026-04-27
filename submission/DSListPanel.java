@@ -1,8 +1,3 @@
-package com.fernando.ds.gui;
-
-import com.fernando.ds.library.DataStructureLibrary;
-import com.fernando.ds.model.DataStructure;
-
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;

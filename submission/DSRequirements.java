@@ -1,5 +1,3 @@
-package com.fernando.ds.model;
-
 public class DSRequirements {
 
     private Preference keyValuePreference;

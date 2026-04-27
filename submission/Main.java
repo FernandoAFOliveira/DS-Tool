@@ -1,9 +1,3 @@
-package com.fernando.ds;
-
-import com.fernando.ds.engine.InputCollector;
-import com.fernando.ds.engine.ScoringEngine;
-import com.fernando.ds.model.DSRequirements;
-
 public class Main {
     public static void main(String[] args) {
         InputCollector inputCollector = new InputCollector();

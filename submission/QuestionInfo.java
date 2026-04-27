@@ -1,5 +1,3 @@
-package com.fernando.ds.library;
-
 public class QuestionInfo {
 
     private final String shortText;

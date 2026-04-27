@@ -1,5 +1,3 @@
-package com.fernando.ds.library;
-
 public class QuestionLibrary {
 
     public static final QuestionInfo[] QUESTIONS = {

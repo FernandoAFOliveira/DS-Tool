@@ -1,5 +1,3 @@
-package com.fernando.ds.gui;
-
 import java.awt.Color;
 
 public enum Theme {

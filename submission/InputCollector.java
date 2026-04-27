@@ -1,9 +1,4 @@
-package com.fernando.ds.engine;
-
 import java.util.Scanner;
-
-import com.fernando.ds.model.DSRequirements;
-import com.fernando.ds.model.Preference;
 
 public class InputCollector {
 

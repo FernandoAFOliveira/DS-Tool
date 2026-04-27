@@ -1,15 +1,6 @@
-package com.fernando.ds.engine;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import com.fernando.ds.model.DSRequirements;
-import com.fernando.ds.model.DataStructure;
-import com.fernando.ds.model.Preference;
-import com.fernando.ds.model.RemovalOrder;
-import com.fernando.ds.library.DataStructureLibrary;
-
 
 public class ScoringEngine {
 

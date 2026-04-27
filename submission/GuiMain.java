@@ -1,6 +1,3 @@
-package com.fernando.ds;
-
-import com.fernando.ds.gui.MainFrame;
 import javax.swing.SwingUtilities;
 
 public class GuiMain {

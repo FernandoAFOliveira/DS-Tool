@@ -1,4 +1,3 @@
-package com.fernando.ds.gui;
 
 import javax.swing.JFrame;
 import javax.swing.JMenu;

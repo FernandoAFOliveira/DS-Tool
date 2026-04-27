@@ -1,7 +1,3 @@
-package com.fernando.ds.gui;
-
-import com.fernando.ds.library.QuestionInfo;
-import com.fernando.ds.library.QuestionLibrary;
 import javax.swing.*;
 import java.awt.*;
 import java.util.function.Consumer;
@@ -10,8 +6,6 @@ import java.util.List;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.function.BiConsumer;
-import com.fernando.ds.model.Preference;
-import com.fernando.ds.model.RemovalOrder;
 
 public class QuestionPanel extends JPanel {
 

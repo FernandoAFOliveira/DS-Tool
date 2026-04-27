@@ -1,5 +1,3 @@
-package com.fernando.ds.gui;
-
 import javax.swing.*;
 import java.awt.*;
 
