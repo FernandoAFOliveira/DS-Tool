@@ -4,6 +4,7 @@ import javax.swing.text.*;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
 
 public class DetailPanel extends JPanel {
 
@@ -165,27 +166,29 @@ public class DetailPanel extends JPanel {
     }
 
     public void showDiagram(String dsName, Theme theme) {
+
         String themeStr = (theme == Theme.DARK || theme == Theme.DARK_BLUE) ? "dark" : "light";
         String fileName = dsName.toLowerCase() + "_" + themeStr + ".png";
-        String resourcePath = themeStr + "/" + fileName;
 
         try {
-            java.net.URL imageUrl = getClass().getResource(resourcePath);
+            // Load directly from current working directory
+            File file = new File(fileName);
 
-            if (imageUrl == null) {
+            if (!file.exists()) {
                 diagramLabel.setIcon(null);
                 currentDiagramImage = null;
-                System.out.println("Diagram not found: " + resourcePath);
+                System.out.println("Diagram not found: " + file.getAbsolutePath());
                 return;
             }
 
-            currentDiagramImage = ImageIO.read(imageUrl);
+            currentDiagramImage = ImageIO.read(file);
             resizeDiagram();
 
         } catch (Exception e) {
             diagramLabel.setIcon(null);
             currentDiagramImage = null;
-            System.out.println("Error loading diagram: " + resourcePath);
+            System.out.println("Error loading diagram: " + fileName);
+            e.printStackTrace(); // helpful for debugging
         }
     }
 
