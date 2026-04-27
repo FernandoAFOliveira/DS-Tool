@@ -1,0 +1,37 @@
+%%{init: {'theme': 'base', 'themeVariables': {
+    'background': '#FFFFFF',
+    'primaryColor': '#E3F2FD',
+    'primaryTextColor': '#0D1B2A',
+    'primaryBorderColor': '#1565C0',
+    'lineColor': '#374151',
+    'secondaryColor': '#FFF3E0',
+    'tertiaryColor': '#F3E5F5',
+    'fontFamily': 'Arial'
+}}}%%
+
+flowchart TB
+
+Input["add: banana"] --> Hash["hashCode chooses bucket"]
+Hash --> Bucket2["bucket 2"]
+
+subgraph Table["HashSet: stores unique keys only"]
+    direction TB
+    Bucket0["bucket 0: apple"]
+    Bucket1["bucket 1: kiwi"]
+    Bucket2["bucket 2: banana"]
+    Bucket3["bucket 3: empty"]
+end
+
+Duplicate["add banana again: ignored"] -.-> Bucket2
+Contains["contains banana: fast average search"] -.-> Bucket2
+
+class Bucket0,Bucket1,Bucket2 data
+class Bucket3 warning
+class Input,Hash,Contains action
+class Duplicate note
+
+classDef data fill:#E3F2FD,stroke:#1565C0,stroke-width:2px,color:#0D1B2A;
+classDef focus fill:#FFE0B2,stroke:#EF6C00,stroke-width:3px,color:#111827;
+classDef action fill:#E8F5E9,stroke:#2E7D32,stroke-width:2px,color:#111827;
+classDef note fill:#F3E5F5,stroke:#8E24AA,stroke-width:2px,color:#111827;
+classDef warning fill:#FFEBEE,stroke:#C62828,stroke-width:2px,color:#111827;

@@ -1,0 +1,24 @@
+flowchart TB
+
+subgraph MinHeap["Min-Heap: Java default PriorityQueue"]
+    direction TB
+    A["5: peek and poll"] --> B["10"]
+    A --> C["20"]
+    B --> D["30"]
+    B --> E["40"]
+    C --> F["50"]
+    C --> G["99"]
+end
+
+subgraph MaxHeap["Max-Heap: PriorityQueue with reverse comparator"]
+    direction TB
+    H["99: peek and poll"] --> I["50"]
+    H --> J["40"]
+    I --> K["30"]
+    I --> L["20"]
+    J --> M["10"]
+    J --> N["5"]
+end
+
+MinNote["Default: smallest priority comes out first"] --> MinHeap
+MaxNote["Comparator: largest priority comes out first"] --> MaxHeap

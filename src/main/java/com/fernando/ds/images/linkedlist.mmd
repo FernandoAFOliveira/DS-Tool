@@ -1,0 +1,5 @@
+%% LinkedList: nodes are connected by references, not stored by index
+flowchart LR
+    Head[head] --> N1["Node<br/>data: A<br/>next"] --> N2["Node<br/>data: B<br/>next"] --> N3["Node<br/>data: C<br/>next"] --> Null[null]
+    New["insert/remove near front<br/>changes references"] -.-> Head
+    Search["to reach C, follow links<br/>A -> B -> C"] -.-> N3

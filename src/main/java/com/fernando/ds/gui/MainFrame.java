@@ -15,7 +15,7 @@ public class MainFrame extends JFrame {
         super("Data Structure Advisor");
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(1100, 700);
+        setSize(1100, 900);
         setMinimumSize(new Dimension(900, 600));
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
@@ -78,21 +78,25 @@ public class MainFrame extends JFrame {
         lightThemeItem.addActionListener(e -> {
             ThemeManager.applyTheme(this, Theme.LIGHT);
             detailPanel.applyTheme(Theme.LIGHT);
+            controller.applyTheme(Theme.LIGHT);
         });
 
         softBlueThemeItem.addActionListener(e -> {
             ThemeManager.applyTheme(this, Theme.SOFT_BLUE);
             detailPanel.applyTheme(Theme.SOFT_BLUE);
+            controller.applyTheme(Theme.SOFT_BLUE);
         });
 
         darkThemeItem.addActionListener(e -> {
             ThemeManager.applyTheme(this, Theme.DARK);
             detailPanel.applyTheme(Theme.DARK);
+            controller.applyTheme(Theme.DARK);
         });
 
         darkBlueThemeItem.addActionListener(e -> {
             ThemeManager.applyTheme(this, Theme.DARK_BLUE);
             detailPanel.applyTheme(Theme.DARK_BLUE);
+            controller.applyTheme(Theme.DARK_BLUE);
         });
 
         return menuBar;

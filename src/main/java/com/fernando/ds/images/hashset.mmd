@@ -1,0 +1,15 @@
+%% HashSet: unique values, no guaranteed order
+flowchart TD
+    AddA["add('apple')"] --> HashA[hashCode]
+    AddB["add('banana')"] --> HashB[hashCode]
+    AddA2["add('apple') again"] --> HashA2[hashCode]
+
+    HashA --> B1[Bucket 1]
+    HashA2 --> B1
+    HashB --> B3[Bucket 3]
+
+    B1 --> Apple["apple<br/>stored once"]
+    B3 --> Banana[banana]
+
+    Contains["contains('apple')<br/>hash -> bucket -> compare"] -.-> B1
+    Note["No duplicates<br/>No index order"] -.-> Apple

@@ -1,0 +1,32 @@
+%%{init: {'theme': 'base', 'themeVariables': {
+    'background': '#0F172A',
+    'primaryColor': '#1E293B',
+    'primaryTextColor': '#E5E7EB',
+    'primaryBorderColor': '#38BDF8',
+    'lineColor': '#CBD5E1',
+    'secondaryColor': '#312E81',
+    'tertiaryColor': '#4C1D95',
+    'fontFamily': 'Arial'
+}}}%%
+
+flowchart LR
+
+subgraph AL["ArrayList: indexed storage with extra capacity"]
+    direction LR
+    I0["index 0: 12"] --> I1["index 1: 7"] --> I2["index 2: 25"] --> I3["index 3: 9"] --> I4["empty capacity"] --> I5["empty capacity"]
+end
+
+Get["get(2): direct access"] -.-> I2
+Add["add(14): next free slot"] -.-> I4
+Remove["remove(1): later items shift left"] -.-> I1
+
+class I0,I1,I2,I3 data
+class I4,I5 warning
+class Get,Add action
+class Remove note
+
+classDef data fill:#1E293B,stroke:#38BDF8,stroke-width:2px,color:#E5E7EB;
+classDef focus fill:#78350F,stroke:#F59E0B,stroke-width:3px,color:#FFF7ED;
+classDef action fill:#064E3B,stroke:#34D399,stroke-width:2px,color:#ECFDF5;
+classDef note fill:#4C1D95,stroke:#C084FC,stroke-width:2px,color:#F5F3FF;
+classDef warning fill:#7F1D1D,stroke:#F87171,stroke-width:2px,color:#FEF2F2;

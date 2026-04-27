@@ -1,0 +1,7 @@
+%% Stack: LIFO, last in first out
+flowchart TD
+    Push["push(4)<br/>adds here"] --> Top["TOP<br/>3"]
+    Top --> Mid[2]
+    Mid --> Bottom[1]
+    Bottom --> Base[bottom]
+    Pop["pop()<br/>removes 3 first"] -.-> Top

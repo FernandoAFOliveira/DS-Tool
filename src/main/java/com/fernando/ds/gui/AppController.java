@@ -18,6 +18,7 @@ public class AppController {
     private final DSListPanel dsListPanel;
     private final DetailPanel detailPanel;
     private final QuestionPanel questionPanel;
+    private Theme currentTheme = Theme.LIGHT;
 
     public AppController(
         QuestionPanel questionPanel,
@@ -36,6 +37,15 @@ public class AppController {
 
     private void updateRemovalOrder(QuestionInfo q, RemovalOrder value) {
         requirements.setRemovalOrderPreference(value);
+        refreshDataStructureList();
+    }
+
+    public void applyTheme(Theme theme) {
+        this.currentTheme = theme;
+
+        ThemeManager.applyThemeToComponent(detailPanel, theme);
+        detailPanel.applyTheme(theme);
+
         refreshDataStructureList();
     }
 
@@ -109,8 +119,5 @@ public class AppController {
         refreshDataStructureList();
     }
 
-    public void applyTheme(Theme theme) {
-        ThemeManager.applyThemeToComponent(detailPanel, theme);
-        detailPanel.applyTheme(theme);
-    }
+
     }

@@ -1,0 +1,37 @@
+%%{init: {'theme': 'base', 'themeVariables': {
+    'background': '#0F172A',
+    'primaryColor': '#1E293B',
+    'primaryTextColor': '#E5E7EB',
+    'primaryBorderColor': '#38BDF8',
+    'lineColor': '#CBD5E1',
+    'secondaryColor': '#312E81',
+    'tertiaryColor': '#4C1D95',
+    'fontFamily': 'Arial'
+}}}%%
+
+flowchart TB
+
+Key["key: Anna"] --> Hash["hashCode"] --> Bucket["bucket"]
+Bucket --> Pair["Anna maps to 407-123-4567"]
+
+subgraph Map["HashMap: key-value pairs"]
+    direction TB
+    P1["Bob maps to 321-999-8888"]
+    P2["Anna maps to 407-123-4567"]
+    P3["Kevin maps to 555-444-3333"]
+end
+
+Get["get(Anna): returns value"] -.-> P2
+Put["put(Anna, new value): replaces old value"] -.-> P2
+Keys["keySet(): loop through keys"] -.-> Map
+
+class Key,Hash,Bucket action
+class Pair,P1,P2,P3 data
+class Get,Put focus
+class Keys note
+
+classDef data fill:#1E293B,stroke:#38BDF8,stroke-width:2px,color:#E5E7EB;
+classDef focus fill:#78350F,stroke:#F59E0B,stroke-width:3px,color:#FFF7ED;
+classDef action fill:#064E3B,stroke:#34D399,stroke-width:2px,color:#ECFDF5;
+classDef note fill:#4C1D95,stroke:#C084FC,stroke-width:2px,color:#F5F3FF;
+classDef warning fill:#7F1D1D,stroke:#F87171,stroke-width:2px,color:#FEF2F2;
