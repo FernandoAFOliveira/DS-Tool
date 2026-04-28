@@ -90,25 +90,21 @@ public class MainFrame extends JFrame {
 
         lightThemeItem.addActionListener(e -> {
             ThemeManager.applyTheme(this, Theme.LIGHT);
-            detailPanel.applyTheme(Theme.LIGHT);
             controller.applyTheme(Theme.LIGHT);
         });
 
         softBlueThemeItem.addActionListener(e -> {
             ThemeManager.applyTheme(this, Theme.SOFT_BLUE);
-            detailPanel.applyTheme(Theme.SOFT_BLUE);
             controller.applyTheme(Theme.SOFT_BLUE);
         });
 
         darkThemeItem.addActionListener(e -> {
             ThemeManager.applyTheme(this, Theme.DARK);
-            detailPanel.applyTheme(Theme.DARK);
             controller.applyTheme(Theme.DARK);
         });
 
         darkBlueThemeItem.addActionListener(e -> {
             ThemeManager.applyTheme(this, Theme.DARK_BLUE);
-            detailPanel.applyTheme(Theme.DARK_BLUE);
             controller.applyTheme(Theme.DARK_BLUE);
         });
 

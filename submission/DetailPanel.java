@@ -128,7 +128,7 @@ public class DetailPanel extends JPanel {
 
             appendSection(doc, "Description:", ds.getExplanation(), normal);
 
-            appendSection(doc, "Example:", ds.getExampleUse(), normal);
+            appendSection(doc, "Best used when:", ds.getExampleUse(), normal);
 
             appendSection(doc, "API Overview:", ds.getApiOverview(), normal);
 
