@@ -1,3 +1,17 @@
+/*
+ * Fernando Fonteles Oliveira
+ * UCF ID: 5676172
+ * 2026/Apr/26
+ * COP 3330 Object-Oriented Programming
+ * Professor: Arup Guha
+ * Programming Assignment 10 Free Choice Project * 
+ * Data Structure Advisor Submission *
+ * File: InputCollector.java
+ *
+ * This file is part of a Java Swing application that helps students compare
+ * common Java data structures based on user-selected requirements.
+ */
+
 import java.util.Scanner;
 
 public class InputCollector {
@@ -13,50 +27,56 @@ public class InputCollector {
     }
 
     public DSRequirements collectRequirements() {
-        boolean keyValue = askYesNo("Do you need Key-Value mapping? (y/n): ");
-        boolean allowDuplicates = askYesNo("Do you allow duplicate elements? (y/n): ");
-        boolean sorted = askYesNo("Do you need elements sorted (e.g., natural order)? (y/n): ");
-
-        System.out.println("\n--- Performance Priorities (1-5, where 5 is critical) ---");
-
-        int lookup = askPriority("Importance of Lookup Speed: ", 1, 5);
-        int addDelete = askPriority("Importance of Add/Delete Speed: ", 1, 5);
-        int memory = askPriority("Importance of Memory Efficiency: ", 1, 5);
-
         DSRequirements req = new DSRequirements();
 
-        // Convert boolean → Preference
         req.setKeyValuePreference(
-            keyValue ? Preference.YES : Preference.NO
+            askPreference("Do you need key-value mapping?")
         );
 
         req.setDuplicatePreference(
-            allowDuplicates ? Preference.YES : Preference.NO
+            askPreference("Do you allow duplicate elements?")
         );
 
         req.setSortedPreference(
-            sorted ? Preference.YES : Preference.NO
+            askPreference("Do you need elements sorted?")
         );
 
-        // Set weights
-        req.setLookupWeight(lookup);
-        req.setAddDeleteWeight(addDelete);
-        req.setMemoryWeight(memory);
+        req.setIndexedPreference(
+            askPreference("Do you need indexed access?")
+        );
+
+        req.setRemovalOrderPreference(askRemovalOrder());
+
+        System.out.println("\n--- Performance Priorities (0-5, where 5 is critical) ---");
+
+        req.setLookupWeight(askPriority("Importance of Lookup Speed: ", 0, 5));
+        req.setAddDeleteWeight(askPriority("Importance of Add/Delete Speed: ", 0, 5));
+        req.setMemoryWeight(askPriority("Importance of Memory Efficiency: ", 0, 5));
 
         return req;
     }
 
-    private boolean askYesNo(String prompt) {
+    private Preference askPreference(String prompt) {
         while (true) {
-            System.out.print(prompt);
+            System.out.print(prompt + " (y/n/a): ");
             String input = scanner.nextLine().trim().toLowerCase();
 
-            if (input.equals("y") || input.equals("yes")) return true;
-            if (input.equals("n") || input.equals("no")) return false;
+            if (input.equals("y") || input.equals("yes")) {
+                return Preference.YES;
+            }
 
-            System.out.println("Invalid input. Please enter y or n.");
+            if (input.equals("n") || input.equals("no")) {
+                return Preference.NO;
+            }
+
+            if (input.equals("a") || input.equals("any")) {
+                return Preference.ANY;
+            }
+
+            System.out.println("Invalid input. Please enter y, n, or a.");
         }
     }
+
 
     private int askPriority(String prompt, int min, int max) {
         while (true) {
@@ -95,6 +115,32 @@ public class InputCollector {
         }
     }
 
+    private RemovalOrder askRemovalOrder() {
+        System.out.println("\nRemoval order preference:");
+        System.out.println("1. Any");
+        System.out.println("2. FIFO");
+        System.out.println("3. LIFO");
+        System.out.println("4. Double-ended");
+        System.out.println("5. Priority");
+
+        int choice = askPriority("Choose 1-5: ", 1, 5);
+
+        switch (choice) {
+            case 1:
+                return RemovalOrder.ANY;
+            case 2:
+                return RemovalOrder.FIFO;
+            case 3:
+                return RemovalOrder.LIFO;
+            case 4:
+                return RemovalOrder.DOUBLE_ENDED;
+            case 5:
+                return RemovalOrder.PRIORITY;
+            default:
+                return RemovalOrder.ANY;
+        }
+    }
+
     public int askMenuChoice() {
         while (true) {
             System.out.println("\n--- Data Structure Advisor ---");
@@ -122,4 +168,6 @@ public class InputCollector {
         public void close() {
         scanner.close();
     }
+
+    
 }

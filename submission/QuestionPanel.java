@@ -1,3 +1,18 @@
+/*
+ * Fernando Fonteles Oliveira
+ * UCF ID: 5676172
+ * 2026/Apr/26
+ * COP 3330 Object-Oriented Programming
+ * Professor: Arup Guha
+ * Programming Assignment 10 Free Choice Project * 
+ * Data Structure Advisor Submission *
+ * File: QuestionPanel.java
+ *
+ * QuestionPanel builds the user input controls.
+ * It uses radio buttons and sliders so the user can describe what kind of
+ * data structure behavior is needed.
+ */
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.function.Consumer;

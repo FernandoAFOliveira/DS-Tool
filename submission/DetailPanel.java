@@ -1,3 +1,18 @@
+/*
+ * Fernando Fonteles Oliveira
+ * UCF ID: 5676172
+ * 2026/Apr/26
+ * COP 3330 Object-Oriented Programming
+ * Professor: Arup Guha
+ * Programming Assignment 10 Free Choice Project * 
+ * Data Structure Advisor Submission *
+ * File: DetailPanel.java
+ *
+ * DetailPanel displays the selected data structure, explanation text,
+ * example code, and diagram image.
+ * ImageIO is used to load PNG diagrams from files so the flattened
+ * submission version does not depend on Maven resources.
+ */
 
 import javax.swing.*;
 import javax.swing.text.*;
@@ -171,7 +186,8 @@ public class DetailPanel extends JPanel {
         String fileName = dsName.toLowerCase() + "_" + themeStr + ".png";
 
         try {
-            // Load directly from current working directory
+            // The submission version loads PNG files directly from the same folder.
+            // This avoids depending on Maven resource paths after the files are flattened.
             File file = new File(fileName);
 
             if (!file.exists()) {

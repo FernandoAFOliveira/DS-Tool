@@ -1,3 +1,18 @@
+/*
+ * Fernando Fonteles Oliveira
+ * UCF ID: 5676172
+ * 2026/Apr/26
+ * COP 3330 Object-Oriented Programming
+ * Professor: Arup Guha
+ * Programming Assignment 10 Free Choice Project * 
+ * Data Structure Advisor Submission *
+ * File: DataStructure.java
+ *
+ * DataStructure is the abstract base class for all supported structures.
+ * It stores shared properties such as lookup speed, duplicate behavior,
+ * ordering, and display text.
+ */
+
 public abstract class DataStructure implements Comparable<DataStructure>{
 	
 	private final String name;
@@ -141,12 +156,11 @@ public abstract class DataStructure implements Comparable<DataStructure>{
 		return this.name.compareTo(other.name);
 	}
 
-	@Override
-	public String toString() {
-		return "Best choice: " + name + "\n\n" +
-			"Why:\n" + explanation + "\n\n" +
-			"Example:\n" + exampleUse + "\n\n" +
-			"API Overview:\n" + apiOverview + "\n\n" +
-			"Code:\n" + codeExample + "\n\n" ;
-	}
+@Override
+public String toString() {
+    return "\n"+ explanation + "\n\n" +
+           exampleUse + "\n\n" +
+           "API Overview:\n" + apiOverview + "\n\n" +
+           "Code:\n" + codeExample + "\n\n";
+}
 }

@@ -1,3 +1,18 @@
+/*
+ * Fernando Fonteles Oliveira
+ * UCF ID: 5676172
+ * 2026/Apr/26
+ * COP 3330 Object-Oriented Programming
+ * Professor: Arup Guha
+ * Programming Assignment 10 Free Choice Project * 
+ * Data Structure Advisor Submission *
+ * File: ThemeManager.java
+ *
+ * ThemeManager applies a selected theme to Swing components.
+ * Keeping this logic in one class avoids repeating color-setting code
+ * throughout the GUI.
+ */
+
 import javax.swing.*;
 import java.awt.*;
 

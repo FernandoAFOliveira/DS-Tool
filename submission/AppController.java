@@ -1,3 +1,18 @@
+/*
+ * Fernando Fonteles Oliveira
+ * UCF ID: 5676172
+ * 2026/Apr/26
+ * COP 3330 Object-Oriented Programming
+ * Professor: Arup Guha
+ * Programming Assignment 10 Free Choice Project * 
+ * Data Structure Advisor Submission *
+ * File: AppController.java
+ *
+ * AppController connects the GUI to the program logic.
+ * It listens for user choices, updates the current requirements, asks the
+ * scoring engine to evaluate the data structures, and refreshes the display.
+ */
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

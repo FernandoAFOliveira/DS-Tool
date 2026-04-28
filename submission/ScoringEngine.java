@@ -1,3 +1,18 @@
+/*
+ * Fernando Fonteles Oliveira
+ * UCF ID: 5676172
+ * 2026/Apr/26
+ * COP 3330 Object-Oriented Programming
+ * Professor: Arup Guha
+ * Programming Assignment 10 Free Choice Project * 
+ * Data Structure Advisor Submission *
+ * File: ScoringEngine.java
+ *
+ * ScoringEngine contains the recommendation logic.
+ * It filters out data structures that violate required features and then
+ * calculates a score using the user's performance weights.
+ */
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -35,13 +50,15 @@ public class ScoringEngine {
 
         // Single best → print full details
         if (bestCandidates.size() == 1) {
+            System.out.println("\nBest Choice(s):");
+            System.out.println(bestCandidates.get(0).getName());
+            System.out.println();
             System.out.println(bestCandidates.get(0));
             return;
         }
 
         // Multiple → show names only
-        System.out.println("\n=== Multiple Best Candidates ===");
-        System.out.println("Select one to see details:\n");
+        System.out.println("\nBest Choice(s):");
 
         for (int i = 0; i < bestCandidates.size(); i++) {
             System.out.println((i + 1) + ". " + bestCandidates.get(i).getName());
@@ -58,6 +75,8 @@ public class ScoringEngine {
         double score = 0.0;
         
         // Key-value mapping
+        // A score of -1 means the data structure fails a required feature
+        // and should not appear in the recommendation list.
         if (req.getKeyValuePreference() == Preference.YES && !ds.isKeys()) {
             return -1.0;
         }

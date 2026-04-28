@@ -11,7 +11,6 @@ import com.fernando.ds.model.DataStructure;
 public class DetailPanel extends JPanel {
 
     private JTextPane textPane;
-    private Style bold;
     private Style code;
     private Style normal;
     private Style title;

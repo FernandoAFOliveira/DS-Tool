@@ -1,3 +1,17 @@
+/*
+ * Fernando Fonteles Oliveira
+ * UCF ID: 5676172
+ * 2026/Apr/26
+ * COP 3330 Object-Oriented Programming
+ * Professor: Arup Guha
+ * Programming Assignment 10 Free Choice Project * 
+ * Data Structure Advisor Submission *
+ * File: MainFrame.java
+ *
+ * MainFrame creates the main application window.
+ * It owns the outer JFrame, menu bar, and main layout, but delegates the
+ * actual interface sections to smaller panel classes.
+ */
 
 import javax.swing.JFrame;
 import javax.swing.JMenu;

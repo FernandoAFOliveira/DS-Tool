@@ -1,3 +1,17 @@
+/*
+ * Fernando Fonteles Oliveira
+ * UCF ID: 5676172
+ * 2026/Apr/26
+ * COP 3330 Object-Oriented Programming
+ * Professor: Arup Guha
+ * Programming Assignment 10 Free Choice Project * 
+ * Data Structure Advisor Submission *
+ * File: Theme.java
+ *
+ * Theme stores the color choices used by the interface.
+ * An enum is used because the program only supports a fixed set of themes.
+ */
+
 import java.awt.Color;
 
 public enum Theme {

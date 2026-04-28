@@ -1,3 +1,17 @@
+/*
+ * Fernando Fonteles Oliveira
+ * UCF ID: 5676172
+ * 2026/Apr/26
+ * COP 3330 Object-Oriented Programming
+ * Professor: Arup Guha
+ * Programming Assignment 10 Free Choice Project * 
+ * Data Structure Advisor Submission *
+ * File: DSListPanel.java
+ *
+ * DSListPanel displays the ranked list of valid data structures.
+ * It keeps list display code separate from scoring and requirement logic.
+ */
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;

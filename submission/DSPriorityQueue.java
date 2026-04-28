@@ -1,4 +1,19 @@
 
+/*
+ * Fernando Fonteles Oliveira
+ * UCF ID: 5676172
+ * 2026/Apr/26
+ * COP 3330 Object-Oriented Programming
+ * Professor: Arup Guha
+ * Programming Assignment 10 Free Choice Project * 
+ * Data Structure Advisor Submission *
+ * File: DSPriorityQueue.java
+ *
+ * * DSPriorityQueue describes the PriorityQueue option used by the advisor.
+ * It provides the structure's behavior ratings, explanation, common methods,
+ * and example code shown in the GUI.
+ */
+
 public class DSPriorityQueue extends DataStructure {
 
     private static final String EXPLANATION =
