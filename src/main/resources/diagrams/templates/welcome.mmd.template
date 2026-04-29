@@ -1,0 +1,32 @@
+%%{init: {
+  'theme': 'base',
+  'flowchart': {
+    'htmlLabels': true,
+    'nodeSpacing': 90,
+    'rankSpacing': 70
+  },
+  'themeVariables': {
+    'background': '{{background}}',
+    'mainBkg': '{{mainBkg}}',
+    'primaryColor': '{{primaryColor}}',
+    'primaryTextColor': '{{textColor}}',
+    'primaryBorderColor': '{{borderColor}}',
+    'lineColor': '{{lineColor}}'
+  }
+}}%%
+
+flowchart LR
+    Q["1<br/><b>Answer questions</b>"]:::action
+    F["2<br/><b>Filter structures</b>"]:::data
+    S["3<br/><b>Select one</b>"]:::focus
+    L["4<br/><b>Learn usage</b>"]:::action
+
+    Q --> F --> S --> L
+
+classDef title fill:{{background}},stroke:{{background}},color:{{textColor}},font-size:30px,font-weight:bold;
+classDef subtitle fill:{{background}},stroke:{{background}},color:{{lineColor}},font-size:18px,font-style:italic;
+classDef data fill:{{dataFill}},stroke:{{dataStroke}},color:{{dataText}},font-size:18px;
+classDef focus fill:{{focusFill}},stroke:{{focusStroke}},color:{{focusText}},stroke-width:2px,font-size:18px;
+classDef action fill:{{actionFill}},stroke:{{actionStroke}},color:{{actionText}},font-size:18px;
+classDef note fill:{{noteFill}},stroke:{{noteStroke}},color:{{noteText}},font-size:16px;
+classDef warning fill:{{warningFill}},stroke:{{warningStroke}},color:{{warningText}},font-size:16px;

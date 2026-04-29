@@ -1,35 +1,47 @@
-%%{init: {'theme': 'base', 'look': 'classic', 'themeVariables': {
-    'background': '{{background}}',
-    'mainBkg': '{{mainBkg}}',
-    'primaryColor': '{{primaryColor}}',
-    'primaryTextColor': '{{primaryTextColor}}',
-    'primaryBorderColor': '{{primaryBorderColor}}',
-    'lineColor': '{{lineColor}}',
-    'secondaryColor': '{{secondaryColor}}',
-    'tertiaryColor': '{{tertiaryColor}}',
-    'fontFamily': 'Arial'
-}}}%%
+%%{init: {
+    'theme': 'base',
+    'look': 'classic',
 
-%% LinkedList: nodes are connected by references, not stored by index
-flowchart LR
-    subgraph LL [LinkedList Nodes]
+    'flowchart': {
+        'nodeSpacing': 50,
+        'rankSpacing': 60,
+        'htmlLabels': true
+    },
+
+    'fontSize': 18,
+
+    'themeVariables': {
+        'background': '{{background}}',
+        'mainBkg': '{{mainBkg}}',
+        'primaryColor': '{{primaryColor}}',
+        'primaryTextColor': '{{textColor}}',
+        'primaryBorderColor': '{{borderColor}}',
+        'lineColor': '{{lineColor}}'
+    }
+}}%%
+
+%% LinkedList: nodes connected by references instead of indexes
+flowchart TB
+    Title["<b>LinkedList</b>"]:::title
+    Subtitle["Nodes store data plus references to the next node"]:::subtitle
+    Title ~~~ Subtitle
+
+    subgraph Main[" "]
         direction LR
-        N1["Node 1"] -- next --> N2["Node 2"]
-        N2 -- next --> N3["Node 3"]
+        Head["head"]:::focus --> N1["Node<br/><b>A</b>"]:::data
+        N1 -- next --> N2["Node<br/><b>B</b>"]:::data
+        N2 -- next --> N3["Node<br/><b>C</b>"]:::data
+        N3 -- next --> Null["null"]:::warning
     end
-    
-    add["add(0)"] -.-> H["Head"]
-    H --> N1
-    
-    classDef data fill:{{dataFill}},stroke:{{dataStroke}},color:{{dataText}};
-    classDef action fill:{{actionFill}},stroke:{{actionStroke}},color:{{actionText}};
-    
-    class N1,N2,N3,H data;
-    class add action;
 
+    Insert["addFirst(X)"]:::action -.-> Head
+    Note["No shifting array cells<br/>Traversal follows links"]:::note -.-> N2
 
-classDef data fill:{{dataFill}},stroke:{{dataStroke}},color:{{dataText}};
-classDef focus fill:{{focusFill}},stroke:{{focusStroke}},color:{{focusText}};
-classDef action fill:{{actionFill}},stroke:{{actionStroke}},color:{{actionText}};
-classDef note fill:{{noteFill}},stroke:{{noteStroke}},color:{{noteText}};
-classDef warning fill:{{warningFill}},stroke:{{warningStroke}},color:{{warningText}};
+classDef title    fill:{{background}},stroke:{{background}},color:{{dataText}},font-size:26px,font-weight:bold;
+classDef subtitle fill:{{background}},stroke:{{background}},color:{{lineColor}},font-size:16px,font-style:italic;
+
+classDef data     fill:{{dataFill}},stroke:{{dataStroke}},color:{{dataText}},font-size:16px;
+classDef focus    fill:{{focusFill}},stroke:{{focusStroke}},color:{{focusText}},stroke-width:3px,font-size:16px;
+classDef action   fill:{{actionFill}},stroke:{{actionStroke}},color:{{actionText}},font-size:16px;
+classDef note     fill:{{noteFill}},stroke:{{noteStroke}},color:{{noteText}},font-size:15px;
+classDef warning  fill:{{warningFill}},stroke:{{warningStroke}},color:{{warningText}},font-size:15px;

@@ -1,29 +1,48 @@
-%%{init: {'theme': 'base', 'look': 'classic', 'themeVariables': {
-    'background': '{{background}}',
-    'mainBkg': '{{mainBkg}}',
-    'primaryColor': '{{primaryColor}}',
-    'primaryTextColor': '{{primaryTextColor}}',
-    'primaryBorderColor': '{{primaryBorderColor}}',
-    'lineColor': '{{lineColor}}',
-    'secondaryColor': '{{secondaryColor}}',
-    'tertiaryColor': '{{tertiaryColor}}',
-    'fontFamily': 'Arial'
-}}}%%
+%%{init: {
+    'theme': 'base',
+    'look': 'classic',
 
-flowchart TD
-    P1["1 (High)"] --> P2["3"]
-    P1 --> P3["2"]
-    P2 --> P4["5"]
-    P2 --> P5["4"]
+    'flowchart': {
+        'nodeSpacing': 50,
+        'rankSpacing': 60,
+        'htmlLabels': true
+    },
 
-    classDef data fill:{{dataFill}},stroke:{{dataStroke}},color:{{dataText}};
-    classDef warning fill:{{warningFill}},stroke:{{warningStroke}},color:{{warningText}};
+    'fontSize': 18,
 
-    class P1,P2,P3,P4,P5 data;
+    'themeVariables': {
+        'background': '{{background}}',
+        'mainBkg': '{{mainBkg}}',
+        'primaryColor': '{{primaryColor}}',
+        'primaryTextColor': '{{textColor}}',
+        'primaryBorderColor': '{{borderColor}}',
+        'lineColor': '{{lineColor}}'
+    }
+}}%%
 
+%% PriorityQueue: highest priority item is removed first
+flowchart TB
+    Title["<b>PriorityQueue</b>"]:::title
+    Subtitle["Usually drawn as a heap: poll() removes the highest-priority item"]:::subtitle
+    Title ~~~ Subtitle
 
-classDef data fill:{{dataFill}},stroke:{{dataStroke}},color:{{dataText}};
-classDef focus fill:{{focusFill}},stroke:{{focusStroke}},color:{{focusText}};
-classDef action fill:{{actionFill}},stroke:{{actionStroke}},color:{{actionText}};
-classDef note fill:{{noteFill}},stroke:{{noteStroke}},color:{{noteText}};
-classDef warning fill:{{warningFill}},stroke:{{warningStroke}},color:{{warningText}};
+    subgraph Main["Heap view"]
+        direction TB
+        P1["1<br/>highest"]:::focus --> P2["3"]:::data
+        P1 --> P3["2"]:::data
+        P2 --> P4["5"]:::data
+        P2 --> P5["4"]:::data
+    end
+
+    Add["add(0)"]:::action -.-> P1
+    Poll["poll() removes 1"]:::warning -.-> P1
+    Note["Not fully sorted internally<br/>Only the next item is guaranteed"]:::note -.-> Main
+
+classDef title    fill:{{background}},stroke:{{background}},color:{{dataText}},font-size:26px,font-weight:bold;
+classDef subtitle fill:{{background}},stroke:{{background}},color:{{lineColor}},font-size:16px,font-style:italic;
+
+classDef data     fill:{{dataFill}},stroke:{{dataStroke}},color:{{dataText}},font-size:16px;
+classDef focus    fill:{{focusFill}},stroke:{{focusStroke}},color:{{focusText}},stroke-width:3px,font-size:16px;
+classDef action   fill:{{actionFill}},stroke:{{actionStroke}},color:{{actionText}},font-size:16px;
+classDef note     fill:{{noteFill}},stroke:{{noteStroke}},color:{{noteText}},font-size:15px;
+classDef warning  fill:{{warningFill}},stroke:{{warningStroke}},color:{{warningText}},font-size:15px;

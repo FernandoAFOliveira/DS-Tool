@@ -2,21 +2,110 @@
 <html>
 <head>
     <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
-</head>
-    <body>
-        <div id="diagram" class="mermaid"></div>
-        <script>
-            mermaid.initialize({ startOnLoad: false });
 
-            window.renderDiagram = function(mmdSource, bgColor) {
-                const container = document.getElementById('diagram');
-                
-                document.body.style.backgroundColor = bgColor;
-                
-                container.innerHTML = '<div class="mermaid">' + mmdSource + '</div>';
-                
-                mermaid.init(undefined, container.querySelector('.mermaid'));
-            };
-        </script>
-    </body>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            display: flex;
+            flex-direction: column; /* 🔥 vertical layout */
+        }
+
+        /* 🔷 HEADER BAR */
+        #header {
+            height: 70px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center; /* center title */
+            position: relative;
+
+            background: rgba(0, 0, 0, 0.15); /* subtle overlay */
+            backdrop-filter: blur(4px);      /* modern glass look */
+        }
+
+        /* Title */
+        #title {
+            font-size: 28px;
+            font-weight: bold;
+            color: white;
+        }
+
+        /* Logo (top-right inside header) */
+        #logo {
+            position: absolute;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+        }
+
+        /* Diagram area */
+        #diagram {
+            flex: 1; /* 🔥 takes remaining space */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Mermaid */
+        .mermaid {
+            width: 95%;
+        }
+
+        .mermaid svg {
+            width: 100% !important;
+            height: auto !important;
+            max-height: 85vh;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ✅ LOGO -->
+    <img id="logo" src="icon.png">
+
+    <div id="header">
+        <div id="title">Data Structure Advisor</div>
+    </div>
+
+    <div id="diagram"></div>
+
+    <script>
+        mermaid.initialize({ startOnLoad: false });
+
+        function isLightColor(hex) {
+            hex = hex.replace("#", "");
+            const r = parseInt(hex.substring(0, 2), 16);
+            const g = parseInt(hex.substring(2, 4), 16);
+            const b = parseInt(hex.substring(4, 6), 16);
+
+            const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+            return brightness > 150;
+        }
+
+        window.renderDiagram = function(mmdSource, bgColor) {
+            document.body.style.backgroundColor = bgColor;
+
+            const header = document.getElementById("header");
+            const title = document.getElementById("title");
+
+            if (isLightColor(bgColor)) {
+                header.style.background = "rgba(0, 0, 0, 0.12)";
+                title.style.color = "#111111";
+            } else {
+                header.style.background = "rgba(255, 255, 255, 0.05)";
+                title.style.color = "#ffffff";
+            }
+
+            const container = document.getElementById('diagram');
+            container.innerHTML = '<div class="mermaid">' + mmdSource + '</div>';
+
+            mermaid.init(undefined, container.querySelector('.mermaid'));
+        };
+    </script>
+
+</body>
 </html>

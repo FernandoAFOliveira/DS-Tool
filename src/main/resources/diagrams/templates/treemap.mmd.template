@@ -1,29 +1,47 @@
-%%{init: {'theme': 'base', 'look': 'classic', 'themeVariables': {
-    'background': '{{background}}',
-    'mainBkg': '{{mainBkg}}',
-    'primaryColor': '{{primaryColor}}',
-    'primaryTextColor': '{{primaryTextColor}}',
-    'primaryBorderColor': '{{primaryBorderColor}}',
-    'lineColor': '{{lineColor}}',
-    'secondaryColor': '{{secondaryColor}}',
-    'tertiaryColor': '{{tertiaryColor}}',
-    'fontFamily': 'Arial'
-}}}%%
+%%{init: {
+    'theme': 'base',
+    'look': 'classic',
+
+    'flowchart': {
+        'nodeSpacing': 50,
+        'rankSpacing': 60,
+        'htmlLabels': true
+    },
+
+    'fontSize': 18,
+
+    'themeVariables': {
+        'background': '{{background}}',
+        'mainBkg': '{{mainBkg}}',
+        'primaryColor': '{{primaryColor}}',
+        'primaryTextColor': '{{textColor}}',
+        'primaryBorderColor': '{{borderColor}}',
+        'lineColor': '{{lineColor}}'
+    }
+}}%%
 
 %% TreeMap: sorted keys, each key maps to one value
-flowchart TD
-    Root["Root: K=10"] --> L["Left: K=5"]
-    Root --> R["Right: K=20"]
-    L --> LL["K=2"]
-    L --> LR["K=7"]
+flowchart TB
+    Title["<b>TreeMap</b>"]:::title
+    Subtitle["A sorted map: keys stay ordered and each key points to one value"]:::subtitle
+    Title ~~~ Subtitle
 
-    classDef data fill:{{dataFill}},stroke:{{dataStroke}},color:{{dataText}};
-    
-    class Root,L,R,LL,LR data;
+    subgraph Main["Keys stored in sorted order"]
+        direction TB
+        Root["key 10<br/>value: M"]:::focus --> L["key 5<br/>value: A"]:::data
+        Root --> R["key 20<br/>value: Z"]:::data
+        L --> LL["key 2<br/>value: B"]:::data
+        L --> LR["key 7<br/>value: C"]:::data
+    end
 
+    Put["put(7, C)"]:::action -.-> LR
+    Order["keySet() iterates<br/>2, 5, 7, 10, 20"]:::note -.-> Main
 
-classDef data fill:{{dataFill}},stroke:{{dataStroke}},color:{{dataText}};
-classDef focus fill:{{focusFill}},stroke:{{focusStroke}},color:{{focusText}};
-classDef action fill:{{actionFill}},stroke:{{actionStroke}},color:{{actionText}};
-classDef note fill:{{noteFill}},stroke:{{noteStroke}},color:{{noteText}};
-classDef warning fill:{{warningFill}},stroke:{{warningStroke}},color:{{warningText}};
+classDef title    fill:{{background}},stroke:{{background}},color:{{dataText}},font-size:26px,font-weight:bold;
+classDef subtitle fill:{{background}},stroke:{{background}},color:{{lineColor}},font-size:16px,font-style:italic;
+
+classDef data     fill:{{dataFill}},stroke:{{dataStroke}},color:{{dataText}},font-size:16px;
+classDef focus    fill:{{focusFill}},stroke:{{focusStroke}},color:{{focusText}},stroke-width:3px,font-size:16px;
+classDef action   fill:{{actionFill}},stroke:{{actionStroke}},color:{{actionText}},font-size:16px;
+classDef note     fill:{{noteFill}},stroke:{{noteStroke}},color:{{noteText}},font-size:15px;
+classDef warning  fill:{{warningFill}},stroke:{{warningStroke}},color:{{warningText}},font-size:15px;

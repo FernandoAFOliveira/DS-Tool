@@ -46,6 +46,20 @@ public enum Theme {
     public Color getBackground() {
         return background;
     }
+    
+    public String getBackgroundHex() {
+        return String.format("#%02x%02x%02x",
+                background.getRed(),
+                background.getGreen(),
+                background.getBlue());
+    }
+
+    public String toHex(Color color) {
+        return String.format("#%02x%02x%02x",
+                color.getRed(),
+                color.getGreen(),
+                color.getBlue());
+    }
 
     public Color getForeground() {
         return foreground;

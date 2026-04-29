@@ -1,34 +1,41 @@
-%%{init: {'theme': 'base', 'look': 'classic', 'themeVariables': {
-    'background': '{{background}}',
-    'mainBkg': '{{mainBkg}}',
-    'primaryColor': '{{primaryColor}}',
-    'primaryTextColor': '{{primaryTextColor}}',
-    'primaryBorderColor': '{{primaryBorderColor}}',
-    'lineColor': '{{lineColor}}',
-    'secondaryColor': '{{secondaryColor}}',
-    'tertiaryColor': '{{tertiaryColor}}',
-    'fontFamily': 'Arial'
-}}}%%
+%%{init: {
+    'theme': 'base',
+    'look': 'classic',
 
-%% HashMap: keys map to values using hashing
-flowchart LR
-    Put["put('Bob', 4071234567)"] --> Hash["hash key<br/>'Bob'"] --> Bucket[Bucket]
-    Bucket --> Pair["Entry<br/>key: Bob<br/>value: 4071234567"]
+    'flowchart': {
+        'nodeSpacing': 50,
+        'rankSpacing': 60,
+        'htmlLabels': true
+    },
 
-    Get["get('Bob')"] --> Hash2["hash key<br/>'Bob'"] --> Bucket
-    Pair --> Value["returns value<br/>4071234567"]
+    'fontSize': 18,
 
-    Update["put('Bob', newValue)<br/>same key replaces value"] -.-> Pair
-    Rule["Keys are unique<br/>Values may repeat"] -.-> Pair
+    'themeVariables': {
+        'background': '{{background}}',
+        'mainBkg': '{{mainBkg}}',
+        'primaryColor': '{{primaryColor}}',
+        'primaryTextColor': '{{textColor}}',
+        'primaryBorderColor': '{{borderColor}}',
+        'lineColor': '{{lineColor}}'
+    }
+}}%%
 
-class Hash,Hash2,Bucket data
-class Pair,Value focus
-class Put,Get,Update action
-class Rule note
+%% HashMap: unique keys map to values using hashing
+flowchart TB
+    Title["<b>HashMap</b>"]:::title
+    Subtitle["Each unique key maps<br/>to one value<br/>put replaces value"]:::subtitle
+    Title ~~~ Subtitle
 
+    Put["put('Bob', 4071234567)"]:::action --> Hash["hash('Bob')"]:::data --> Bucket["bucket"]:::data --> Pair["Entry<br/><b>key:</b> Bob<br/><b>value:</b> 4071234567"]:::focus
+    Get["get('Bob')"]:::action --> Hash2["hash('Bob')"]:::data --> Bucket
+    Pair --> Value["returns<br/>4071234567"]:::focus
+    Rule["Keys are unique<br/>Values may repeat"]:::note -.-> Pair
 
-classDef data fill:{{dataFill}},stroke:{{dataStroke}},color:{{dataText}};
-classDef focus fill:{{focusFill}},stroke:{{focusStroke}},color:{{focusText}};
-classDef action fill:{{actionFill}},stroke:{{actionStroke}},color:{{actionText}};
-classDef note fill:{{noteFill}},stroke:{{noteStroke}},color:{{noteText}};
-classDef warning fill:{{warningFill}},stroke:{{warningStroke}},color:{{warningText}};
+classDef title    fill:{{background}},stroke:{{background}},color:{{dataText}},font-size:26px,font-weight:bold;
+classDef subtitle fill:{{background}},stroke:{{background}},color:{{lineColor}},font-size:16px,font-style:italic;
+
+classDef data     fill:{{dataFill}},stroke:{{dataStroke}},color:{{dataText}},font-size:16px;
+classDef focus    fill:{{focusFill}},stroke:{{focusStroke}},color:{{focusText}},stroke-width:3px,font-size:16px;
+classDef action   fill:{{actionFill}},stroke:{{actionStroke}},color:{{actionText}},font-size:16px;
+classDef note     fill:{{noteFill}},stroke:{{noteStroke}},color:{{noteText}},font-size:15px;
+classDef warning  fill:{{warningFill}},stroke:{{warningStroke}},color:{{warningText}},font-size:15px;

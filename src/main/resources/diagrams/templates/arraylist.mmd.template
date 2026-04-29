@@ -1,38 +1,49 @@
-%%{init: {'theme': 'base', 'look': 'classic', 'themeVariables': {
-    'background': '{{background}}',
-    'mainBkg': '{{mainBkg}}',
-    'primaryColor': '{{primaryColor}}',
-    'primaryTextColor': '{{primaryTextColor}}',
-    'primaryBorderColor': '{{primaryBorderColor}}',
-    'lineColor': '{{lineColor}}',
-    'secondaryColor': '{{secondaryColor}}',
-    'tertiaryColor': '{{tertiaryColor}}',
-    'fontFamily': 'Arial'
-}}}%%
+%%{init: {
+    'theme': 'base',
+    'look': 'classic',
 
+    'flowchart': {
+        'nodeSpacing': 50,
+        'rankSpacing': 60,
+        'htmlLabels': true
+    },
+
+    'fontSize': 18,
+
+    'themeVariables': {
+        'background': '{{background}}',
+        'mainBkg': '{{mainBkg}}',
+        'primaryColor': '{{primaryColor}}',
+        'primaryTextColor': '{{textColor}}',
+        'primaryBorderColor': '{{borderColor}}',
+        'lineColor': '{{lineColor}}'
+    }
+}}%%
 %% ArrayList: index-based storage with dynamic capacity
-flowchart LR
-    subgraph AL [ArrayList Indices]
+flowchart TB
+    Title["<b>ArrayList</b>"]:::title
+    Subtitle["Resizable array: fast get by index, shifting when inserting/removing in the middle"]:::subtitle
+    Title ~~~ Subtitle
+
+    subgraph Main[" "]
         direction LR
-        I0["0:12"]
-        I1["1:7"]
-        I2["2:25"]
-        I3["3:9"]
+        I0["<b>0</b><br/>12"]:::data
+        I1["<b>1</b><br/>7"]:::warning
+        I2["<b>2</b><br/>25"]:::focus
+        I3["<b>3</b><br/>9"]:::data
+        I4["<b>4</b><br/>14"]:::data
+        I0 --> I1 --> I2 --> I3 --> I4
     end
-    
-    G["get(2)"] --> I2
-    A["add(14)"] --> I4["4:14"]
-    R["remove(1)"] --> I0
-    
-    classDef data fill:{{dataFill}},stroke:{{dataStroke}},color:{{dataText}};
-    classDef action fill:{{actionFill}},stroke:{{actionStroke}},color:{{actionText}};
-    
-    class I0,I1,I2,I3,I4 data;
-    class G,A,R action;
 
+    Get["get(2)"]:::action --> I2
+    Add["add(14)"]:::action --> I4
+    Remove["remove(1)<br/>shift left"]:::warning -.-> I1
 
-classDef data fill:{{dataFill}},stroke:{{dataStroke}},color:{{dataText}};
-classDef focus fill:{{focusFill}},stroke:{{focusStroke}},color:{{focusText}};
-classDef action fill:{{actionFill}},stroke:{{actionStroke}},color:{{actionText}};
-classDef note fill:{{noteFill}},stroke:{{noteStroke}},color:{{noteText}};
-classDef warning fill:{{warningFill}},stroke:{{warningStroke}},color:{{warningText}};
+classDef title    fill:{{background}},stroke:{{background}},color:{{dataText}},font-size:26px,font-weight:bold;
+classDef subtitle fill:{{background}},stroke:{{background}},color:{{lineColor}},font-size:16px,font-style:italic;
+
+classDef data     fill:{{dataFill}},stroke:{{dataStroke}},color:{{dataText}},font-size:16px;
+classDef focus    fill:{{focusFill}},stroke:{{focusStroke}},color:{{focusText}},stroke-width:3px,font-size:16px;
+classDef action   fill:{{actionFill}},stroke:{{actionStroke}},color:{{actionText}},font-size:16px;
+classDef note     fill:{{noteFill}},stroke:{{noteStroke}},color:{{noteText}},font-size:15px;
+classDef warning  fill:{{warningFill}},stroke:{{warningStroke}},color:{{warningText}},font-size:15px;

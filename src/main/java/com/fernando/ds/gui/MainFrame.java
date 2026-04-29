@@ -8,6 +8,7 @@ import javax.swing.JOptionPane;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Toolkit;
 
 public class MainFrame extends JFrame {
 
@@ -19,6 +20,11 @@ public class MainFrame extends JFrame {
         setMinimumSize(new Dimension(900, 600));
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
+        setIconImage(
+            Toolkit.getDefaultToolkit().getImage(
+                getClass().getResource("/icon.png")
+            )
+        );
 
         DetailPanel detailPanel = new DetailPanel();
         QuestionPanel questionPanel = new QuestionPanel();

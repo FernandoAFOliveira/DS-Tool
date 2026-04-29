@@ -1,36 +1,47 @@
-%%{init: {'theme': 'base', 'look': 'classic', 'themeVariables': {
-    'background': '{{background}}',
-    'mainBkg': '{{mainBkg}}',
-    'primaryColor': '{{primaryColor}}',
-    'primaryTextColor': '{{primaryTextColor}}',
-    'primaryBorderColor': '{{primaryBorderColor}}',
-    'lineColor': '{{lineColor}}',
-    'secondaryColor': '{{secondaryColor}}',
-    'tertiaryColor': '{{tertiaryColor}}',
-    'fontFamily': 'Arial'
-}}}%%
+%%{init: {
+    'theme': 'base',
+    'look': 'classic',
+
+    'flowchart': {
+        'nodeSpacing': 50,
+        'rankSpacing': 60,
+        'htmlLabels': true
+    },
+
+    'fontSize': 18,
+
+    'themeVariables': {
+        'background': '{{background}}',
+        'mainBkg': '{{mainBkg}}',
+        'primaryColor': '{{primaryColor}}',
+        'primaryTextColor': '{{textColor}}',
+        'primaryBorderColor': '{{borderColor}}',
+        'lineColor': '{{lineColor}}'
+    }
+}}%%
 
 %% HashSet: unique values, no guaranteed order
-flowchart LR
-    subgraph HS [HashSet Buckets]
+flowchart TB
+    Title["<b>HashSet</b>"]:::title
+    Subtitle["Stores unique values using hash buckets; iteration order is not guaranteed"]:::subtitle
+    Title ~~~ Subtitle
+
+    subgraph Main["Hash buckets"]
         direction LR
-        B0["Bucket 0"] --> E1["Entry A"]
-        B1["Bucket 1"] --> E2["Entry B"]
-        B2["Bucket 2"] --> E3["Entry C"]
+        B0["bucket 0"]:::data --> A["apple"]:::data
+        B1["bucket 1"]:::focus --> B["banana"]:::focus
+        B2["bucket 2"]:::data --> K["kiwi"]:::data
+        B3["bucket 3"]:::data
     end
-    
-    add["add(D)"] --> B3["Bucket 3"]
-    contains["contains(B)"] --> B1
 
-    classDef data fill:{{dataFill}},stroke:{{dataStroke}},color:{{dataText}};
-    classDef action fill:{{actionFill}},stroke:{{actionStroke}},color:{{actionText}};
-    
-    class B0,B1,B2,B3,E1,E2,E3 data;
-    class add,contains action;
+    Add["add(apple)<br/>duplicate ignored"]:::warning -.-> A
+    Contains["contains(banana)"]:::action --> B1
 
+classDef title    fill:{{background}},stroke:{{background}},color:{{dataText}},font-size:26px,font-weight:bold;
+classDef subtitle fill:{{background}},stroke:{{background}},color:{{lineColor}},font-size:16px,font-style:italic;
 
-classDef data fill:{{dataFill}},stroke:{{dataStroke}},color:{{dataText}};
-classDef focus fill:{{focusFill}},stroke:{{focusStroke}},color:{{focusText}};
-classDef action fill:{{actionFill}},stroke:{{actionStroke}},color:{{actionText}};
-classDef note fill:{{noteFill}},stroke:{{noteStroke}},color:{{noteText}};
-classDef warning fill:{{warningFill}},stroke:{{warningStroke}},color:{{warningText}};
+classDef data     fill:{{dataFill}},stroke:{{dataStroke}},color:{{dataText}},font-size:16px;
+classDef focus    fill:{{focusFill}},stroke:{{focusStroke}},color:{{focusText}},stroke-width:3px,font-size:16px;
+classDef action   fill:{{actionFill}},stroke:{{actionStroke}},color:{{actionText}},font-size:16px;
+classDef note     fill:{{noteFill}},stroke:{{noteStroke}},color:{{noteText}},font-size:15px;
+classDef warning  fill:{{warningFill}},stroke:{{warningStroke}},color:{{warningText}},font-size:15px;

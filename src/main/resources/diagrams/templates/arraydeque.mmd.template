@@ -1,29 +1,45 @@
-%%{init: {'theme': 'base', 'look': 'classic', 'themeVariables': {
-    'background': '{{background}}',
-    'mainBkg': '{{mainBkg}}',
-    'primaryColor': '{{primaryColor}}',
-    'primaryTextColor': '{{primaryTextColor}}',
-    'primaryBorderColor': '{{primaryBorderColor}}',
-    'lineColor': '{{lineColor}}',
-    'secondaryColor': '{{secondaryColor}}',
-    'tertiaryColor': '{{tertiaryColor}}',
-    'fontFamily': 'Arial'
-}}}%%
+%%{init: {
+    'theme': 'base',
+    'look': 'classic',
 
-%% ArrayDeque: double-ended queue; both ends are usable
-flowchart LR
-    LeftOps["front operations<br/>addFirst()<br/>pollFirst()<br/>peekFirst()"] <--> F[front: A] <--> B[B] <--> C[C] <--> R[rear: D] <--> RightOps["rear operations<br/>addLast()<br/>pollLast()<br/>peekLast()"]
-    StackUse["as Stack:<br/>addLast + pollLast"] -.-> R
-    QueueUse["as Queue:<br/>addLast + pollFirst"] -.-> F
+    'flowchart': {
+        'nodeSpacing': 50,
+        'rankSpacing': 60,
+        'htmlLabels': true
+    },
 
-class F,R focus
-class B,C data
-class LeftOps,RightOps action
-class StackUse,QueueUse note
+    'fontSize': 18,
 
+    'themeVariables': {
+        'background': '{{background}}',
+        'mainBkg': '{{mainBkg}}',
+        'primaryColor': '{{primaryColor}}',
+        'primaryTextColor': '{{textColor}}',
+        'primaryBorderColor': '{{borderColor}}',
+        'lineColor': '{{lineColor}}'
+    }
+}}%%
 
-classDef data fill:{{dataFill}},stroke:{{dataStroke}},color:{{dataText}};
-classDef focus fill:{{focusFill}},stroke:{{focusStroke}},color:{{focusText}};
-classDef action fill:{{actionFill}},stroke:{{actionStroke}},color:{{actionText}};
-classDef note fill:{{noteFill}},stroke:{{noteStroke}},color:{{noteText}};
-classDef warning fill:{{warningFill}},stroke:{{warningStroke}},color:{{warningText}};
+%% ArrayDeque: double-ended queue with both ends usable
+flowchart TB
+    Title["<b>ArrayDeque</b>"]:::title
+    Subtitle["Both ends support fast insert/remove operations"]:::subtitle
+    Title ~~~ Subtitle
+
+    subgraph Main[" "]
+        direction LR
+        Front["FRONT<br/><b>A</b>"]:::focus <--> B["B"]:::data <--> C["C"]:::data <--> Rear["REAR<br/><b>D</b>"]:::focus
+    end
+
+    LeftOps["addFirst()<br/>pollFirst()<br/>peekFirst()"]:::action --> Front
+    RightOps["addLast()<br/>pollLast()<br/>peekLast()"]:::action --> Rear
+    Uses["Can act as Stack or Queue"]:::note -.-> Main
+
+classDef title    fill:{{background}},stroke:{{background}},color:{{dataText}},font-size:26px,font-weight:bold;
+classDef subtitle fill:{{background}},stroke:{{background}},color:{{lineColor}},font-size:16px,font-style:italic;
+
+classDef data     fill:{{dataFill}},stroke:{{dataStroke}},color:{{dataText}},font-size:16px;
+classDef focus    fill:{{focusFill}},stroke:{{focusStroke}},color:{{focusText}},stroke-width:3px,font-size:16px;
+classDef action   fill:{{actionFill}},stroke:{{actionStroke}},color:{{actionText}},font-size:16px;
+classDef note     fill:{{noteFill}},stroke:{{noteStroke}},color:{{noteText}},font-size:15px;
+classDef warning  fill:{{warningFill}},stroke:{{warningStroke}},color:{{warningText}},font-size:15px;

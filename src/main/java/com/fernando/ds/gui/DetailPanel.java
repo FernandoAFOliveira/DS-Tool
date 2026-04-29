@@ -23,6 +23,7 @@ public class DetailPanel extends JPanel {
     private DataStructure currentDataStructure;
     private Theme currentTheme = Theme.LIGHT;
     private javax.swing.text.Style code, normal, title, sectionHeader;
+    private boolean diagramPageReady = false;
 
     public DetailPanel() {
         setLayout(new BorderLayout());
@@ -62,20 +63,61 @@ public class DetailPanel extends JPanel {
             StyleConstants.setSpaceBelow(title, 4);
     
 
-    jfxPanel = new JFXPanel();
-        add(jfxPanel, BorderLayout.NORTH);
+        jfxPanel = new JFXPanel();
+
+        JScrollPane textScrollPane = new JScrollPane(textPane);
+
+        JLabel resizeHint = new JLabel("⬆ Drag to resize diagram", SwingConstants.CENTER);
+        resizeHint.setFont(new Font("SansSerif", Font.PLAIN, 12));
+        resizeHint.setForeground(Color.GRAY);
+
+        JPanel topContainer = new JPanel(new BorderLayout());
+        topContainer.add(jfxPanel, BorderLayout.CENTER);
+        topContainer.add(resizeHint, BorderLayout.SOUTH);
+
+        JSplitPane splitPane = new JSplitPane(
+            JSplitPane.VERTICAL_SPLIT,
+            topContainer,
+            textScrollPane
+        );
+
+        splitPane.setResizeWeight(0.55);
+        splitPane.setDividerLocation(0.55);
+        splitPane.setOneTouchExpandable(true);
+        splitPane.setContinuousLayout(true);
+
+        add(splitPane, BorderLayout.CENTER);
 
         Platform.runLater(() -> {
             webView = new WebView();
-            // Set the error/status listeners ONCE here
-            webView.getEngine().setOnError(event -> System.err.println("JS Error: " + event.getMessage()));
-            
-            // Load the HTML once
+
+            webView.getEngine().setOnError(event ->
+                System.err.println("JS Error: " + event.getMessage())
+            );
+
+            webView.getEngine().getLoadWorker().stateProperty().addListener((obs, oldState, newState) -> {
+                if (newState == javafx.concurrent.Worker.State.SUCCEEDED) {
+                    diagramPageReady = true;
+
+                    if (currentDataStructure != null) {
+                        MermaidResult result = DiagramTemplateLoader.getProcessedMermaid(
+                            currentDataStructure.getName(),
+                            currentTheme
+                        );
+                        showDiagram(result.mmdSource, result.backgroundColor);
+                    } else {
+                        MermaidResult result = DiagramTemplateLoader.getProcessedMermaid(
+                            "welcome",
+                            currentTheme
+                        );
+                        showDiagram(result.mmdSource, result.backgroundColor);
+                    }
+                }
+            });
+
             webView.getEngine().load(getClass().getResource("/diagram.html").toExternalForm());
             jfxPanel.setScene(new javafx.scene.Scene(webView));
         });
-
-            add(new JScrollPane(textPane), BorderLayout.CENTER);
     }
 
 
@@ -94,6 +136,7 @@ public class DetailPanel extends JPanel {
         } catch (BadLocationException e) {
             textPane.setText("Error displaying question information.");
         }
+        textPane.setCaretPosition(0);
     }
 
     public void showDataStructure(DataStructure ds) {
@@ -119,17 +162,21 @@ public class DetailPanel extends JPanel {
         } catch (BadLocationException e) {
             textPane.setText("Error displaying data structure information.");
         }
+        textPane.setCaretPosition(0);
     }
 
     public void showWelcome() {
         textPane.setText("");
+        textPane.setMaximumSize(new Dimension(700, Integer.MAX_VALUE));
         currentQuestion = null;
         currentDataStructure = null;
+        MermaidResult result = DiagramTemplateLoader.getProcessedMermaid("welcome", currentTheme);
+        showDiagram(result.mmdSource, result.backgroundColor);
 
         StyledDocument doc = textPane.getStyledDocument();
 
         try {
-            appendCenteredTitle(doc, "Data Structure Advisor");
+            appendCenteredTitle(doc, "Welcome to Data Structure Advisor");
 
             appendSection(doc, "Description:", "This app helps compare common Java data structures based on the needs of a programming task.", normal);
 
@@ -143,6 +190,7 @@ public class DetailPanel extends JPanel {
         } catch (BadLocationException e) {
             textPane.setText("Error displaying welcome information.");
         }
+        textPane.setCaretPosition(0);
     }
 
     public void showMessage(String titleText, String message) {
@@ -158,19 +206,25 @@ public class DetailPanel extends JPanel {
         } catch (BadLocationException e) {
             textPane.setText("Error displaying message.");
         }
+        textPane.setCaretPosition(0);
     }
 
-    public void showDiagram(String mmdSource, String bgColor) {
-        Platform.runLater(() -> {
-            if (webView != null && webView.getEngine() != null) {
-                String sanitized = mmdSource.replace("\\", "\\\\")
-                                            .replace("`", "\\`")
-                                            .replace("\n", "\\n");
-                
-                webView.getEngine().executeScript("renderDiagram(`" + sanitized + "`, '" + bgColor + "')");
-            }
-        });
-    }
+public void showDiagram(String mmdSource, String bgColor) {
+    Platform.runLater(() -> {
+        if (!diagramPageReady || webView == null || webView.getEngine() == null) {
+            return;
+        }
+
+        String sanitized = mmdSource.replace("\\", "\\\\")
+                                    .replace("`", "\\`")
+                                    .replace("\n", "\\n");
+
+        webView.getEngine().executeScript(
+            "renderDiagram(`" + sanitized + "`, '" + bgColor + "')"
+        );
+    });
+}
+
     private void append(StyledDocument doc, String text, Style style) throws BadLocationException {
         int start = doc.getLength();
         doc.insertString(start, text, style);
