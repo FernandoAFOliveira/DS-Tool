@@ -1,0 +1,35 @@
+%%{init: {'theme': 'base', 'look': 'classic', 'themeVariables': {
+    'background': '{{background}}',
+    'mainBkg': '{{mainBkg}}',
+    'primaryColor': '{{primaryColor}}',
+    'primaryTextColor': '{{primaryTextColor}}',
+    'primaryBorderColor': '{{primaryBorderColor}}',
+    'lineColor': '{{lineColor}}',
+    'secondaryColor': '{{secondaryColor}}',
+    'tertiaryColor': '{{tertiaryColor}}',
+    'fontFamily': 'Arial'
+}}}%%
+
+flowchart LR
+    subgraph S [Stack]
+        direction LR
+        T["TOP: 3"] --> 2
+        2 --> 1
+        1 --> B["bottom"]
+    end
+    
+    P["push(4)"] -- "push" --> T
+    pop["pop()"] -.-> T
+
+    classDef data fill:{{dataFill}},stroke:{{dataStroke}},color:{{dataText}};
+    classDef action fill:{{actionFill}},stroke:{{actionStroke}},color:{{actionText}};
+    
+    class T,2,1,B data;
+    class P,pop action;
+
+
+classDef data fill:{{dataFill}},stroke:{{dataStroke}},color:{{dataText}};
+classDef focus fill:{{focusFill}},stroke:{{focusStroke}},color:{{focusText}};
+classDef action fill:{{actionFill}},stroke:{{actionStroke}},color:{{actionText}};
+classDef note fill:{{noteFill}},stroke:{{noteStroke}},color:{{noteText}};
+classDef warning fill:{{warningFill}},stroke:{{warningStroke}},color:{{warningText}};

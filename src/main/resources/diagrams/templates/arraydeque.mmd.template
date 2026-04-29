@@ -1,0 +1,29 @@
+%%{init: {'theme': 'base', 'look': 'classic', 'themeVariables': {
+    'background': '{{background}}',
+    'mainBkg': '{{mainBkg}}',
+    'primaryColor': '{{primaryColor}}',
+    'primaryTextColor': '{{primaryTextColor}}',
+    'primaryBorderColor': '{{primaryBorderColor}}',
+    'lineColor': '{{lineColor}}',
+    'secondaryColor': '{{secondaryColor}}',
+    'tertiaryColor': '{{tertiaryColor}}',
+    'fontFamily': 'Arial'
+}}}%%
+
+%% ArrayDeque: double-ended queue; both ends are usable
+flowchart LR
+    LeftOps["front operations<br/>addFirst()<br/>pollFirst()<br/>peekFirst()"] <--> F[front: A] <--> B[B] <--> C[C] <--> R[rear: D] <--> RightOps["rear operations<br/>addLast()<br/>pollLast()<br/>peekLast()"]
+    StackUse["as Stack:<br/>addLast + pollLast"] -.-> R
+    QueueUse["as Queue:<br/>addLast + pollFirst"] -.-> F
+
+class F,R focus
+class B,C data
+class LeftOps,RightOps action
+class StackUse,QueueUse note
+
+
+classDef data fill:{{dataFill}},stroke:{{dataStroke}},color:{{dataText}};
+classDef focus fill:{{focusFill}},stroke:{{focusStroke}},color:{{focusText}};
+classDef action fill:{{actionFill}},stroke:{{actionStroke}},color:{{actionText}};
+classDef note fill:{{noteFill}},stroke:{{noteStroke}},color:{{noteText}};
+classDef warning fill:{{warningFill}},stroke:{{warningStroke}},color:{{warningText}};

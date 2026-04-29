@@ -1,0 +1,36 @@
+%%{init: {'theme': 'base', 'look': 'classic', 'themeVariables': {
+    'background': '{{background}}',
+    'mainBkg': '{{mainBkg}}',
+    'primaryColor': '{{primaryColor}}',
+    'primaryTextColor': '{{primaryTextColor}}',
+    'primaryBorderColor': '{{primaryBorderColor}}',
+    'lineColor': '{{lineColor}}',
+    'secondaryColor': '{{secondaryColor}}',
+    'tertiaryColor': '{{tertiaryColor}}',
+    'fontFamily': 'Arial'
+}}}%%
+
+%% Queue: FIFO, first in first out
+flowchart LR
+    subgraph Q [Queue]
+        direction LR
+        head["Head: 1"] --> 2
+        2 --> 3
+        3 --> tail["Tail: 4"]
+    end
+    
+    enq["enqueue(5)"] -.-> tail
+    deq["dequeue()"] -- "remove" --> head
+
+    classDef data fill:{{dataFill}},stroke:{{dataStroke}},color:{{dataText}};
+    classDef action fill:{{actionFill}},stroke:{{actionStroke}},color:{{actionText}};
+    
+    class head,2,3,tail data;
+    class enq,deq action;
+
+
+classDef data fill:{{dataFill}},stroke:{{dataStroke}},color:{{dataText}};
+classDef focus fill:{{focusFill}},stroke:{{focusStroke}},color:{{focusText}};
+classDef action fill:{{actionFill}},stroke:{{actionStroke}},color:{{actionText}};
+classDef note fill:{{noteFill}},stroke:{{noteStroke}},color:{{noteText}};
+classDef warning fill:{{warningFill}},stroke:{{warningStroke}},color:{{warningText}};

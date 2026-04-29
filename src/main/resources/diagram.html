@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+</head>
+    <body>
+        <div id="diagram" class="mermaid"></div>
+        <script>
+            mermaid.initialize({ startOnLoad: false });
+
+            window.renderDiagram = function(mmdSource, bgColor) {
+                const container = document.getElementById('diagram');
+                
+                document.body.style.backgroundColor = bgColor;
+                
+                container.innerHTML = '<div class="mermaid">' + mmdSource + '</div>';
+                
+                mermaid.init(undefined, container.querySelector('.mermaid'));
+            };
+        </script>
+    </body>
+</html>

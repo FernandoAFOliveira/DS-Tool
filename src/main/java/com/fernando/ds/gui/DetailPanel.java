@@ -1,47 +1,34 @@
 package com.fernando.ds.gui;
 
-import javax.swing.*;
-import javax.swing.text.*;
-import javax.imageio.ImageIO;
+import javafx.application.Platform;
+import javafx.embed.swing.JFXPanel;
+import javafx.scene.web.WebView;
 import java.awt.*;
-import java.awt.image.BufferedImage;
+import javax.swing.*;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
+import javax.swing.text.Style;
 
 import com.fernando.ds.library.QuestionInfo;
 import com.fernando.ds.model.DataStructure;
-public class DetailPanel extends JPanel {
+import com.fernando.ds.util.DiagramTemplateLoader;
+import com.fernando.ds.util.MermaidResult;
 
+public class DetailPanel extends JPanel {
     private JTextPane textPane;
-    private Style code;
-    private Style normal;
-    private Style title;
-    private Style sectionHeader;
+    private JFXPanel jfxPanel;
+    private WebView webView;
     private QuestionInfo currentQuestion;
     private DataStructure currentDataStructure;
-    private JLabel diagramLabel;
     private Theme currentTheme = Theme.LIGHT;
-    private BufferedImage currentDiagramImage;
-    
+    private javax.swing.text.Style code, normal, title, sectionHeader;
 
     public DetailPanel() {
         setLayout(new BorderLayout());
 
         textPane = new JTextPane();
         textPane.setEditable(false);
-
-        JScrollPane scrollPane = new JScrollPane(textPane);
-
-        diagramLabel = new JLabel();
-        diagramLabel.setHorizontalAlignment(JLabel.CENTER);
-
-        add(diagramLabel, BorderLayout.NORTH);
-        add(scrollPane, BorderLayout.CENTER);
-
-        addComponentListener(new java.awt.event.ComponentAdapter() {
-            @Override
-            public void componentResized(java.awt.event.ComponentEvent e) {
-                resizeDiagram();
-            }
-        });
 
         sectionHeader = textPane.addStyle("SectionHeader", null);
             StyleConstants.setBold(sectionHeader, true);
@@ -73,13 +60,28 @@ public class DetailPanel extends JPanel {
             StyleConstants.setLeftIndent(title, 0);
             StyleConstants.setSpaceAbove(title, 10);
             StyleConstants.setSpaceBelow(title, 4);
-        }
+    
+
+    jfxPanel = new JFXPanel();
+        add(jfxPanel, BorderLayout.NORTH);
+
+        Platform.runLater(() -> {
+            webView = new WebView();
+            // Set the error/status listeners ONCE here
+            webView.getEngine().setOnError(event -> System.err.println("JS Error: " + event.getMessage()));
+            
+            // Load the HTML once
+            webView.getEngine().load(getClass().getResource("/diagram.html").toExternalForm());
+            jfxPanel.setScene(new javafx.scene.Scene(webView));
+        });
+
+            add(new JScrollPane(textPane), BorderLayout.CENTER);
+    }
+
 
     public void showQuestion(QuestionInfo question) {
         currentQuestion = question;
         currentDataStructure = null;
-        diagramLabel.setIcon(null);
-
         textPane.setText("");
 
         StyledDocument doc = textPane.getStyledDocument();
@@ -97,7 +99,8 @@ public class DetailPanel extends JPanel {
     public void showDataStructure(DataStructure ds) {
         textPane.setText("");
         currentDataStructure = ds;
-        showDiagram(ds.getName(), currentTheme);
+        MermaidResult result = DiagramTemplateLoader.getProcessedMermaid(ds.getName(), currentTheme);
+            showDiagram(result.mmdSource, result.backgroundColor);
         currentQuestion = null;
 
         StyledDocument doc = textPane.getStyledDocument();
@@ -122,7 +125,6 @@ public class DetailPanel extends JPanel {
         textPane.setText("");
         currentQuestion = null;
         currentDataStructure = null;
-        diagramLabel.setIcon(null);
 
         StyledDocument doc = textPane.getStyledDocument();
 
@@ -147,7 +149,6 @@ public class DetailPanel extends JPanel {
         currentQuestion = null;
         currentDataStructure = null;
         textPane.setText("");
-        diagramLabel.setIcon(null);
 
         StyledDocument doc = textPane.getStyledDocument();
 
@@ -159,60 +160,17 @@ public class DetailPanel extends JPanel {
         }
     }
 
-    public void showDiagram(String dsName, Theme theme) {
-        String themeStr = (theme == Theme.DARK || theme == Theme.DARK_BLUE) ? "dark" : "light";
-        String fileName = dsName.toLowerCase() + "_" + themeStr + ".png";
-        String resourcePath = "/diagrams/" + themeStr + "/" + fileName;
-
-        try {
-            java.net.URL imageUrl = getClass().getResource(resourcePath);
-
-            if (imageUrl == null) {
-                diagramLabel.setIcon(null);
-                currentDiagramImage = null;
-                System.out.println("Diagram not found: " + resourcePath);
-                return;
+    public void showDiagram(String mmdSource, String bgColor) {
+        Platform.runLater(() -> {
+            if (webView != null && webView.getEngine() != null) {
+                String sanitized = mmdSource.replace("\\", "\\\\")
+                                            .replace("`", "\\`")
+                                            .replace("\n", "\\n");
+                
+                webView.getEngine().executeScript("renderDiagram(`" + sanitized + "`, '" + bgColor + "')");
             }
-
-            currentDiagramImage = ImageIO.read(imageUrl);
-            resizeDiagram();
-
-        } catch (Exception e) {
-            diagramLabel.setIcon(null);
-            currentDiagramImage = null;
-            System.out.println("Error loading diagram: " + resourcePath);
-        }
+        });
     }
-
-    private void resizeDiagram() {
-        if (currentDiagramImage == null) {
-            diagramLabel.setIcon(null);
-            return;
-        }
-
-        int originalWidth = currentDiagramImage.getWidth();
-        int originalHeight = currentDiagramImage.getHeight();
-
-        int availableWidth = Math.max(100, getWidth() - 40);
-
-        double scale = Math.min(1.0, (double) availableWidth / originalWidth);
-
-        int newWidth = (int)(originalWidth * scale);
-        int newHeight = (int)(originalHeight * scale);
-
-        BufferedImage resized = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g2 = resized.createGraphics();
-
-        g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-        g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-        g2.drawImage(currentDiagramImage, 0, 0, newWidth, newHeight, null);
-        g2.dispose();
-
-        diagramLabel.setIcon(new ImageIcon(resized));
-    }
-
     private void append(StyledDocument doc, String text, Style style) throws BadLocationException {
         int start = doc.getLength();
         doc.insertString(start, text, style);

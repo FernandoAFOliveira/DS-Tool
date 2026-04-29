@@ -1,0 +1,38 @@
+%%{init: {'theme': 'base', 'look': 'classic', 'themeVariables': {
+    'background': '{{background}}',
+    'mainBkg': '{{mainBkg}}',
+    'primaryColor': '{{primaryColor}}',
+    'primaryTextColor': '{{primaryTextColor}}',
+    'primaryBorderColor': '{{primaryBorderColor}}',
+    'lineColor': '{{lineColor}}',
+    'secondaryColor': '{{secondaryColor}}',
+    'tertiaryColor': '{{tertiaryColor}}',
+    'fontFamily': 'Arial'
+}}}%%
+
+%% ArrayList: index-based storage with dynamic capacity
+flowchart LR
+    subgraph AL [ArrayList Indices]
+        direction LR
+        I0["0:12"]
+        I1["1:7"]
+        I2["2:25"]
+        I3["3:9"]
+    end
+    
+    G["get(2)"] --> I2
+    A["add(14)"] --> I4["4:14"]
+    R["remove(1)"] --> I0
+    
+    classDef data fill:{{dataFill}},stroke:{{dataStroke}},color:{{dataText}};
+    classDef action fill:{{actionFill}},stroke:{{actionStroke}},color:{{actionText}};
+    
+    class I0,I1,I2,I3,I4 data;
+    class G,A,R action;
+
+
+classDef data fill:{{dataFill}},stroke:{{dataStroke}},color:{{dataText}};
+classDef focus fill:{{focusFill}},stroke:{{focusStroke}},color:{{focusText}};
+classDef action fill:{{actionFill}},stroke:{{actionStroke}},color:{{actionText}};
+classDef note fill:{{noteFill}},stroke:{{noteStroke}},color:{{noteText}};
+classDef warning fill:{{warningFill}},stroke:{{warningStroke}},color:{{warningText}};

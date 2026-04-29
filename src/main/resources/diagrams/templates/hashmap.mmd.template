@@ -1,0 +1,34 @@
+%%{init: {'theme': 'base', 'look': 'classic', 'themeVariables': {
+    'background': '{{background}}',
+    'mainBkg': '{{mainBkg}}',
+    'primaryColor': '{{primaryColor}}',
+    'primaryTextColor': '{{primaryTextColor}}',
+    'primaryBorderColor': '{{primaryBorderColor}}',
+    'lineColor': '{{lineColor}}',
+    'secondaryColor': '{{secondaryColor}}',
+    'tertiaryColor': '{{tertiaryColor}}',
+    'fontFamily': 'Arial'
+}}}%%
+
+%% HashMap: keys map to values using hashing
+flowchart LR
+    Put["put('Bob', 4071234567)"] --> Hash["hash key<br/>'Bob'"] --> Bucket[Bucket]
+    Bucket --> Pair["Entry<br/>key: Bob<br/>value: 4071234567"]
+
+    Get["get('Bob')"] --> Hash2["hash key<br/>'Bob'"] --> Bucket
+    Pair --> Value["returns value<br/>4071234567"]
+
+    Update["put('Bob', newValue)<br/>same key replaces value"] -.-> Pair
+    Rule["Keys are unique<br/>Values may repeat"] -.-> Pair
+
+class Hash,Hash2,Bucket data
+class Pair,Value focus
+class Put,Get,Update action
+class Rule note
+
+
+classDef data fill:{{dataFill}},stroke:{{dataStroke}},color:{{dataText}};
+classDef focus fill:{{focusFill}},stroke:{{focusStroke}},color:{{focusText}};
+classDef action fill:{{actionFill}},stroke:{{actionStroke}},color:{{actionText}};
+classDef note fill:{{noteFill}},stroke:{{noteStroke}},color:{{noteText}};
+classDef warning fill:{{warningFill}},stroke:{{warningStroke}},color:{{warningText}};

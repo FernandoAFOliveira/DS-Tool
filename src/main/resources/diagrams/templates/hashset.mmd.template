@@ -1,0 +1,36 @@
+%%{init: {'theme': 'base', 'look': 'classic', 'themeVariables': {
+    'background': '{{background}}',
+    'mainBkg': '{{mainBkg}}',
+    'primaryColor': '{{primaryColor}}',
+    'primaryTextColor': '{{primaryTextColor}}',
+    'primaryBorderColor': '{{primaryBorderColor}}',
+    'lineColor': '{{lineColor}}',
+    'secondaryColor': '{{secondaryColor}}',
+    'tertiaryColor': '{{tertiaryColor}}',
+    'fontFamily': 'Arial'
+}}}%%
+
+%% HashSet: unique values, no guaranteed order
+flowchart LR
+    subgraph HS [HashSet Buckets]
+        direction LR
+        B0["Bucket 0"] --> E1["Entry A"]
+        B1["Bucket 1"] --> E2["Entry B"]
+        B2["Bucket 2"] --> E3["Entry C"]
+    end
+    
+    add["add(D)"] --> B3["Bucket 3"]
+    contains["contains(B)"] --> B1
+
+    classDef data fill:{{dataFill}},stroke:{{dataStroke}},color:{{dataText}};
+    classDef action fill:{{actionFill}},stroke:{{actionStroke}},color:{{actionText}};
+    
+    class B0,B1,B2,B3,E1,E2,E3 data;
+    class add,contains action;
+
+
+classDef data fill:{{dataFill}},stroke:{{dataStroke}},color:{{dataText}};
+classDef focus fill:{{focusFill}},stroke:{{focusStroke}},color:{{focusText}};
+classDef action fill:{{actionFill}},stroke:{{actionStroke}},color:{{actionText}};
+classDef note fill:{{noteFill}},stroke:{{noteStroke}},color:{{noteText}};
+classDef warning fill:{{warningFill}},stroke:{{warningStroke}},color:{{warningText}};

@@ -1,0 +1,9 @@
+{
+  "background": "#0D1823", "mainBkg": "#12202F", "primaryColor": "#192D41",
+  "textColor": "#EBF5FF", "borderColor": "#4682B4", "lineColor": "#607D8B",
+  "dataFill": "#192D41", "dataStroke": "#4682B4", "dataText": "#EBF5FF",
+  "focusFill": "#7C5200", "focusStroke": "#FFB300", "focusText": "#FFF8E1",
+  "actionFill": "#004D40", "actionStroke": "#00C853", "actionText": "#E8F5E9",
+  "noteFill": "#311B92", "noteStroke": "#7C4DFF", "noteText": "#EDE7F6",
+  "warningFill": "#B71C1C", "warningStroke": "#FF5252", "warningText": "#FFEBEE"
+}

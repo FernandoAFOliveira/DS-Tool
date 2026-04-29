@@ -1,0 +1,35 @@
+%%{init: {'theme': 'base', 'look': 'classic', 'themeVariables': {
+    'background': '{{background}}',
+    'mainBkg': '{{mainBkg}}',
+    'primaryColor': '{{primaryColor}}',
+    'primaryTextColor': '{{primaryTextColor}}',
+    'primaryBorderColor': '{{primaryBorderColor}}',
+    'lineColor': '{{lineColor}}',
+    'secondaryColor': '{{secondaryColor}}',
+    'tertiaryColor': '{{tertiaryColor}}',
+    'fontFamily': 'Arial'
+}}}%%
+
+%% LinkedList: nodes are connected by references, not stored by index
+flowchart LR
+    subgraph LL [LinkedList Nodes]
+        direction LR
+        N1["Node 1"] -- next --> N2["Node 2"]
+        N2 -- next --> N3["Node 3"]
+    end
+    
+    add["add(0)"] -.-> H["Head"]
+    H --> N1
+    
+    classDef data fill:{{dataFill}},stroke:{{dataStroke}},color:{{dataText}};
+    classDef action fill:{{actionFill}},stroke:{{actionStroke}},color:{{actionText}};
+    
+    class N1,N2,N3,H data;
+    class add action;
+
+
+classDef data fill:{{dataFill}},stroke:{{dataStroke}},color:{{dataText}};
+classDef focus fill:{{focusFill}},stroke:{{focusStroke}},color:{{focusText}};
+classDef action fill:{{actionFill}},stroke:{{actionStroke}},color:{{actionText}};
+classDef note fill:{{noteFill}},stroke:{{noteStroke}},color:{{noteText}};
+classDef warning fill:{{warningFill}},stroke:{{warningStroke}},color:{{warningText}};
