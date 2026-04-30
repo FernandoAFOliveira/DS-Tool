@@ -1,31 +1,44 @@
+# Data Structure Advisor
 
+Data Structure Advisor is a Java desktop application that helps students compare common Java data structures and choose an appropriate structure for a programming task.
 
-# DataStructure Decision Tool
+The app provides an interactive GUI with questions, filters, ranked data structure suggestions, visual diagrams, explanations, API summaries, and example Java code.
 
-A professional-grade Java application designed to assist developers and students in selecting the most efficient Java Collection Framework structure for their specific performance needs.
+## Features
 
-## Why This Tool?
-In Java development, choosing the wrong data structure can lead to significant performance bottlenecks. This tool eliminates the guesswork by analyzing your specific performance requirements—such as speed, memory usage, and data constraints—to recommend the ideal structure for your use case.
+- Compare common Java data structures:
+  - ArrayList
+  - Stack
+  - Queue
+  - PriorityQueue
+  - ArrayDeque
+  - HashSet
+  - TreeSet
+  - HashMap
+  - TreeMap
+- Filter by:
+  - key-value mapping
+  - duplicate support
+  - sorted order
+  - index access
+  - removal order
+- Rank results by:
+  - lookup speed
+  - add/delete speed
+  - memory efficiency
+- View themed diagrams for each structure
+- Switch between light, soft blue, dark, and dark blue themes
+- Read explanations, API overviews, and example code
 
-## How It Works (End-User Experience)
-As an end-user, you simply follow these three steps:
+## Requirements
 
-1. **Define Your Needs**: You input your constraints (e.g., "Do I need unique elements?" or "Do I need key-value mapping?") and your performance priorities (e.g., "How important is fast lookup speed?").
-2. **Automated Analysis**: The tool's engine processes your requirements against its internal library of Java structures (like `ArrayList`, `HashMap`, `TreeSet`, etc.).
-3. **Optimized Recommendation**: The tool returns a ranked list of the best structures for your task, along with an "Expert Note" if you have selected an older, legacy structure that has a better modern alternative.
+- Java 25
+- Maven
 
-## Architectural Highlights
-This project demonstrates professional OOP principles:
-- **Separation of Concerns**: The evaluation logic is completely decoupled from the data structures.
-- **Strategy Pattern**: The scoring engine can be swapped or upgraded without modifying the library of structures.
-- **Maintainable Design**: Using Maven and standard Java packaging, the tool is built to be easily extended with new data structures.
+## Running the App
 
-## Getting Started
-1. **Prerequisites**: Ensure you have Java 17 and Maven installed.
-2. **Build**: Run `mvn clean install` in the project root to compile the application.
-3. **Run**: Start the application and follow the interactive console prompts to receive your data structure recommendation.
+From the project root:
 
----
-*Developed as part of the COP-3330 Object-Oriented Programming coursework.*
-README.md
-Displaying README.md.
+```bash
+mvn clean compile
+mvn exec:java

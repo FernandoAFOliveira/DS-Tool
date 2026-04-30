@@ -47,7 +47,6 @@ public class MainFrame extends JFrame {
 
         setJMenuBar(createMenuBar(controller, explanationPanel));
 
-        explanationPanel.showWelcome();
         controller.reset();
 
         add(mainPanel, BorderLayout.CENTER);

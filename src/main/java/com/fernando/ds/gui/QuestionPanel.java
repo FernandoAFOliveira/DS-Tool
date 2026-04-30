@@ -204,7 +204,7 @@ public class QuestionPanel extends JPanel {
         }
 
         for (CompactSliderPanel slider : sliders) {
-            slider.setValue(5);;
+            slider.setValue(5);
         }
 
         if (selectedCard != null) {

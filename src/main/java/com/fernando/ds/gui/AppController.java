@@ -64,18 +64,16 @@ public class AppController {
     }
 
     public void applyTheme(Theme theme) {
-
         currentTheme = theme;
-        ThemeManager.applyThemeToComponent(explanationPanel, theme);
         explanationPanel.applyTheme(theme);
-            if (currentDataStructure != null) {
-        showDataStructure(currentDataStructure);
+
+        if (currentDataStructure != null) {
+            showDataStructure(currentDataStructure);
         } else {
             showWelcome();
         }
 
         refreshDataStructureList();
-        showWelcome();
     }
 
     private void refreshDataStructureList() {
@@ -154,7 +152,6 @@ public class AppController {
     public void reset() {
         requirements.reset();
         questionPanel.resetSelections();
-        explanationPanel.showWelcome();
         refreshDataStructureList();
         showWelcome();
     }
