@@ -12,7 +12,15 @@ public final class DiagramTemplateLoader {
     private DiagramTemplateLoader() {}
 
     public static MermaidResult getProcessedMermaid(String diagramName, Theme theme) {
+
         String template = loadResource("/diagrams/templates/" + diagramName.toLowerCase() + ".mmd.template");
+        if (template == null) {
+            throw new IllegalArgumentException(
+                "Diagram template not found: " + diagramName +
+                " (expected at /diagrams/templates/" + diagramName.toLowerCase() + ".mmd.template)"
+            );
+        }
+
         Map<String, String> themeMap = loadThemeAsMap(theme);
         String mmd = performSubstitution(template, themeMap);
         return new MermaidResult(mmd, themeMap.getOrDefault("background", "#FFFFFF"));
@@ -35,8 +43,6 @@ public final class DiagramTemplateLoader {
             processed = processed.replace(key, entry.getValue().trim());
         }
         
-        // CRITICAL: Any placeholder not found in your JSON must be set to a default
-        // or else Mermaid will see "{{something}}" and throw a syntax error.
         return processed.replaceAll("\\{\\{.*?\\}\\}", "#CCCCCC");
     }
 

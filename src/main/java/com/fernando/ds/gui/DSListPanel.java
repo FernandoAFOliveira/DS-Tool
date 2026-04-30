@@ -16,7 +16,6 @@ public class DSListPanel extends JPanel {
     public DSListPanel() {
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 8));
-        setPreferredSize(new Dimension(250, 0));
 
         JLabel title = new JLabel("Data Structures", JLabel.CENTER);
         add(title, BorderLayout.NORTH);
@@ -68,7 +67,5 @@ public class DSListPanel extends JPanel {
                 }
             }
         });
-    }
-
-    
+    }    
 }

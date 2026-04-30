@@ -1,14 +1,19 @@
 package com.fernando.ds.gui;
+
+// Java
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+// Projects
 import com.fernando.ds.library.QuestionInfo;
 import com.fernando.ds.library.DataStructureLibrary;
 import com.fernando.ds.model.DSRequirements;
 import com.fernando.ds.model.DataStructure;
 import com.fernando.ds.model.Preference;
 import com.fernando.ds.model.RemovalOrder;
+import com.fernando.ds.util.DiagramTemplateLoader;
+import com.fernando.ds.util.MermaidResult;
 import com.fernando.ds.engine.ScoringEngine;
 
 public class AppController {
@@ -16,22 +21,41 @@ public class AppController {
     private final DSRequirements requirements = new DSRequirements();
     private final ScoringEngine scoringEngine = new ScoringEngine();
     private final DSListPanel dsListPanel;
-    private final DetailPanel detailPanel;
+     private final DiagramPanel diagramPanel;
+    private final ExplanationPanel explanationPanel;
+    private Theme currentTheme = Theme.LIGHT;
     private final QuestionPanel questionPanel;
+    private DataStructure currentDataStructure;
+    private QuestionInfo currentQuestion;
 
     public AppController(
         QuestionPanel questionPanel,
         DSListPanel dsListPanel,
-        DetailPanel detailPanel
+        DiagramPanel diagramPanel,
+        ExplanationPanel explanationPanel
     ) {
         this.questionPanel = questionPanel;
         this.dsListPanel = dsListPanel;
-        this.detailPanel = detailPanel;        
-        dsListPanel.setSelectionListener(detailPanel::showDataStructure);
+        this.diagramPanel = diagramPanel;
+        this.explanationPanel = explanationPanel;
+
+        dsListPanel.setSelectionListener(this::showDataStructure);
         questionPanel.setQuestionSelectionListener(this::handleQuestionChange);
         questionPanel.setPreferenceSelectionListener(this::updatePreference);
         questionPanel.setWeightSelectionListener(this::updateWeight);
         questionPanel.setRemovalOrderSelectionListener(this::updateRemovalOrder);
+    }
+
+    private void showDataStructure(DataStructure ds) {
+        currentDataStructure = ds;
+        currentQuestion = null;
+        MermaidResult result = DiagramTemplateLoader.getProcessedMermaid(
+            ds.getName(),
+            currentTheme
+        );
+
+        diagramPanel.showDiagram(result.mmdSource, result.backgroundColor);
+        explanationPanel.showDataStructure(ds);
     }
 
     private void updateRemovalOrder(QuestionInfo q, RemovalOrder value) {
@@ -41,10 +65,17 @@ public class AppController {
 
     public void applyTheme(Theme theme) {
 
-        ThemeManager.applyThemeToComponent(detailPanel, theme);
-        detailPanel.applyTheme(theme);
+        currentTheme = theme;
+        ThemeManager.applyThemeToComponent(explanationPanel, theme);
+        explanationPanel.applyTheme(theme);
+            if (currentDataStructure != null) {
+        showDataStructure(currentDataStructure);
+        } else {
+            showWelcome();
+        }
 
         refreshDataStructureList();
+        showWelcome();
     }
 
     private void refreshDataStructureList() {
@@ -65,7 +96,7 @@ public class AppController {
     }
 
     private void handleQuestionChange(QuestionInfo q) {
-        detailPanel.showQuestion(q);
+        explanationPanel.showQuestion(q);
 
         refreshDataStructureList();
     }
@@ -77,7 +108,7 @@ public class AppController {
             if (value == Preference.YES) {
                 requirements.setDuplicatePreference(Preference.ANY);
                 questionPanel.setDuplicateQuestionEnabled(false);
-                detailPanel.showMessage(
+                explanationPanel.showMessage(
                     "Key-value mapping selected",
                     "Keys must be unique in Java maps. Different keys may still point to the same value, so the duplicate question has been set to Any."
                 );
@@ -110,11 +141,22 @@ public class AppController {
         refreshDataStructureList();
     }
 
+    private void showWelcome() {
+        MermaidResult result = DiagramTemplateLoader.getProcessedMermaid(
+            "welcome",
+            currentTheme
+        );
+
+        diagramPanel.showDiagram(result.mmdSource, result.backgroundColor);
+        explanationPanel.showWelcome();
+    }
+    
     public void reset() {
         requirements.reset();
         questionPanel.resetSelections();
-        detailPanel.showWelcome();
+        explanationPanel.showWelcome();
         refreshDataStructureList();
+        showWelcome();
     }
 
 

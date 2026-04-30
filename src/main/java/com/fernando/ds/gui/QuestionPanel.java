@@ -20,7 +20,7 @@ public class QuestionPanel extends JPanel {
     private BiConsumer<QuestionInfo, Preference> preferenceSelectionListener;
     private BiConsumer<QuestionInfo, Integer> weightSelectionListener;
     private final List<JRadioButton> anyButtons = new ArrayList<>();
-    private final List<JSlider> sliders = new ArrayList<>();
+    private final List<CompactSliderPanel> sliders = new ArrayList<>();
     private JRadioButton duplicateYesButton;
     private JRadioButton duplicateNoButton;
     private JRadioButton duplicateAnyButton;
@@ -120,8 +120,6 @@ public class QuestionPanel extends JPanel {
             }
         });
 
-
-
         return row;
     }
 
@@ -129,29 +127,20 @@ public class QuestionPanel extends JPanel {
         JPanel row = new JPanel(new BorderLayout(2, 4));
         row.setBorder(BorderFactory.createEmptyBorder(2, 8, 2, 8));
 
-        JLabel label = createClickableQuestionLabel(q);
-
-        JSlider slider = new JSlider(0, 5, 5);
+        CompactSliderPanel slider = new CompactSliderPanel(q.getShortText(), 0, 5, 5);
         sliders.add(slider);
-        slider.setMajorTickSpacing(1);
-        slider.setPaintTicks(true);
-        slider.setPaintLabels(true);
 
-        
-        row.add(label, BorderLayout.NORTH);
-        row.add(slider, BorderLayout.CENTER);
+        slider.setChangeListener(value -> {
+            if (weightSelectionListener != null) {
+                weightSelectionListener.accept(q, value);
+            }
 
-        slider.addChangeListener(e -> {
-            if (!slider.getValueIsAdjusting()) {
-                if (weightSelectionListener != null) {
-                    weightSelectionListener.accept(q, slider.getValue());
-                }
-
-                if (questionSelectionListener != null) {
-                    questionSelectionListener.accept(q);
-                }
+            if (questionSelectionListener != null) {
+                questionSelectionListener.accept(q);
             }
         });
+
+        row.add(slider, BorderLayout.CENTER);
 
         return row;
     }
@@ -174,8 +163,6 @@ public class QuestionPanel extends JPanel {
 
         return card;
     }
-
-
 
     private void selectQuestionCard(JPanel card, QuestionInfo q) {
         if (selectedCard != null) {
@@ -216,8 +203,8 @@ public class QuestionPanel extends JPanel {
             anyButton.setSelected(true);
         }
 
-        for (JSlider slider : sliders) {
-            slider.setValue(5);
+        for (CompactSliderPanel slider : sliders) {
+            slider.setValue(5);;
         }
 
         if (selectedCard != null) {

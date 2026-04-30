@@ -26,22 +26,34 @@ public class MainFrame extends JFrame {
             )
         );
 
-        DetailPanel detailPanel = new DetailPanel();
         QuestionPanel questionPanel = new QuestionPanel();
         DSListPanel dsListPanel = new DSListPanel();
+        DiagramPanel diagramPanel = new DiagramPanel();
+        ExplanationPanel explanationPanel = new ExplanationPanel();
 
-        LeftPanel leftPanel = new LeftPanel(questionPanel, dsListPanel);
+        MainPanel mainPanel = new MainPanel(
+            questionPanel,
+            dsListPanel,
+            diagramPanel,
+            explanationPanel
+        );
 
-        AppController controller = new AppController(questionPanel, dsListPanel, detailPanel);
+        AppController controller = new AppController(
+                questionPanel,
+                dsListPanel,
+                diagramPanel,
+                explanationPanel
+            );
 
-        setJMenuBar(createMenuBar(controller, detailPanel));
+        setJMenuBar(createMenuBar(controller, explanationPanel));
 
-        detailPanel.showWelcome();
+        explanationPanel.showWelcome();
+        controller.reset();
 
-        add(leftPanel, BorderLayout.WEST);
-        add(detailPanel, BorderLayout.CENTER);
+        add(mainPanel, BorderLayout.CENTER);
     }
-    private JMenuBar createMenuBar(AppController controller, DetailPanel detailPanel){
+    
+    private JMenuBar createMenuBar(AppController controller, ExplanationPanel explanationPanel){
         JMenuBar menuBar = new JMenuBar();
 
         JMenu fileMenu = new JMenu("File");
@@ -81,31 +93,20 @@ public class MainFrame extends JFrame {
         menuBar.add(viewMenu);
         menuBar.add(helpMenu);
 
-        lightThemeItem.addActionListener(e -> {
-            ThemeManager.applyTheme(this, Theme.LIGHT);
-            detailPanel.applyTheme(Theme.LIGHT);
-            controller.applyTheme(Theme.LIGHT);
-        });
+        lightThemeItem.addActionListener(e -> applyTheme(Theme.LIGHT, controller));
 
-        softBlueThemeItem.addActionListener(e -> {
-            ThemeManager.applyTheme(this, Theme.SOFT_BLUE);
-            detailPanel.applyTheme(Theme.SOFT_BLUE);
-            controller.applyTheme(Theme.SOFT_BLUE);
-        });
+        softBlueThemeItem.addActionListener(e -> applyTheme(Theme.SOFT_BLUE, controller));
 
-        darkThemeItem.addActionListener(e -> {
-            ThemeManager.applyTheme(this, Theme.DARK);
-            detailPanel.applyTheme(Theme.DARK);
-            controller.applyTheme(Theme.DARK);
-        });
+        darkThemeItem.addActionListener(e -> applyTheme(Theme.DARK, controller));
 
-        darkBlueThemeItem.addActionListener(e -> {
-            ThemeManager.applyTheme(this, Theme.DARK_BLUE);
-            detailPanel.applyTheme(Theme.DARK_BLUE);
-            controller.applyTheme(Theme.DARK_BLUE);
-        });
+        darkBlueThemeItem.addActionListener(e -> applyTheme(Theme.DARK_BLUE, controller));
 
         return menuBar;
+    }
+
+    private void applyTheme(Theme theme, AppController controller) {
+        ThemeManager.applyTheme(this, theme);
+        controller.applyTheme(theme);
     }
 
     private void showAboutDialog() {

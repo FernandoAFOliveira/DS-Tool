@@ -1,5 +1,0 @@
-%% ArrayDeque: double-ended queue; both ends are usable
-flowchart LR
-    LeftOps["front operations<br/>addFirst()<br/>pollFirst()<br/>peekFirst()"] <--> F[front: A] <--> B[B] <--> C[C] <--> R[rear: D] <--> RightOps["rear operations<br/>addLast()<br/>pollLast()<br/>peekLast()"]
-    StackUse["as Stack:<br/>addLast + pollLast"] -.-> R
-    QueueUse["as Queue:<br/>addLast + pollFirst"] -.-> F
