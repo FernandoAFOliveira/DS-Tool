@@ -1,0 +1,28 @@
+<h1>TreeMap</h1>
+
+<h2>Description</h2>
+<p>
+<b>TreeMap</b> stores key-value pairs in sorted key order and supports navigation methods such as finding nearby keys.
+</p>
+
+<h2>Example</h2>
+<p>
+Use <b>TreeMap</b> when you need key-value mapping and also need the keys kept sorted.
+</p>
+
+<h2>API Overview</h2>
+<p>
+<code>put(K key, V value)</code>, <code>get(Object key)</code>, <code>containsKey(Object key)</code>, <code>firstKey()</code>, <code>lastKey()</code>, <code>lowerKey(K key)</code>, <code>higherKey(K key)</code>
+</p>
+
+<h2>Code</h2>
+<pre><code>TreeMap&lt;String, Integer&gt; sortedMap = new TreeMap&lt;&gt;();
+
+sortedMap.put("banana", 2);
+sortedMap.put("apple", 1);
+sortedMap.put("cherry", 3);
+
+System.out.println(sortedMap.firstKey()); // apple
+System.out.println(sortedMap.lastKey()); // cherry
+System.out.println(sortedMap.lowerKey("banana")); // apple
+System.out.println(sortedMap.higherKey("banana")); // cherry</code></pre>

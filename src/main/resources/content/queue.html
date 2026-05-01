@@ -1,0 +1,25 @@
+<h1>Queue</h1>
+
+<h2>Description</h2>
+<p>
+<b>Queue</b> represents first-in, first-out behavior, where the first item added is the first item removed.
+</p>
+
+<h2>Example</h2>
+<p>
+Use <b>Queue</b> for waiting lines, task processing, breadth-first search, or anything processed in arrival order.
+</p>
+
+<h2>API Overview</h2>
+<p>
+<code>add(E e)</code>, <code>offer(E e)</code>, <code>poll()</code>, <code>peek()</code>, <code>remove()</code>, <code>size()</code>
+</p>
+
+<h2>Code</h2>
+<pre><code>Queue&lt;String&gt; queue = new LinkedList&lt;&gt;();
+
+queue.add("Alice");
+queue.add("Bob");
+
+System.out.println(queue.poll()); // Alice
+System.out.println(queue.peek()); // Bob</code></pre>

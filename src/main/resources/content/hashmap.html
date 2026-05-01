@@ -1,0 +1,25 @@
+<h1>HashMap</h1>
+
+<h2>Description</h2>
+<p>
+<b>HashMap</b> stores key-value pairs and provides very fast average lookup, insertion, and deletion by key.
+</p>
+
+<h2>Example</h2>
+<p>
+Use <b>HashMap</b> for counting words, storing usernames with scores, or mapping IDs to objects.
+</p>
+
+<h2>API Overview</h2>
+<p>
+<code>put(K key, V value)</code>, <code>get(Object key)</code>, <code>containsKey(Object key)</code>, <code>remove(Object key)</code>, <code>keySet()</code>, <code>size()</code>
+</p>
+
+<h2>Code</h2>
+<pre><code>HashMap&lt;String, Integer&gt; wordCount = new HashMap&lt;&gt;();
+
+wordCount.put("hello", 1);
+wordCount.put("world", 2);
+
+System.out.println(wordCount.get("hello")); // 1
+System.out.println(wordCount.containsKey("world")); // true</code></pre>

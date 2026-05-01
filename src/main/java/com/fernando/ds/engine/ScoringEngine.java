@@ -1,7 +1,4 @@
 package com.fernando.ds.engine;
-
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import com.fernando.ds.model.DSRequirements;

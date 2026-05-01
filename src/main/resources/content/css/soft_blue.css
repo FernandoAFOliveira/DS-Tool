@@ -1,0 +1,42 @@
+body {
+    background-color: #ebf5ff;
+    color: #000000;
+    font-family: SansSerif;
+    font-size: 14px;
+    padding: 24px;
+}
+
+h1 {
+    text-align: center;
+    font-size: 26px;
+}
+
+h2 {
+    text-align: center;
+    font-size: 18px;
+    margin-top: 28px;
+}
+
+p {
+    line-height: 1.5;
+}
+
+pre {
+    background-color: #dcebfA;
+    padding: 12px;
+    border-radius: 6px;
+    font-family: Monospaced;
+}
+
+code {
+    font-family: Monospaced;
+    font-size: 14px;
+}
+
+ul {
+    margin-left: 20px;
+}
+
+b {
+    color: #000000;
+}

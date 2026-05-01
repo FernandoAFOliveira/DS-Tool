@@ -1,0 +1,25 @@
+<h1>ArrayDeque</h1>
+
+<h2>Description</h2>
+<p>
+<b>ArrayDeque</b> is a resizable double-ended queue. It is useful when you need efficient insertion and removal from both the front and back.
+</p>
+
+<h2>Example</h2>
+<p>
+Use <b>ArrayDeque</b> for queues, stacks, undo systems, or processing items from both ends.
+</p>
+
+<h2>API Overview</h2>
+<p>
+<code>addFirst(E e)</code>, <code>addLast(E e)</code>, <code>pollFirst()</code>, <code>pollLast()</code>, <code>peekFirst()</code>, <code>peekLast()</code>, <code>size()</code>
+</p>
+
+<h2>Code</h2>
+<pre><code>ArrayDeque&lt;String&gt; deque = new ArrayDeque&lt;&gt;();
+
+deque.addFirst("Alice");
+deque.addLast("Bob");
+
+System.out.println(deque.pollFirst()); // Alice
+System.out.println(deque.pollLast());  // Bob</code></pre>

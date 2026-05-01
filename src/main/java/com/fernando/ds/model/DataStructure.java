@@ -1,154 +1,122 @@
 package com.fernando.ds.model;
 
-public abstract class DataStructure implements Comparable<DataStructure>{
-	
-	private final String name;
+public abstract class DataStructure implements Comparable<DataStructure> {
 
-	// Main behavior/category attributes
-	private final boolean keyValue;
-	private final boolean allowsDuplicates;
-	private final boolean indexed;
-	private final RemovalOrder removalOrder;
+    private final String name;
 
-	// Scoring attributes
-	private final int lookup;
-	private final int addDelete;
-	private final int memory;
-	private final int sorted;
+    // Main behavior/category attributes
+    private final boolean keyValue;
+    private final boolean allowsDuplicates;
+    private final boolean indexed;
+    private final RemovalOrder removalOrder;
 
-	// Tie-breaking / display
-	private final boolean legacy;
-	private double lastCalculatedScore;
+    // Scoring attributes
+    private final int lookup;
+    private final int addDelete;
+    private final int memory;
+    private final int sorted;
 
-	protected final String explanation;
-	protected final String exampleUse;
-	protected final String apiOverview;
-	protected final String codeExample;
-	
-	
-	public DataStructure(
-		String name,
+    // Tie-breaking / display
+    private final boolean legacy;
+    private double lastCalculatedScore;
 
-		boolean keyValue,
-		boolean allowsDuplicates,
-		boolean indexed,
-		RemovalOrder removalOrder,
+    public DataStructure(
+        String name,
 
-		int lookup,
-		int addDelete,
-		int memory,
-		int sorted,
+        boolean keyValue,
+        boolean allowsDuplicates,
+        boolean indexed,
+        RemovalOrder removalOrder,
 
-		boolean legacy,
+        int lookup,
+        int addDelete,
+        int memory,
+        int sorted,
 
-		String explanation,
-		String exampleUse,
-		String apiOverview,
-		String codeExample
-	) {
-		this.name = name;
-		this.keyValue = keyValue;
-		this.allowsDuplicates = allowsDuplicates;
-		this.indexed = indexed;
-		this.removalOrder = removalOrder;
+        boolean legacy
+    ) {
+        this.name = name;
+        this.keyValue = keyValue;
+        this.allowsDuplicates = allowsDuplicates;
+        this.indexed = indexed;
+        this.removalOrder = removalOrder;
 
-		this.lookup = lookup;
-		this.addDelete = addDelete;
-		this.memory = memory;
-		this.sorted = sorted;
+        this.lookup = lookup;
+        this.addDelete = addDelete;
+        this.memory = memory;
+        this.sorted = sorted;
 
-		this.legacy = legacy;
+        this.legacy = legacy;
+    }
 
-		this.explanation = explanation;
-		this.exampleUse = exampleUse;
-		this.apiOverview = apiOverview;
-		this.codeExample = codeExample;
-	}
+    public String getDisplayName() {
+        return name;
+    }
 
-	public String getDisplayName() {
-		return name;
-	}
+    public double getLastCalculatedScore() {
+        return lastCalculatedScore;
+    }
 
-	public String getExplanation() {
-		return explanation;
-	}
+    public void setLastCalculatedScore(double score) {
+        this.lastCalculatedScore = score;
+    }
 
-	public String getExampleUse() {
-		return exampleUse;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public String getApiOverview() {
-		return apiOverview;
-	}
+    public boolean isLegacy() {
+        return legacy;
+    }
 
-	// Getter AND Setter for the temporary score
-    public double getLastCalculatedScore() { return lastCalculatedScore; }
-    public void setLastCalculatedScore(double score) { this.lastCalculatedScore = score; }
-		
-	//Getters 
-	public String getName() {
-		return name;
-	}
+    public boolean isDuplicates() {
+        return allowsDuplicates;
+    }
 
-	public boolean isLegacy() {
-		return legacy;
-	}
+    public boolean isKeys() {
+        return keyValue;
+    }
 
-	public boolean isDuplicates() {
-		return allowsDuplicates;
-	}
+    public boolean isIndexed() {
+        return indexed;
+    }
 
-	public boolean isKeys() {
-		return keyValue;
-	}
+    public RemovalOrder getRemovalOrder() {
+        return removalOrder;
+    }
 
-	public boolean isIndexed() {
-		return indexed;
-	}
+    public int getLookup() {
+        return lookup;
+    }
 
-	public RemovalOrder getRemovalOrder() {
-		return removalOrder;
-	}
+    public int getAddDelete() {
+        return addDelete;
+    }
 
-	public int getLookup() {
-		return lookup;
-	}
+    public int getMemory() {
+        return memory;
+    }
 
-	public int getAddDelete() {
-		return addDelete;
-	}
+    public int getSorted() {
+        return sorted;
+    }
 
-	public int getMemory() {
-		return memory;
-	}
+    @Override
+    public int compareTo(DataStructure other) {
+        int scoreCompare = Double.compare(
+            other.lastCalculatedScore,
+            this.lastCalculatedScore
+        );
 
-	public int getSorted() {
-		return sorted;
-	}
-	public String getCodeExample() {
-		return codeExample;
-	}
-	
-		@Override
-	public int compareTo(DataStructure other) {
-		int scoreCompare = Double.compare(
-			other.lastCalculatedScore,
-			this.lastCalculatedScore
-		);
+        if (scoreCompare != 0) {
+            return scoreCompare;
+        }
 
-		if (scoreCompare != 0) {
-			return scoreCompare;
-		}
+        return this.name.compareTo(other.name);
+    }
 
-		return this.name.compareTo(other.name);
-	}
-
-	@Override
-	public String toString() {
-		return "Best choice: " + name + "\n\n" +
-			"Why:\n" + explanation + "\n\n" +
-			"Example:\n" + exampleUse + "\n\n" +
-			"API Overview:\n" + apiOverview + "\n\n" +
-			"Code:\n" + codeExample + "\n\n" ;
-	}
+    @Override
+    public String toString() {
+        return name;
+    }
 }

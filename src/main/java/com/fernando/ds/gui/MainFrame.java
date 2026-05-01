@@ -1,14 +1,20 @@
 package com.fernando.ds.gui;
 
+import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 
+import javax.swing.JScrollPane;
+
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+
+
+import com.fernando.ds.util.ContentLoader;
 
 public class MainFrame extends JFrame {
 
@@ -50,6 +56,7 @@ public class MainFrame extends JFrame {
         controller.reset();
 
         add(mainPanel, BorderLayout.CENTER);
+
     }
     
     private JMenuBar createMenuBar(AppController controller, ExplanationPanel explanationPanel){
@@ -109,14 +116,22 @@ public class MainFrame extends JFrame {
     }
 
     private void showAboutDialog() {
+        String html = ContentLoader.loadTextResource("/content/about.html");
+
+        JEditorPane editorPane = new JEditorPane();
+        editorPane.setContentType("text/html");
+        editorPane.setText(html);
+        editorPane.setEditable(false);
+        editorPane.setOpaque(false);
+        editorPane.setCaretPosition(0);
+
+        JScrollPane scrollPane = new JScrollPane(editorPane);
+        scrollPane.setPreferredSize(new Dimension(520, 360));
+        scrollPane.setBorder(null);
+
         JOptionPane.showMessageDialog(
             this,
-            "Data Structure Advisor\n\n"
-            + "Created by Fernando Oliveira\n"
-            + "COP 3330 Object-Oriented Programming\n\n"
-            + "This app helps students compare common Java data structures.\n"
-            + "Use the questions and sliders to filter and sort the structures,\n"
-            + "then select a data structure to view details and example code.",
+            scrollPane,
             "About Data Structure Advisor",
             JOptionPane.INFORMATION_MESSAGE
         );

@@ -1,0 +1,28 @@
+<h1>TreeSet</h1>
+
+<h2>Description</h2>
+<p>
+<b>TreeSet</b> stores unique elements in sorted order and supports navigation methods for finding nearby values.
+</p>
+
+<h2>Example</h2>
+<p>
+Use <b>TreeSet</b> when you need unique values, sorted order, or operations like finding the next higher or lower value.
+</p>
+
+<h2>API Overview</h2>
+<p>
+<code>add(E e)</code>, <code>contains(Object o)</code>, <code>remove(Object o)</code>, <code>first()</code>, <code>last()</code>, <code>lower(E e)</code>, <code>higher(E e)</code>, <code>floor(E e)</code>, <code>ceiling(E e)</code>
+</p>
+
+<h2>Code</h2>
+<pre><code>TreeSet&lt;String&gt; sortedSet = new TreeSet&lt;&gt;();
+
+sortedSet.add("banana");
+sortedSet.add("apple");
+sortedSet.add("cherry");
+
+System.out.println(sortedSet.first()); // apple
+System.out.println(sortedSet.last()); // cherry
+System.out.println(sortedSet.lower("banana")); // apple
+System.out.println(sortedSet.higher("banana")); // cherry</code></pre>

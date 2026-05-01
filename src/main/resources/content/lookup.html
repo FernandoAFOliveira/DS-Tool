@@ -1,0 +1,22 @@
+<h1>Lookup speed</h1>
+
+<p>
+Controls how much importance is given to fast searching or checking.
+</p>
+
+<p>
+High priority favors structures like <b>HashMap</b> and <b>HashSet</b> (O(1) average).
+</p>
+
+<p>
+<b>TreeMap</b> and <b>TreeSet</b> are usually O(log n) but maintain sorted order.
+</p>
+
+<p>
+Set this high when your program frequently checks:
+<ul>
+    <li>Does this value exist?</li>
+    <li>What value belongs to this key?</li>
+    <li>Have I seen this before?</li>
+</ul>
+</p>
