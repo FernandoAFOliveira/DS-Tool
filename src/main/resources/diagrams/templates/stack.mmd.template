@@ -23,8 +23,6 @@
 %% Stack: LIFO, last in first out
 flowchart TB
     Title["<b>Stack</b>"]:::title
-    Subtitle["LIFO: the last item pushed is the first item popped"]:::subtitle
-    Title ~~~ Subtitle
 
     subgraph Main[" "]
         direction TB

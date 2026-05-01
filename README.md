@@ -41,4 +41,4 @@ From the project root:
 
 ```bash
 mvn clean compile
-mvn exec:java
+mvn javafx:run  

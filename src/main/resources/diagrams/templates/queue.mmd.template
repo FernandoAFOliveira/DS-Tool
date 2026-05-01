@@ -22,8 +22,6 @@
 %% Queue: FIFO, first in first out
 flowchart TB
     Title["<b>Queue</b>"]:::title
-    Subtitle["FIFO: items enter at the rear and leave from the front"]:::subtitle
-    Title ~~~ Subtitle
 
     subgraph Main[" "]
         direction LR

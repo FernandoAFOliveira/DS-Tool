@@ -22,8 +22,6 @@
 %% ArrayList: index-based storage with dynamic capacity
 flowchart TB
     Title["<b>ArrayList</b>"]:::title
-    Subtitle["Resizable array: fast get by index, shifting when inserting/removing in the middle"]:::subtitle
-    Title ~~~ Subtitle
 
     subgraph Main[" "]
         direction LR

@@ -23,8 +23,6 @@
 %% ArrayDeque: double-ended queue with both ends usable
 flowchart TB
     Title["<b>ArrayDeque</b>"]:::title
-    Subtitle["Both ends support fast insert/remove operations"]:::subtitle
-    Title ~~~ Subtitle
 
     subgraph Main[" "]
         direction LR

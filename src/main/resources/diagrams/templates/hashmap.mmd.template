@@ -23,8 +23,6 @@
 %% HashMap: unique keys map to values using hashing
 flowchart TB
     Title["<b>HashMap</b>"]:::title
-    Subtitle["Each unique key maps<br/>to one value<br/>put replaces value"]:::subtitle
-    Title ~~~ Subtitle
 
     Put["put('Bob', 4071234567)"]:::action --> Hash["hash('Bob')"]:::data --> Bucket["bucket"]:::data --> Pair["Entry<br/><b>key:</b> Bob<br/><b>value:</b> 4071234567"]:::focus
     Get["get('Bob')"]:::action --> Hash2["hash('Bob')"]:::data --> Bucket

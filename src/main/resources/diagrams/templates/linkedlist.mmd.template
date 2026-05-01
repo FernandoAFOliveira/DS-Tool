@@ -23,8 +23,6 @@
 %% LinkedList: nodes connected by references instead of indexes
 flowchart TB
     Title["<b>LinkedList</b>"]:::title
-    Subtitle["Nodes store data plus references to the next node"]:::subtitle
-    Title ~~~ Subtitle
 
     subgraph Main[" "]
         direction LR

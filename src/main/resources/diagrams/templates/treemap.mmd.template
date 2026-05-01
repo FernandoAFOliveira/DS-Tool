@@ -23,8 +23,6 @@
 %% TreeMap: sorted keys, each key maps to one value
 flowchart TB
     Title["<b>TreeMap</b>"]:::title
-    Subtitle["A sorted map: keys stay ordered and each key points to one value"]:::subtitle
-    Title ~~~ Subtitle
 
     subgraph Main["Keys stored in sorted order"]
         direction TB

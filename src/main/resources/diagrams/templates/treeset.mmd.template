@@ -23,9 +23,6 @@
 %% TreeSet: sorted set backed by a balanced search tree
 flowchart TB
     Title["<b>TreeSet</b>"]:::title
-    Subtitle["A sorted set: no duplicates, iterator visits values in order"]:::subtitle
-    Title ~~~ Subtitle
-
     subgraph Main["Balanced search tree"]
         direction TB
         Root["5"]:::focus --> L["3"]:::data

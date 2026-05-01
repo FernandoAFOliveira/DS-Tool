@@ -23,8 +23,6 @@
 %% PriorityQueue: highest priority item is removed first
 flowchart TB
     Title["<b>PriorityQueue</b>"]:::title
-    Subtitle["Usually drawn as a heap: poll() removes the highest-priority item"]:::subtitle
-    Title ~~~ Subtitle
 
     subgraph Main["Heap view"]
         direction TB

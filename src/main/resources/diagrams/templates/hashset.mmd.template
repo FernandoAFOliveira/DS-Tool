@@ -23,8 +23,6 @@
 %% HashSet: unique values, no guaranteed order
 flowchart TB
     Title["<b>HashSet</b>"]:::title
-    Subtitle["Stores unique values using hash buckets; iteration order is not guaranteed"]:::subtitle
-    Title ~~~ Subtitle
 
     subgraph Main["Hash buckets"]
         direction LR
