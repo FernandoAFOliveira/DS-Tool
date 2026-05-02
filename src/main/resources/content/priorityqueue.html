@@ -37,14 +37,15 @@ pq.add(8);
 
 for (Integer x : pq) {
     System.out.println(x); // order is unpredictable
+}
 
 // Max-heap (reverse priority)
-PriorityQueue<Integer> maxPQ = new PriorityQueue<>(Collections.reverseOrder());
+PriorityQueue&lt;Integer&gt; maxPQ = new PriorityQueue&lt;&gt;(Collections.reverseOrder());
 
 maxPQ.add(5);
 maxPQ.add(2);
 maxPQ.add(8);
 
-System.out.println(maxPQ.poll()); // 8    
-}</code></pre>
+System.out.println(maxPQ.poll()); // 8   
+</code></pre>
 </div>

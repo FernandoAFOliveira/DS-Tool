@@ -5,3 +5,7 @@
 .settings/
 *.class
 .env
+.vscode/settings.json
+dist/
+*.exe
+*.deb
