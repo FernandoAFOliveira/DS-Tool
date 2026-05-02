@@ -1,75 +1,100 @@
 # Data Structure Advisor
 
-Data Structure Advisor is a Java desktop application that helps students compare common Java data structures and choose an appropriate structure for a programming task.
+A Java desktop application that helps students and developers **choose the right data structure based on real programming constraints**.
+Unlike static documentation, this tool guides users through a decision process using filters, rankings, and visual diagrams.
 
-The app provides an interactive GUI with questions, filters, ranked data structure suggestions, visual diagrams, explanations, API summaries, and example Java code.
+![Downloads](https://img.shields.io/github/downloads/FernandoAFOliveira/DS-Tool/total?style=for-the-badge)
+![Release](https://img.shields.io/github/v/release/FernandoAFOliveira/DS-Tool?style=for-the-badge)
+![License](https://img.shields.io/github/license/FernandoAFOliveira/DS-Tool?style=for-the-badge)
+
+👉 **[Download Latest Release](https://github.com/FernandoAFOliveira/DS-Tool/releases/latest)**
+
+---
+
+## Preview
+
+![Main UI](docs/images/main-ui.png)
+
+---
+
+## Features
+
+- Compare common Java data structures:
+  - ArrayList, Stack, Queue, PriorityQueue
+  - ArrayDeque, HashSet, TreeSet
+  - HashMap, TreeMap
+
+- Filter by:
+  - Key-value mapping
+  - Duplicate support
+  - Sorted order
+  - Index access
+  - Removal behavior
+
+- Rank results by:
+  - Lookup speed
+  - Add/remove speed
+  - Memory efficiency
+
+- Interactive visual diagrams for each structure
+- Built-in explanations:
+  - Key concepts
+  - API overview
+  - Example code
+
+- Multiple UI themes:
+  - Light
+  - Dark
+  - Soft Blue
+  - Dark Blue
+
+---
 
 ## Screenshots
-
-### Main Interface
-![Main UI](docs/images/main-ui.png)
 
 ### Data Structure Comparison
 ![Comparison](docs/images/comparison.png)
 
 ### Dark Theme
-![Dark Theme](docs/images/dark_theme.png)
+![Dark Theme](docs/images/dark-theme.png)
 
-### Dark Blue Theme
-![Dark Blue Theme](docs/images/dark_blue_theme.png)
+---
 
 ## Download
 
-👉 [Download Latest Release](https://github.com/FernandoAFOliveira/DS-Tool/releases)
+Download the latest version from GitHub Releases:
 
-## Features
+👉 https://github.com/FernandoAFOliveira/DS-Tool/releases/latest
 
-- Compare common Java data structures:
-  - ArrayList
-  - Stack
-  - Queue
-  - PriorityQueue
-  - ArrayDeque
-  - HashSet
-  - TreeSet
-  - HashMap
-  - TreeMap
-- Filter by:
-  - key-value mapping
-  - duplicate support
-  - sorted order
-  - index access
-  - removal order
-- Rank results by:
-  - lookup speed
-  - add/delete speed
-  - memory efficiency
-- View themed diagrams for each structure
-- Switch between light, soft blue, dark, and dark blue themes
-- Read explanations, API overviews, and example code
+### Available packages:
+- Windows installer (`.exe`)
+- Linux package (`.deb`)
 
-## License
-This project is licensed under the MIT License.
+---
 
-## Requirements
+## Quick Start (Run from Source)
 
-- Java 21
-- Maven
-
-## Quick Start
-
+```bash
 git clone https://github.com/FernandoAFOliveira/DS-Tool.git
 cd DS-Tool
 mvn clean javafx:run
+```
+---
 
-## Running the App
+ ### Requirements
+ - Java 21
+ - Maven
 
-From the project root:
+---
 
-```bash
-mvn clean compile
-mvn javafx:run 
+ ## Why this project?
 
-No separate requirements file is needed. Maven downloads the required dependencies automatically.
-If JavaFX fails to launch, ensure JavaFX is properly installed or use:
-mvn clean javafx:run
+Choosing the right data structure is one of the most important decisions in programming, but it's often taught in isolation.
+
+This tool bridges the gap by:
+- Connecting theory with real use cases
+- Providing visual intuition
+- Helping users make decisions based on constraints
+
+## License
+This project is licensed under the MIT License.
