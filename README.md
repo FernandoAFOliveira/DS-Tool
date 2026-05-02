@@ -98,3 +98,16 @@ This tool bridges the gap by:
 
 ## License
 This project is licensed under the MIT License.
+
+## Contributing
+
+Contributions are welcome.
+
+Ways to help:
+- Improve explanations and examples
+- Add new data structures
+- Improve diagrams and themes
+- Report bugs
+- Suggest better ranking logic
+
+Please see [CONTRIBUTING.md](CONTRIBUTING.md) for setup instructions and contribution guidelines.
