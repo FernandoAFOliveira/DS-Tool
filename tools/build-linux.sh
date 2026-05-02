@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 # build-linux.sh
-# Builds JAR, copies dependencies, and creates Linux installer
+# Builds JAR, copies dependencies, and creates Linux installers:
+# - .deb package for Debian/Ubuntu/Kubuntu
+# - portable .tar.gz app image for other Linux distributions
 
 set -e
 
@@ -9,6 +11,9 @@ APP_VERSION="1.0.0"
 MAIN_JAR="data-structure-tool-1.0-SNAPSHOT.jar"
 MAIN_CLASS="com.fernando.ds.GuiMain"
 ICON_FILE="icon.png"
+
+DEB_NAME="DS-Tool-Linux-v${APP_VERSION}.deb"
+PORTABLE_NAME="DS-Tool-Linux-Portable-v${APP_VERSION}.tar.gz"
 
 echo "==== Preparing dist folder ===="
 
@@ -23,7 +28,7 @@ if [ ! -f "target/$MAIN_JAR" ]; then
     exit 1
 fi
 
-echo "==== Creating Linux installer with jpackage ===="
+echo "==== Creating Debian/Ubuntu installer (.deb) ===="
 
 jpackage \
   --type deb \
@@ -37,25 +42,52 @@ jpackage \
   --add-modules javafx.controls,javafx.web,javafx.swing \
   --icon "$ICON_FILE"
 
-echo "==== Renaming installer ===="
+deb_file=$(find dist -maxdepth 1 -type f -name "*.deb" | head -n 1)
 
-installer=$(find dist -maxdepth 1 -type f \( -name "*.deb" -o -name "*.rpm" \) | head -n 1)
-
-if [ -z "$installer" ]; then
-    echo "ERROR: No Linux installer found in dist/"
+if [ -z "$deb_file" ]; then
+    echo "ERROR: No .deb installer found in dist/"
     exit 1
 fi
 
-ext="${installer##*.}"
-new_name="DS-Tool-Linux-v${APP_VERSION}.${ext}"
-
-if [ -f "dist/$new_name" ]; then
-    echo "WARNING: dist/$new_name already exists. Overwriting..."
-    rm "dist/$new_name"
+if [ -f "dist/$DEB_NAME" ]; then
+    echo "WARNING: dist/$DEB_NAME already exists. Overwriting..."
+    rm "dist/$DEB_NAME"
 fi
 
-mv "$installer" "dist/$new_name"
+mv "$deb_file" "dist/$DEB_NAME"
+
+echo "==== Creating portable Linux app image ===="
+
+portable_work_dir="dist/portable-work"
+
+if [ -d "$portable_work_dir" ]; then
+    rm -rf "$portable_work_dir"
+fi
+
+mkdir -p "$portable_work_dir"
+
+jpackage \
+  --type app-image \
+  --name "$APP_NAME" \
+  --app-version "$APP_VERSION" \
+  --input target \
+  --main-jar "$MAIN_JAR" \
+  --main-class "$MAIN_CLASS" \
+  --dest "$portable_work_dir" \
+  --module-path target/dependency \
+  --add-modules javafx.controls,javafx.web,javafx.swing \
+  --icon "$ICON_FILE"
+
+if [ -f "dist/$PORTABLE_NAME" ]; then
+    echo "WARNING: dist/$PORTABLE_NAME already exists. Overwriting..."
+    rm "dist/$PORTABLE_NAME"
+fi
+
+tar -czf "dist/$PORTABLE_NAME" -C "$portable_work_dir" "$APP_NAME"
+
+rm -rf "$portable_work_dir"
 
 echo "==== Build complete ===="
-echo "Installer created:"
-echo "dist/$new_name"
+echo "Created:"
+echo "dist/$DEB_NAME"
+echo "dist/$PORTABLE_NAME"
