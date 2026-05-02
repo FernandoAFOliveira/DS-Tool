@@ -1,13 +1,7 @@
 <h1>PriorityQueue</h1>
 
 <b>PriorityQueue</b> stores elements so that the highest-priority or lowest-priority item can be removed first.
-</p>
-<p>
 <b>PriorityQueue</b> does not keep all elements fully sorted. It only guarantees that <code>peek()</code> and <code>poll()</code> access the next priority item.
-</p>
-
-<h2>Example</h2>
-<p>
 Use <b>PriorityQueue</b> for scheduling tasks, processing jobs by priority, or algorithms that repeatedly need the next smallest item.
 </p>
 
@@ -16,12 +10,41 @@ Use <b>PriorityQueue</b> for scheduling tasks, processing jobs by priority, or a
 <code>add(E e)</code>, <code>offer(E e)</code>, <code>poll()</code>, <code>peek()</code>, <code>remove(Object o)</code>, <code>size()</code>
 </p>
 
-<h2>Code</h2>
+<div class="note">
+<b>Key idea:</b> Iterating over a PriorityQueue does NOT give sorted order.
+To process elements in priority order, you must repeatedly call <code>poll()</code>.
+</div>
+
+<div class="block">
 <pre><code>PriorityQueue&lt;Integer&gt; pq = new PriorityQueue&lt;&gt;();
 
 pq.add(5);
 pq.add(2);
 pq.add(8);
 
-System.out.println(pq.poll()); // 2 (the smallest element)
-System.out.println(pq.peek()); // 5 (the next smallest element)</code></pre>
+// Access highest priority (smallest)
+System.out.println(pq.peek()); // 2
+
+// Remove in priority order
+while (!pq.isEmpty()) {
+    System.out.println(pq.poll()); // 2, 5, 8
+}
+
+// ⚠️ Common mistake: iteration is NOT sorted
+pq.add(5);
+pq.add(2);
+pq.add(8);
+
+for (Integer x : pq) {
+    System.out.println(x); // order is unpredictable
+
+// Max-heap (reverse priority)
+PriorityQueue<Integer> maxPQ = new PriorityQueue<>(Collections.reverseOrder());
+
+maxPQ.add(5);
+maxPQ.add(2);
+maxPQ.add(8);
+
+System.out.println(maxPQ.poll()); // 8    
+}</code></pre>
+</div>

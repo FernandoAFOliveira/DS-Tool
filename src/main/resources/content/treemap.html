@@ -2,26 +2,52 @@
 
 <p>
 <b>TreeMap</b> stores key-value pairs in sorted key order and supports navigation methods such as finding nearby keys.
-</p>
-
-<h2>Example</h2>
-<p>
 Use <b>TreeMap</b> when you need key-value mapping and also need the keys kept sorted.
 </p>
 
 <h2>API Overview</h2>
+
 <p>
-<code>put(K key, V value)</code>, <code>get(Object key)</code>, <code>containsKey(Object key)</code>, <code>firstKey()</code>, <code>lastKey()</code>, <code>lowerKey(K key)</code>, <code>higherKey(K key)</code>
+<code>put(K key, V value)</code>, <code>get(Object key)</code>, <code>containsKey(Object key)</code>, 
+<code>firstKey()</code>, <code>lastKey()</code>, 
 </p>
 
+<div class="note">
+<b>Key idea:</b> TreeMap = HashMap + sorting (by keys).
+Keys are always kept in sorted order, not insertion order.
+<b>Important:</b> Keys must be comparable (or use a Comparator), or a runtime error will occur.
+</div>
+
+<div class="note">
+<b>Navigation:</b><br>
+<code>lowerKey(x)</code> → strictly less than x<br>
+<code>floorKey(x)</code> → ≤ x<br>
+<code>higherKey(x)</code> → strictly greater than x<br>
+<code>ceilingKey(x)</code> → ≥ x
+</div>
+
 <h2>Code</h2>
-<pre><code>TreeMap&lt;String, Integer&gt; sortedMap = new TreeMap&lt;&gt;();
+<div class="block">
+<pre><code>TreeMap&lt;String, Integer&gt; map = new TreeMap&lt;&gt;();
 
-sortedMap.put("banana", 2);
-sortedMap.put("apple", 1);
-sortedMap.put("cherry", 3);
+map.put("banana", 2);
+map.put("apple", 1);
+map.put("cherry", 3);
 
-System.out.println(sortedMap.firstKey()); // apple
-System.out.println(sortedMap.lastKey()); // cherry
-System.out.println(sortedMap.lowerKey("banana")); // apple
-System.out.println(sortedMap.higherKey("banana")); // cherry</code></pre>
+// Sorted by key: {apple=1, banana=2, cherry=3}
+
+System.out.println(map.firstKey()); // apple
+System.out.println(map.lastKey());  // cherry
+
+// Navigation
+System.out.println(map.lowerKey("banana"));   // apple
+System.out.println(map.floorKey("banana"));   // banana
+System.out.println(map.higherKey("banana"));  // cherry
+System.out.println(map.ceilingKey("banana")); // banana
+
+// Correct iteration (like HashMap)
+for (Map.Entry&lt;String, Integer&gt; entry : map.entrySet()) {
+    System.out.println(entry.getKey() + " -> " + entry.getValue());
+}
+</code></pre>
+</div>

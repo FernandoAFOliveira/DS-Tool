@@ -1,20 +1,12 @@
 package com.fernando.ds.engine;
-import java.util.List;
 
 import com.fernando.ds.model.DSRequirements;
 import com.fernando.ds.model.DataStructure;
 import com.fernando.ds.model.Preference;
 import com.fernando.ds.model.RemovalOrder;
-import com.fernando.ds.library.DataStructureLibrary;
 
 
 public class ScoringEngine {
-
-    private final List<DataStructure> library;
-
-    public ScoringEngine() {
-        this.library = DataStructureLibrary.getAll();
-    }
 
     
     public double calculate(DataStructure ds, DSRequirements req) {

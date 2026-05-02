@@ -2,10 +2,6 @@
 
 <p>
 <b>HashMap</b> stores key-value pairs and provides very fast average lookup, insertion, and deletion by key.
-</p>
-
-<h2>Example</h2>
-<p>
 Use <b>HashMap</b> for counting words, storing usernames with scores, or mapping IDs to objects.
 </p>
 
@@ -14,11 +10,27 @@ Use <b>HashMap</b> for counting words, storing usernames with scores, or mapping
 <code>put(K key, V value)</code>, <code>get(Object key)</code>, <code>containsKey(Object key)</code>, <code>remove(Object key)</code>, <code>keySet()</code>, <code>size()</code>
 </p>
 
+<div class="note">
+<b>Key idea:</b> Use <code>entrySet()</code> to iterate efficiently over keys and values.
+Avoid looping over <code>keySet()</code> and calling <code>get()</code> repeatedly.
+</div>
+
 <h2>Code</h2>
+<div class="block">
 <pre><code>HashMap&lt;String, Integer&gt; wordCount = new HashMap&lt;&gt;();
 
 wordCount.put("hello", 1);
 wordCount.put("world", 2);
 
+// Access
 System.out.println(wordCount.get("hello")); // 1
-System.out.println(wordCount.containsKey("world")); // true</code></pre>
+System.out.println(wordCount.containsKey("world")); // true
+
+// Update value
+wordCount.put("hello", wordCount.get("hello") + 1); // increment count
+
+// Correct iteration (best practice)
+for (Map.Entry&lt;String, Integer&gt; entry : wordCount.entrySet()) {
+    System.out.println(entry.getKey() + " -> " + entry.getValue());
+}</code></pre>
+</div>

@@ -4,7 +4,6 @@
 <b>Queue</b> represents first-in, first-out behavior, where the first item added is the first item removed.
 </p>
 
-<h2>Example</h2>
 <p>
 Use <b>Queue</b> for waiting lines, task processing, breadth-first search, or anything processed in arrival order.
 </p>
@@ -14,11 +13,32 @@ Use <b>Queue</b> for waiting lines, task processing, breadth-first search, or an
 <code>add(E e)</code>, <code>offer(E e)</code>, <code>poll()</code>, <code>peek()</code>, <code>remove()</code>, <code>size()</code>
 </p>
 
-<h2>Code</h2>
+<div class="note">
+<b>Key idea:</b> Queue = First-In, First-Out (FIFO). 
+Always remove from the front and add to the back.
+Queue is an interface — use <code>LinkedList</code> or <code>ArrayDeque</code> as implementations.
+</div>
+
+<div class="note">
+Front → [Alice, Bob, Charlie] → Back
+</div>
+
+<div class="block">
 <pre><code>Queue&lt;String&gt; queue = new LinkedList&lt;&gt;();
 
-queue.add("Alice");
-queue.add("Bob");
+// Add to the back
+queue.offer("Alice");
+queue.offer("Bob");
 
+// Peek (look at front without removing)
+System.out.println(queue.peek()); // Alice
+
+// Remove from the front (FIFO)
 System.out.println(queue.poll()); // Alice
-System.out.println(queue.peek()); // Bob</code></pre>
+System.out.println(queue.poll()); // Bob
+
+// ⚠️ Difference between methods
+// offer() / poll() → safe (return null if empty)
+// add() / remove() → throw exception if empty
+</code></pre>
+</div>

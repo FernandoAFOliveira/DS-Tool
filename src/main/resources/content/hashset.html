@@ -2,10 +2,6 @@
 
 <p>
 <b>HashSet</b> stores unique elements and provides fast average add, remove, and contains operations.
-</p>
-
-<h2>Example</h2>
-<p>
 Use <b>HashSet</b> when you need to remove duplicates or quickly check whether an item has already appeared.
 </p>
 
@@ -15,11 +11,33 @@ Use <b>HashSet</b> when you need to remove duplicates or quickly check whether a
 </p>
 
 <h2>Code</h2>
-<pre><code>HashSet&lt;String&gt; uniqueItems = new HashSet&lt;&gt;();
+<div class="block">
+<pre><code>HashSet&lt;Integer&gt; a = new HashSet&lt;&gt;();
+HashSet&lt;Integer&gt; b = new HashSet&lt;&gt;();
 
-uniqueItems.add("apple");
-uniqueItems.add("banana");
-uniqueItems.add("apple"); // This won't be added again
+a.add(1);
+a.add(2);
+a.add(3);
 
-System.out.println(uniqueItems.contains("apple")); // true
-System.out.println(uniqueItems.size()); // 2</code></pre>
+b.add(3);
+b.add(4);
+
+// Iterate through a HashSet
+for (Integer x : a) {
+    System.out.println(x);
+}
+
+// Union: all values from a or b
+HashSet&lt;Integer&gt; union = new HashSet&lt;&gt;(a);
+for (Integer x : b) {
+    union.add(x);
+}
+
+// Intersection: values found in both a and b
+HashSet&lt;Integer&gt; intersection = new HashSet&lt;&gt;();
+for (Integer x : a) {
+    if (b.contains(x)) {
+        intersection.add(x);
+    }
+}</code></pre>
+</div>

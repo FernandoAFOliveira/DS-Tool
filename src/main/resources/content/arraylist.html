@@ -2,10 +2,6 @@
 
 <p>
 Resizable array implementation of the <b>List</b> interface. Provides fast random access but slower insertions and deletions in the middle.
-</p>
-
-<h2>Example</h2>
-<p>
 Use <b>ArrayList</b> when storing items where you often access elements by index, such as a list of users, products, or scores.
 </p>
 
@@ -14,13 +10,34 @@ Use <b>ArrayList</b> when storing items where you often access elements by index
 <code>add()</code>, <code>get()</code>, <code>set()</code>, <code>remove()</code>, <code>size()</code>, <code>contains()</code>
 </p>
 
+<div class="note">
+<b>Key idea:</b> ArrayList gives fast index access, but removing items shifts later elements left.
+Use an Iterator when removing during traversal.
+</div>
+
 <h2>Code</h2>
-<pre><code>ArrayList&lt;String&gt; list = new ArrayList&lt;&gt;();
+<div class="block">
+<pre><code>ArrayList&lt;Integer&gt; numbers = new ArrayList&lt;&gt;();
 
-list.add("Alice");
-list.add("Bob");
+numbers.add(1);
+numbers.add(2);
+numbers.add(3);
+numbers.add(4);
+numbers.add(5);
 
-System.out.println(list.get(0)); // Alice
+// Index access
+System.out.println(numbers.get(0)); // 1
 
-list.remove("Bob");
-System.out.println(list.size()); // 1</code></pre>
+// Safe removal while iterating
+Iterator&lt;Integer&gt; iter = numbers.iterator();
+
+while (iter.hasNext()) {
+    int value = iter.next();
+
+    if (value % 2 == 0) {
+        iter.remove();
+    }
+}
+
+System.out.println(numbers); // [1, 3, 5]</code></pre>
+</div>

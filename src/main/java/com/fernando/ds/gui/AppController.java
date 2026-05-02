@@ -26,7 +26,6 @@ public class AppController {
     private Theme currentTheme = Theme.LIGHT;
     private final QuestionPanel questionPanel;
     private DataStructure currentDataStructure;
-    private QuestionInfo currentQuestion;
 
     public AppController(
         QuestionPanel questionPanel,
@@ -48,7 +47,6 @@ public class AppController {
 
     private void showDataStructure(DataStructure ds) {
         currentDataStructure = ds;
-        currentQuestion = null;
         MermaidResult result = DiagramTemplateLoader.getProcessedMermaid(
             ds.getName(),
             currentTheme

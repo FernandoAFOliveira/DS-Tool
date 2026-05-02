@@ -2,12 +2,11 @@
 
 <p>
 <b>ArrayDeque</b> is a resizable double-ended queue. It is useful when you need efficient insertion and removal from both the front and back.
-</p>
-
-<h2>Example</h2>
-<p>
 Use <b>ArrayDeque</b> for queues, stacks, undo systems, or processing items from both ends.
 </p>
+<div class="note">
+    <b>Key idea:</b> ArrayDeque = Stack + Queue in one structure.
+</div>
 
 <h2>API Overview</h2>
 <p>
@@ -15,10 +14,28 @@ Use <b>ArrayDeque</b> for queues, stacks, undo systems, or processing items from
 </p>
 
 <h2>Code</h2>
-<pre><code>ArrayDeque&lt;String&gt; deque = new ArrayDeque&lt;&gt;();
+<div class="block">
+<pre><code>ArrayDeque&lt;Integer&gt; dq = new ArrayDeque&lt;&gt;();
 
-deque.addFirst("Alice");
-deque.addLast("Bob");
+// --- Queue behavior (FIFO) ---
+dq.addLast(1);
+dq.addLast(2);
+dq.addLast(3);
 
-System.out.println(deque.pollFirst()); // Alice
-System.out.println(deque.pollLast());  // Bob</code></pre>
+System.out.println(dq.pollFirst()); // 1
+
+// --- Stack behavior (LIFO) ---
+dq.push(10);   // same as addFirst
+dq.push(20);
+
+System.out.println(dq.pop()); // 20
+
+// --- Peek without removing ---
+System.out.println(dq.peekFirst()); // front
+System.out.println(dq.peekLast());  // back
+
+// --- Iteration ---
+for (Integer x : dq) {
+    System.out.println(x);
+}</code></pre>
+</div>
