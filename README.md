@@ -5,7 +5,7 @@ Unlike static documentation, this tool guides users through a decision process u
 
 ![Downloads](https://img.shields.io/github/downloads/FernandoAFOliveira/DS-Tool/total?style=for-the-badge)
 ![Release](https://img.shields.io/github/v/release/FernandoAFOliveira/DS-Tool?style=for-the-badge)
-[![License](https://img.shields.io/github/license/FernandoAFOliveira/DS-Tool?style=for-the-badge)](LICENSE)
+[![License](https://img.shields.io/github/license/FernandoAFOliveira/DS-Tool?style=for-the-badge&label=LICENSE&cacheSeconds=60)](LICENSE)
 
 👉 **[Download Latest Release](https://github.com/FernandoAFOliveira/DS-Tool/releases/latest)**
 
