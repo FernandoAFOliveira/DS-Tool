@@ -24,6 +24,17 @@ mvn javafx:run
 - [ ] Select **File > Reset selections**; answers and weights return to defaults and welcome content returns.
 - [ ] After reset, select another answer or structure successfully.
 
+## Milestone 2 state preservation
+
+- [ ] Select a data structure, then change a ranking weight without making that structure ineligible; the same structure remains selected.
+- [ ] Change an answer so the selected structure becomes ineligible; the selection clears and stale structure content is not retained.
+- [ ] Open question help, switch through every theme, and confirm the same question help remains displayed.
+- [ ] Select a structure, switch through every theme, and confirm its selection, explanation, and diagram remain displayed.
+- [ ] Select key-value mapping; duplicate preference becomes **Any** and its controls are disabled. Change away from key-value mapping; duplicate controls become usable again.
+- [ ] After setting non-default answers, weights, selection, and theme, choose **Subject > Java (active)** and **Experience > Advisor (active)**; all Advisor state remains unchanged.
+- [ ] Choose **File > Reset selections**; answers, weights, selection, and navigation reset while the active theme remains unchanged.
+- [ ] After reset, make another selection successfully.
+
 ## Every visible menu command
 
 Dismiss each dialog before continuing.

@@ -1,38 +1,38 @@
 package com.fernando.ds.gui;
 
-// Java
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-// Projects
-import com.fernando.ds.library.QuestionInfo;
+import com.fernando.ds.application.ApplicationState;
+import com.fernando.ds.engine.ScoringEngine;
 import com.fernando.ds.library.DataStructureLibrary;
+import com.fernando.ds.library.QuestionInfo;
+import com.fernando.ds.library.QuestionLibrary;
 import com.fernando.ds.model.DSRequirements;
 import com.fernando.ds.model.DataStructure;
 import com.fernando.ds.model.Preference;
 import com.fernando.ds.model.RemovalOrder;
 import com.fernando.ds.util.DiagramTemplateLoader;
 import com.fernando.ds.util.MermaidResult;
-import com.fernando.ds.engine.ScoringEngine;
 
 public class AppController {
 
-    private final DSRequirements requirements = new DSRequirements();
+    private final ApplicationState state;
     private final ScoringEngine scoringEngine = new ScoringEngine();
     private final DSListPanel dsListPanel;
-     private final DiagramPanel diagramPanel;
+    private final DiagramPanel diagramPanel;
     private final ExplanationPanel explanationPanel;
-    private Theme currentTheme = Theme.LIGHT;
     private final QuestionPanel questionPanel;
-    private DataStructure currentDataStructure;
 
     public AppController(
+        ApplicationState state,
         QuestionPanel questionPanel,
         DSListPanel dsListPanel,
         DiagramPanel diagramPanel,
         ExplanationPanel explanationPanel
     ) {
+        this.state = state;
         this.questionPanel = questionPanel;
         this.dsListPanel = dsListPanel;
         this.diagramPanel = diagramPanel;
@@ -45,114 +45,156 @@ public class AppController {
         questionPanel.setRemovalOrderSelectionListener(this::updateRemovalOrder);
     }
 
-    private void showDataStructure(DataStructure ds) {
-        currentDataStructure = ds;
+    public void initialize() {
+        questionPanel.applyAnswers(state.getRecommendationAnswers());
+        refreshDataStructureList();
+        renderNavigation();
+    }
+
+    private void showDataStructure(DataStructure dataStructure) {
+        state.selectDataStructure(dataStructure.getName());
+        renderDataStructure(dataStructure);
+    }
+
+    private void renderDataStructure(DataStructure dataStructure) {
         MermaidResult result = DiagramTemplateLoader.getProcessedMermaid(
-            ds.getName(),
-            currentTheme
+            dataStructure.getName(),
+            currentTheme()
         );
 
         diagramPanel.showDiagram(result.mmdSource, result.backgroundColor);
-        explanationPanel.showDataStructure(ds);
+        explanationPanel.showDataStructure(dataStructure);
     }
 
-    private void updateRemovalOrder(QuestionInfo q, RemovalOrder value) {
-        requirements.setRemovalOrderPreference(value);
+    private void updateRemovalOrder(QuestionInfo question, RemovalOrder value) {
+        state.setRemovalOrder(value);
         refreshDataStructureList();
     }
 
     public void applyTheme(Theme theme) {
-        currentTheme = theme;
+        state.setAppearance(theme.getAppearance());
         explanationPanel.applyTheme(theme);
-
-        if (currentDataStructure != null) {
-            showDataStructure(currentDataStructure);
-        } else {
-            showWelcome();
-        }
-
+        renderNavigation();
         refreshDataStructureList();
     }
 
+    private Theme currentTheme() {
+        return Theme.fromAppearance(state.getAppearance());
+    }
+
     private void refreshDataStructureList() {
-        List<DataStructure> all = DataStructureLibrary.getAll();
+        DSRequirements requirements = state.getRecommendationAnswers();
         List<DataStructure> valid = new ArrayList<>();
 
-        for (DataStructure ds : all) {
-            double score = scoringEngine.calculate(ds, requirements);
+        for (DataStructure dataStructure : DataStructureLibrary.getAll()) {
+            double score = scoringEngine.calculate(dataStructure, requirements);
 
             if (score >= 0) {
-                ds.setLastCalculatedScore(score);
-                valid.add(ds);
+                dataStructure.setLastCalculatedScore(score);
+                valid.add(dataStructure);
             }
         }
 
         Collections.sort(valid);
-        dsListPanel.updateList(valid);
-    }
+        String requestedSelection = state.getSelectedDataStructureName().orElse(null);
+        boolean selectedIsAvailable = requestedSelection == null || valid.stream()
+            .anyMatch(dataStructure ->
+                dataStructure.getName().equals(requestedSelection)
+            );
+        String selectedName = requestedSelection;
 
-    private void handleQuestionChange(QuestionInfo q) {
-        explanationPanel.showQuestion(q);
-
-        refreshDataStructureList();
-    }
-
-    private void updatePreference(QuestionInfo q, Preference value) {
-        if (q.getId() == QuestionInfo.QuestionId.KEY_VALUE) {
-            requirements.setKeyValuePreference(value);
-
-            if (value == Preference.YES) {
-                requirements.setDuplicatePreference(Preference.ANY);
-                questionPanel.setDuplicateQuestionEnabled(false);
-                explanationPanel.showMessage(
-                    "Key-value mapping selected",
-                    "Keys must be unique in Java maps. Different keys may still point to the same value, so the duplicate question has been set to Any."
-                );
-            } else {
-                questionPanel.setDuplicateQuestionEnabled(true);
+        if (!selectedIsAvailable) {
+            state.clearSelectedDataStructure();
+            if (state.getNavigation().kind()
+                == ApplicationState.NavigationKind.DATA_STRUCTURE) {
+                state.navigateToWelcome();
+                renderNavigation();
             }
-
-        } else if (q.getId() == QuestionInfo.QuestionId.DUPLICATES) {
-            requirements.setDuplicatePreference(value);
-
-        } else if (q.getId() == QuestionInfo.QuestionId.SORTED) {
-            requirements.setSortedPreference(value);
+            selectedName = null;
         }
-        else if (q.getId() == QuestionInfo.QuestionId.INDEXED) {
-            requirements.setIndexedPreference(value);
+
+        dsListPanel.updateList(valid, selectedName);
+    }
+
+    private void handleQuestionChange(QuestionInfo question) {
+        state.navigateToQuestion(question.getId());
+        explanationPanel.showQuestion(question);
+        refreshDataStructureList();
+    }
+
+    private void updatePreference(QuestionInfo question, Preference value) {
+        state.setPreference(question.getId(), value);
+        questionPanel.applyAnswers(state.getRecommendationAnswers());
+
+        if (question.getId() == QuestionInfo.QuestionId.KEY_VALUE
+            && value == Preference.YES) {
+            String title = "Key-value mapping selected";
+            String message = "Keys must be unique in Java maps. Different keys "
+                + "may still point to the same value, so the duplicate question "
+                + "has been set to Any.";
+            state.navigateToMessage(title, message);
+            explanationPanel.showMessage(title, message);
         }
 
         refreshDataStructureList();
     }
 
-    private void updateWeight(QuestionInfo q, int value) {
-        if (q.getId() == QuestionInfo.QuestionId.LOOKUP) {
-            requirements.setLookupWeight(value);
-        } else if (q.getId() == QuestionInfo.QuestionId.ADD_DELETE) {
-            requirements.setAddDeleteWeight(value);
-        } else if (q.getId() == QuestionInfo.QuestionId.MEMORY) {
-            requirements.setMemoryWeight(value);
-        }
-
+    private void updateWeight(QuestionInfo question, int value) {
+        state.setWeight(question.getId(), value);
         refreshDataStructureList();
+    }
+
+    private void renderNavigation() {
+        ApplicationState.Navigation navigation = state.getNavigation();
+
+        switch (navigation.kind()) {
+            case WELCOME -> showWelcome();
+            case QUESTION -> explanationPanel.showQuestion(
+                findQuestion(navigation.questionId())
+            );
+            case DATA_STRUCTURE -> state.getSelectedDataStructureName()
+                .flatMap(this::findDataStructure)
+                .ifPresentOrElse(
+                    this::renderDataStructure,
+                    this::showWelcome
+                );
+            case MESSAGE -> explanationPanel.showMessage(
+                navigation.title(),
+                navigation.message()
+            );
+        }
+    }
+
+    private QuestionInfo findQuestion(QuestionInfo.QuestionId questionId) {
+        for (QuestionInfo question : QuestionLibrary.getAll()) {
+            if (question.getId() == questionId) {
+                return question;
+            }
+        }
+        throw new IllegalStateException("Unknown question: " + questionId);
+    }
+
+    private java.util.Optional<DataStructure> findDataStructure(String name) {
+        return DataStructureLibrary.getAll().stream()
+            .filter(dataStructure -> dataStructure.getName().equals(name))
+            .findFirst();
     }
 
     private void showWelcome() {
         MermaidResult result = DiagramTemplateLoader.getProcessedMermaid(
             "welcome",
-            currentTheme
+            currentTheme()
         );
 
         diagramPanel.showDiagram(result.mmdSource, result.backgroundColor);
         explanationPanel.showWelcome();
     }
-    
+
     public void reset() {
-        requirements.reset();
-        questionPanel.resetSelections();
+        state.resetAdvisorSession();
+        questionPanel.applyAnswers(state.getRecommendationAnswers());
+        questionPanel.clearSelectedQuestion();
         refreshDataStructureList();
-        showWelcome();
+        renderNavigation();
     }
-
-
-    }
+}

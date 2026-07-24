@@ -39,6 +39,14 @@ public class CompactSliderPanel extends JPanel {
     }
 
     public void setValue(int newValue) {
+        setValue(newValue, true);
+    }
+
+    public void setValueSilently(int newValue) {
+        setValue(newValue, false);
+    }
+
+    private void setValue(int newValue, boolean notifyListener) {
         if (newValue < min || newValue > max) {
             return;
         }
@@ -46,7 +54,7 @@ public class CompactSliderPanel extends JPanel {
         value = newValue;
         updateText();
 
-        if (changeListener != null) {
+        if (notifyListener && changeListener != null) {
             changeListener.accept(value);
         }
     }

@@ -16,6 +16,17 @@ public class DSRequirements {
         reset();
     }
 
+    public DSRequirements(DSRequirements source) {
+        this.keyValuePreference = source.keyValuePreference;
+        this.duplicatePreference = source.duplicatePreference;
+        this.sortedPreference = source.sortedPreference;
+        this.indexedPreference = source.indexedPreference;
+        this.lookupWeight = source.lookupWeight;
+        this.addDeleteWeight = source.addDeleteWeight;
+        this.memoryWeight = source.memoryWeight;
+        this.removalOrderPreference = source.removalOrderPreference;
+    }
+
     public Preference getKeyValuePreference() {
         return keyValuePreference;
     }

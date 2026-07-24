@@ -1,6 +1,5 @@
 package com.fernando.ds.gui;
 
-import com.fernando.ds.library.DataStructureLibrary;
 import com.fernando.ds.model.DataStructure;
 
 import javax.swing.*;
@@ -12,6 +11,7 @@ public class DSListPanel extends JPanel {
 
     private final DefaultListModel<DataStructure> listModel;
     private final JList<DataStructure> dsList;
+    private boolean updatingList;
 
     public DSListPanel() {
         setLayout(new BorderLayout());
@@ -37,29 +37,39 @@ public class DSListPanel extends JPanel {
 
             return label;
         });
-        
+
         dsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-
         add(new JScrollPane(dsList), BorderLayout.CENTER);
-
-        loadAllDataStructures();
     }
 
-    private void loadAllDataStructures() {
-        updateList(DataStructureLibrary.getAll());
-    }
+    public void updateList(
+        List<DataStructure> structures,
+        String selectedDataStructureName
+    ) {
+        updatingList = true;
+        try {
+            listModel.clear();
+            int selectedIndex = -1;
 
-    public void updateList(List<DataStructure> structures) {
-        listModel.clear();
+            for (int index = 0; index < structures.size(); index++) {
+                DataStructure dataStructure = structures.get(index);
+                listModel.addElement(dataStructure);
+                if (dataStructure.getName().equals(selectedDataStructureName)) {
+                    selectedIndex = index;
+                }
+            }
 
-        for (DataStructure ds : structures) {
-            listModel.addElement(ds);
+            if (selectedIndex >= 0) {
+                dsList.setSelectedIndex(selectedIndex);
+            }
+        } finally {
+            updatingList = false;
         }
     }
 
     public void setSelectionListener(Consumer<DataStructure> listener) {
-        dsList.addListSelectionListener(e -> {
-            if (!e.getValueIsAdjusting()) {
+        dsList.addListSelectionListener(event -> {
+            if (!event.getValueIsAdjusting() && !updatingList) {
                 DataStructure selected = dsList.getSelectedValue();
 
                 if (selected != null) {
@@ -67,5 +77,5 @@ public class DSListPanel extends JPanel {
                 }
             }
         });
-    }    
+    }
 }

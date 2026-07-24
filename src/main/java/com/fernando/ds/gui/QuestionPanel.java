@@ -2,16 +2,18 @@ package com.fernando.ds.gui;
 
 import com.fernando.ds.library.QuestionInfo;
 import com.fernando.ds.library.QuestionLibrary;
-import javax.swing.*;
-import java.awt.*;
-import java.util.function.Consumer;
-import java.util.ArrayList;
-import java.util.List;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.util.function.BiConsumer;
+import com.fernando.ds.model.DSRequirements;
 import com.fernando.ds.model.Preference;
 import com.fernando.ds.model.RemovalOrder;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.EnumMap;
+import java.util.Map;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 public class QuestionPanel extends JPanel {
 
@@ -19,12 +21,20 @@ public class QuestionPanel extends JPanel {
     private JPanel selectedCard = null;
     private BiConsumer<QuestionInfo, Preference> preferenceSelectionListener;
     private BiConsumer<QuestionInfo, Integer> weightSelectionListener;
-    private final List<JRadioButton> anyButtons = new ArrayList<>();
-    private final List<CompactSliderPanel> sliders = new ArrayList<>();
     private JRadioButton duplicateYesButton;
     private JRadioButton duplicateNoButton;
     private JRadioButton duplicateAnyButton;
     private BiConsumer<QuestionInfo, RemovalOrder> removalOrderSelectionListener;
+    private final Map<QuestionInfo.QuestionId, JRadioButton> yesButtons =
+        new EnumMap<>(QuestionInfo.QuestionId.class);
+    private final Map<QuestionInfo.QuestionId, JRadioButton> noButtons =
+        new EnumMap<>(QuestionInfo.QuestionId.class);
+    private final Map<QuestionInfo.QuestionId, JRadioButton> preferenceAnyButtons =
+        new EnumMap<>(QuestionInfo.QuestionId.class);
+    private final Map<QuestionInfo.QuestionId, CompactSliderPanel> slidersByQuestion =
+        new EnumMap<>(QuestionInfo.QuestionId.class);
+    private final Map<RemovalOrder, JRadioButton> removalOrderButtons =
+        new EnumMap<>(RemovalOrder.class);
 
     public QuestionPanel() {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -52,7 +62,7 @@ public class QuestionPanel extends JPanel {
         add(card);
         addCardClickBehavior(card, card, q);
         }
-        
+
     }
 
     public void setRemovalOrderSelectionListener(BiConsumer<QuestionInfo, RemovalOrder> listener) {
@@ -82,7 +92,9 @@ public class QuestionPanel extends JPanel {
         JRadioButton yes = new JRadioButton("Yes");
         JRadioButton no = new JRadioButton("No");
         JRadioButton any = new JRadioButton("Any", true);
-            anyButtons.add(any);
+        yesButtons.put(q.getId(), yes);
+        noButtons.put(q.getId(), no);
+        preferenceAnyButtons.put(q.getId(), any);
 
         if (q.getId() == QuestionInfo.QuestionId.DUPLICATES) {
             duplicateYesButton = yes;
@@ -128,7 +140,7 @@ public class QuestionPanel extends JPanel {
         row.setBorder(BorderFactory.createEmptyBorder(2, 8, 2, 8));
 
         CompactSliderPanel slider = new CompactSliderPanel(q.getShortText(), 0, 5, 5);
-        sliders.add(slider);
+        slidersByQuestion.put(q.getId(), slider);
 
         slider.setChangeListener(value -> {
             if (weightSelectionListener != null) {
@@ -198,21 +210,55 @@ public class QuestionPanel extends JPanel {
         }
     }
 
-    public void resetSelections() {
-        for (JRadioButton anyButton : anyButtons) {
-            anyButton.setSelected(true);
-        }
+    public void applyAnswers(DSRequirements answers) {
+        selectPreference(
+            QuestionInfo.QuestionId.KEY_VALUE,
+            answers.getKeyValuePreference()
+        );
+        selectPreference(
+            QuestionInfo.QuestionId.DUPLICATES,
+            answers.getDuplicatePreference()
+        );
+        selectPreference(
+            QuestionInfo.QuestionId.SORTED,
+            answers.getSortedPreference()
+        );
+        selectPreference(
+            QuestionInfo.QuestionId.INDEXED,
+            answers.getIndexedPreference()
+        );
 
-        for (CompactSliderPanel slider : sliders) {
-            slider.setValue(5);
-        }
+        slidersByQuestion.get(QuestionInfo.QuestionId.LOOKUP)
+            .setValueSilently(answers.getLookupWeight());
+        slidersByQuestion.get(QuestionInfo.QuestionId.ADD_DELETE)
+            .setValueSilently(answers.getAddDeleteWeight());
+        slidersByQuestion.get(QuestionInfo.QuestionId.MEMORY)
+            .setValueSilently(answers.getMemoryWeight());
+        removalOrderButtons.get(answers.getRemovalOrderPreference())
+            .setSelected(true);
+        setDuplicateQuestionEnabled(
+            answers.getKeyValuePreference() != Preference.YES
+        );
+    }
 
+    private void selectPreference(
+        QuestionInfo.QuestionId questionId,
+        Preference preference
+    ) {
+        JRadioButton button = switch (preference) {
+            case YES -> yesButtons.get(questionId);
+            case NO -> noButtons.get(questionId);
+            case ANY -> preferenceAnyButtons.get(questionId);
+        };
+        button.setSelected(true);
+    }
+
+    public void clearSelectedQuestion() {
         if (selectedCard != null) {
             selectedCard.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createEtchedBorder(),
                 BorderFactory.createEmptyBorder(6, 8, 6, 8)
             ));
-
             selectedCard = null;
         }
     }
@@ -228,7 +274,9 @@ public class QuestionPanel extends JPanel {
 
         if (duplicateAnyButton != null) {
             duplicateAnyButton.setEnabled(enabled);
-            duplicateAnyButton.setSelected(true);
+            if (!enabled) {
+                duplicateAnyButton.setSelected(true);
+            }
         }
     }
 
@@ -245,7 +293,6 @@ public class QuestionPanel extends JPanel {
         JRadioButton lifo = new JRadioButton("LIFO");
         JRadioButton deque = new JRadioButton("DE");
         JRadioButton priority = new JRadioButton("PRI");
-        anyButtons.add(any);
 
         ButtonGroup group = new ButtonGroup();
         group.add(any);
@@ -253,6 +300,12 @@ public class QuestionPanel extends JPanel {
         group.add(lifo);
         group.add(deque);
         group.add(priority);
+
+        removalOrderButtons.put(RemovalOrder.ANY, any);
+        removalOrderButtons.put(RemovalOrder.FIFO, fifo);
+        removalOrderButtons.put(RemovalOrder.LIFO, lifo);
+        removalOrderButtons.put(RemovalOrder.DOUBLE_ENDED, deque);
+        removalOrderButtons.put(RemovalOrder.PRIORITY, priority);
 
         options.add(any);
         options.add(fifo);

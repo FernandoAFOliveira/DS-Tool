@@ -1,5 +1,7 @@
 package com.fernando.ds.gui;
 
+import com.fernando.ds.application.ApplicationState;
+
 import java.awt.Color;
 
 public enum Theme {
@@ -43,10 +45,18 @@ public enum Theme {
         this.selectionColor = selectionColor;
     }
 
+    public ApplicationState.Appearance getAppearance() {
+        return ApplicationState.Appearance.valueOf(name());
+    }
+
+    public static Theme fromAppearance(ApplicationState.Appearance appearance) {
+        return Theme.valueOf(appearance.name());
+    }
+
     public Color getBackground() {
         return background;
     }
-    
+
     public String getBackgroundHex() {
         return String.format("#%02x%02x%02x",
                 background.getRed(),

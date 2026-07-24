@@ -13,7 +13,6 @@ public class ExplanationPanel extends JPanel {
 
     private final JEditorPane textPane;
     private Theme currentTheme = Theme.LIGHT;
-    private String currentContentPath = "content/welcome.html";
 
     public ExplanationPanel() {
         setLayout(new BorderLayout());
@@ -28,23 +27,21 @@ public class ExplanationPanel extends JPanel {
     }
 
     public void showWelcome() {
-        currentContentPath = "/content/welcome.html";
-        displayContent(currentContentPath);
+        displayContent("/content/welcome.html");
     }
 
     public void showQuestionsHelp() {
-        currentContentPath = "/content/questions.html";
-        displayContent(currentContentPath);
+        displayContent("/content/questions.html");
     }
 
     public void showQuestion(QuestionInfo question) {
-        currentContentPath = "/content/" + question.getId().name().toLowerCase() + ".html";
-        displayContent(currentContentPath);
+        displayContent(
+            "/content/" + question.getId().name().toLowerCase() + ".html"
+        );
     }
 
     public void showDataStructure(DataStructure ds) {
-        currentContentPath = "/content/" + ds.getName().toLowerCase() + ".html";
-        displayContent(currentContentPath);
+        displayContent("/content/" + ds.getName().toLowerCase() + ".html");
     }
 
     public void showMessage(String titleText, String message) {
@@ -58,7 +55,6 @@ public class ExplanationPanel extends JPanel {
 
     public void applyTheme(Theme theme) {
         currentTheme = theme;
-        displayContent(currentContentPath);
     }
 
     private void displayContent(String path) {

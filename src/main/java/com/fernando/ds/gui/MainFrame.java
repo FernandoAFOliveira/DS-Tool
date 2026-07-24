@@ -12,6 +12,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 
+import com.fernando.ds.application.ApplicationState;
 import com.fernando.ds.util.ContentLoader;
 
 public class MainFrame extends JFrame {
@@ -30,6 +31,8 @@ public class MainFrame extends JFrame {
             )
         );
 
+        ApplicationState state = new ApplicationState();
+
         QuestionPanel questionPanel = new QuestionPanel();
         DSListPanel dsListPanel = new DSListPanel();
         DiagramPanel diagramPanel = new DiagramPanel();
@@ -43,22 +46,26 @@ public class MainFrame extends JFrame {
         );
 
         AppController controller = new AppController(
+            state,
             questionPanel,
             dsListPanel,
             diagramPanel,
             explanationPanel
         );
 
-        setJMenuBar(createMenuBar(controller));
-        UiActionGuard.run(this, "Advisor", controller::reset);
+        setJMenuBar(createMenuBar(controller, state));
+        UiActionGuard.run(this, "Advisor", controller::initialize);
         add(mainPanel, BorderLayout.CENTER);
     }
 
-    private JMenuBar createMenuBar(AppController controller) {
+    private JMenuBar createMenuBar(
+        AppController controller,
+        ApplicationState state
+    ) {
         JMenuBar menuBar = new JMenuBar();
         menuBar.add(createFileMenu(controller));
-        menuBar.add(createSubjectMenu());
-        menuBar.add(createExperienceMenu());
+        menuBar.add(createSubjectMenu(state));
+        menuBar.add(createExperienceMenu(state));
         menuBar.add(createViewMenu(controller));
         menuBar.add(createHelpMenu());
         return menuBar;
@@ -82,7 +89,7 @@ public class MainFrame extends JFrame {
         return fileMenu;
     }
 
-    private JMenu createSubjectMenu() {
+    private JMenu createSubjectMenu(ApplicationState state) {
         JMenu subjectMenu = new JMenu("Subject");
         JMenuItem javaItem = new JMenuItem("Java (active)");
         JMenuItem cItem = new JMenuItem("C");
@@ -92,7 +99,10 @@ public class MainFrame extends JFrame {
         javaItem.addActionListener(event -> UiActionGuard.run(
             this,
             "Java",
-            () -> showInformationDialog("Java", "Java is the active subject.")
+            () -> {
+                state.setActiveSubject(ApplicationState.Subject.JAVA);
+                showInformationDialog("Java", "Java is the active subject.");
+            }
         ));
         addNotEnabledAction(cItem, "C");
         addNotEnabledAction(cppItem, "C++");
@@ -106,7 +116,7 @@ public class MainFrame extends JFrame {
         return subjectMenu;
     }
 
-    private JMenu createExperienceMenu() {
+    private JMenu createExperienceMenu(ApplicationState state) {
         JMenu experienceMenu = new JMenu("Experience");
         JMenuItem advisorItem = new JMenuItem("Advisor (active)");
         JMenuItem explorerItem = new JMenuItem("Explorer");
@@ -117,10 +127,13 @@ public class MainFrame extends JFrame {
         advisorItem.addActionListener(event -> UiActionGuard.run(
             this,
             "Advisor",
-            () -> showInformationDialog(
-                "Advisor",
-                "Advisor is the active experience."
-            )
+            () -> {
+                state.setActiveExperience(ApplicationState.Experience.ADVISOR);
+                showInformationDialog(
+                    "Advisor",
+                    "Advisor is the active experience."
+                );
+            }
         ));
         addNotEnabledAction(explorerItem, "Explorer");
         addNotEnabledAction(flashCardsItem, "Flash Cards");
