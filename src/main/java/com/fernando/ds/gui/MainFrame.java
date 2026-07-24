@@ -72,7 +72,9 @@ public class MainFrame extends JFrame {
         resetItem.addActionListener(event ->
             UiActionGuard.run(this, "Reset selections", controller::reset)
         );
-        exitItem.addActionListener(event -> dispose());
+        exitItem.addActionListener(event ->
+            UiActionGuard.run(this, "Exit", this::dispose)
+        );
 
         fileMenu.add(resetItem);
         fileMenu.addSeparator();
@@ -87,11 +89,10 @@ public class MainFrame extends JFrame {
         JMenuItem cppItem = new JMenuItem("C++");
         JMenuItem pythonItem = new JMenuItem("Python");
 
-        javaItem.addActionListener(event -> JOptionPane.showMessageDialog(
+        javaItem.addActionListener(event -> UiActionGuard.run(
             this,
-            "Java is the active subject.",
             "Java",
-            JOptionPane.INFORMATION_MESSAGE
+            () -> showInformationDialog("Java", "Java is the active subject.")
         ));
         addNotEnabledAction(cItem, "C");
         addNotEnabledAction(cppItem, "C++");
@@ -113,11 +114,13 @@ public class MainFrame extends JFrame {
         JMenuItem flashCardsItem = new JMenuItem("Flash Cards");
         JMenuItem timedQuizItem = new JMenuItem("Timed Quiz");
 
-        advisorItem.addActionListener(event -> JOptionPane.showMessageDialog(
+        advisorItem.addActionListener(event -> UiActionGuard.run(
             this,
-            "Advisor is the active experience.",
             "Advisor",
-            JOptionPane.INFORMATION_MESSAGE
+            () -> showInformationDialog(
+                "Advisor",
+                "Advisor is the active experience."
+            )
         ));
         addNotEnabledAction(explorerItem, "Explorer");
         addNotEnabledAction(flashCardsItem, "Flash Cards");
@@ -199,6 +202,15 @@ public class MainFrame extends JFrame {
             this,
             scrollPane,
             "About Data Structure Advisor",
+            JOptionPane.INFORMATION_MESSAGE
+        );
+    }
+
+    private void showInformationDialog(String title, String message) {
+        JOptionPane.showMessageDialog(
+            this,
+            message,
+            title,
             JOptionPane.INFORMATION_MESSAGE
         );
     }
