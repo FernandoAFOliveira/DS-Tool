@@ -16,6 +16,7 @@ import javax.swing.JScrollPane;
 
 import com.fernando.ds.application.ApplicationState;
 import com.fernando.ds.application.ExplorerService;
+import com.fernando.ds.application.LearningQuestionSource;
 import com.fernando.ds.subject.JavaSubjectProvider;
 import com.fernando.ds.subject.SubjectId;
 import com.fernando.ds.subject.SubjectProvider;
@@ -27,6 +28,7 @@ public class MainFrame extends JFrame {
 
     private static final String ADVISOR_CARD = "advisor";
     private static final String EXPLORER_CARD = "explorer";
+    private static final String FLASH_CARDS_CARD = "flashCards";
 
     private final ApplicationState state = new ApplicationState();
     private final SubjectProviderRegistry subjectProviders;
@@ -35,8 +37,11 @@ public class MainFrame extends JFrame {
     private final JPanel experiences = new JPanel(experienceLayout);
     private ExplorerPanel explorerPanel;
     private ExplorerController explorerController;
+    private FlashCardPanel flashCardPanel;
+    private FlashCardController flashCardController;
     private JMenuItem advisorItem;
     private JMenuItem explorerItem;
+    private JMenuItem flashCardsItem;
 
     public MainFrame() {
         super("Data Structure Advisor");
@@ -150,7 +155,7 @@ public class MainFrame extends JFrame {
         advisorItem = new JMenuItem("Advisor (active)");
         explorerItem = new JMenuItem("Explorer");
         JMenu learnMenu = new JMenu("Learn");
-        JMenuItem flashCardsItem = new JMenuItem("Flash Cards");
+        flashCardsItem = new JMenuItem("Flash Cards");
         JMenuItem timedQuizItem = new JMenuItem("Timed Quiz");
 
         advisorItem.addActionListener(event -> UiActionGuard.run(
@@ -163,7 +168,11 @@ public class MainFrame extends JFrame {
             "Explorer",
             this::showExplorer
         ));
-        addNotEnabledAction(flashCardsItem, "Flash Cards");
+        flashCardsItem.addActionListener(event -> UiActionGuard.run(
+            this,
+            "Flash Cards",
+            this::showFlashCards
+        ));
         addNotEnabledAction(timedQuizItem, "Timed Quiz");
 
         learnMenu.add(flashCardsItem);
@@ -246,6 +255,9 @@ public class MainFrame extends JFrame {
         if (explorerController != null) {
             explorerController.applyTheme(theme);
         }
+        if (flashCardController != null) {
+            flashCardController.applyTheme(theme);
+        }
     }
 
     private void showAdvisor() {
@@ -292,12 +304,58 @@ public class MainFrame extends JFrame {
         updateExperienceLabels();
     }
 
+    private void showFlashCards() {
+        if (flashCardController == null) {
+            flashCardPanel = new FlashCardPanel();
+            flashCardController = new FlashCardController(
+                state,
+                subjectProviders,
+                new LearningQuestionSource(),
+                flashCardPanel
+            );
+            flashCardPanel.setPreviousListener(() -> UiActionGuard.run(
+                this,
+                "Flash Cards",
+                flashCardController::showPrevious
+            ));
+            flashCardPanel.setRevealListener(() -> UiActionGuard.run(
+                this,
+                "Flash Cards",
+                flashCardController::revealAnswer
+            ));
+            flashCardPanel.setNextListener(() -> UiActionGuard.run(
+                this,
+                "Flash Cards",
+                flashCardController::showNext
+            ));
+            Theme currentTheme = Theme.fromAppearance(state.getAppearance());
+            ThemeManager.applyThemeToComponent(
+                flashCardPanel,
+                currentTheme
+            );
+            flashCardController.applyTheme(currentTheme);
+            experiences.add(flashCardPanel, FLASH_CARDS_CARD);
+        }
+
+        flashCardController.activate();
+        experienceLayout.show(experiences, FLASH_CARDS_CARD);
+        state.setActiveExperience(ApplicationState.Experience.LEARN);
+        updateExperienceLabels();
+    }
+
     private void updateExperienceLabels() {
         boolean advisorActive = state.getActiveExperience()
             == ApplicationState.Experience.ADVISOR;
+        boolean explorerActive = state.getActiveExperience()
+            == ApplicationState.Experience.EXPLORER;
+        boolean learnActive = state.getActiveExperience()
+            == ApplicationState.Experience.LEARN;
         advisorItem.setText(advisorActive ? "Advisor (active)" : "Advisor");
         explorerItem.setText(
-            advisorActive ? "Explorer" : "Explorer (active)"
+            explorerActive ? "Explorer (active)" : "Explorer"
+        );
+        flashCardsItem.setText(
+            learnActive ? "Flash Cards (active)" : "Flash Cards"
         );
     }
 

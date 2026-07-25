@@ -72,6 +72,31 @@ class UiActionGuardTest {
     }
 
     @Test
+    void advisorRemainsUsableAfterAFlashCardsFailure() {
+        RecordingPresenter presenter = new RecordingPresenter();
+        AtomicBoolean advisorActionRan = new AtomicBoolean();
+
+        captureGuardLogs(() ->
+            UiActionGuard.run("Flash Cards", () -> {
+                throw new IllegalStateException("card render failed");
+            }, presenter)
+        );
+        UiActionGuard.run(
+            "Advisor",
+            () -> advisorActionRan.set(true),
+            presenter
+        );
+
+        assertTrue(advisorActionRan.get());
+        assertEquals("Flash Cards", presenter.errorTitle);
+        assertEquals(
+            UiActionGuard.FEATURE_ERROR_MESSAGE,
+            presenter.errorMessage
+        );
+        assertEquals(1, presenter.errorCount);
+    }
+
+    @Test
     void containsNotificationFailureAndLogsIt() {
         RuntimeException notificationFailure =
             new RuntimeException("dialog subsystem failed");

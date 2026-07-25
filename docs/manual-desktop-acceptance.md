@@ -82,6 +82,23 @@ mvn javafx:run
 - [ ] Return to Advisor and confirm its answers, filtering, selection, diagram, explanation, and navigation behavior are unchanged.
 - [ ] Recheck Java, C, C++, Python, and a Learn command; active-subject state and exact unavailable-feature behavior are unchanged.
 
+## Milestone 6 Learn foundation
+
+- [ ] Choose **Experience > Learn > Flash Cards** and confirm a concept-first card opens with its answer hidden and the menu label changes to **Flash Cards (active)**.
+- [ ] Confirm the first card asks about Dynamic array without using `ArrayList` as the concept identity.
+- [ ] Reveal the first answer; confirm the Knowledge Core description is primary and the Java `ArrayList` representation appears only as supplementary information.
+- [ ] Navigate through all nine cards in stable Knowledge Core order; Previous is disabled on the first card, Next is disabled on the last card, and no card exposes an internal `StructureId`.
+- [ ] Reveal several cards; the reviewed count increases once per distinct card and repeated visits do not double-count progress.
+- [ ] On a revealed card, switch to Advisor and Explorer, then return to Flash Cards; the same card, revealed answer, and reviewed count are restored.
+- [ ] Before studying, prepare non-default Advisor answers, weights, shared structure selection, theme, and question-help navigation. Navigate and reveal Flash Cards, then confirm all prepared Advisor and Explorer state remains unchanged.
+- [ ] Select a structure in Advisor or Explorer, navigate to a different Flash Card, and confirm returning to Advisor or Explorer restores the original shared structure rather than the current card.
+- [ ] Change every theme while Flash Cards is active; prompt, answer, progress, focus, and buttons remain readable and the session is preserved.
+- [ ] At normal and high-DPI scaling, resize the window and confirm card content remains readable, scrollable, and unclipped.
+- [ ] Choose **File > Reset selections** while Flash Cards is active; accepted Advisor state resets while the current Flash Card and reviewed progress remain unchanged.
+- [ ] Trigger a controlled Flash Cards rendering failure in a development session; confirm the standard generic error, full developer logging, unchanged card/progress state, and successful Advisor use afterward.
+- [ ] Confirm **Experience > Learn > Timed Quiz** still displays exactly `This feature is not enabled yet.`
+- [ ] Recheck Advisor, Explorer, Java, C, C++, and Python behavior after using Flash Cards.
+
 ## Every visible menu command
 
 Dismiss each dialog before continuing.
@@ -98,7 +115,7 @@ Dismiss each dialog before continuing.
 - [ ] **Experience > Advisor (active)** displays `Advisor is the active experience.`
 - [ ] **Experience > Explorer** opens Explorer and changes its label to **Explorer (active)**.
 - [ ] **Experience > Advisor** returns to Advisor and changes its label to **Advisor (active)**.
-- [ ] **Experience > Learn > Flash Cards** displays exactly `This feature is not enabled yet.`
+- [ ] **Experience > Learn > Flash Cards** opens or restores Flash Cards and changes its label to **Flash Cards (active)**.
 - [ ] **Experience > Learn > Timed Quiz** displays exactly `This feature is not enabled yet.`
 
 ### View

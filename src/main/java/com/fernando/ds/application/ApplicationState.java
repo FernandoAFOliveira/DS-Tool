@@ -21,7 +21,8 @@ public final class ApplicationState {
 
     public enum Experience {
         ADVISOR,
-        EXPLORER
+        EXPLORER,
+        LEARN
     }
 
     public enum Appearance {
@@ -112,6 +113,11 @@ public final class ApplicationState {
     private AccessibilityPreferences accessibilityPreferences =
         new AccessibilityPreferences(false, false);
     private Locale locale;
+    private final LearningProgress learningProgress = new LearningProgress();
+    private FlashCardSession flashCardSession = new FlashCardSession(
+        StructureId.DYNAMIC_ARRAY,
+        false
+    );
 
     public ApplicationState() {
         this(Locale.getDefault());
@@ -258,6 +264,31 @@ public final class ApplicationState {
 
     public void setLocale(Locale locale) {
         this.locale = Objects.requireNonNull(locale, "locale");
+    }
+
+    /** @return a defensive snapshot of shared Learn progress */
+    public LearningProgress getLearningProgress() {
+        return new LearningProgress(learningProgress);
+    }
+
+    /** @return the resumable Flash Cards session */
+    public FlashCardSession getFlashCardSession() {
+        return flashCardSession;
+    }
+
+    /** Moves Flash Cards to another concept with its answer hidden. */
+    public void navigateFlashCard(StructureId structureId) {
+        flashCardSession = new FlashCardSession(
+            Objects.requireNonNull(structureId, "structureId"),
+            false
+        );
+    }
+
+    /** Reveals and records the current Flash Cards concept as reviewed. */
+    public void revealCurrentFlashCard() {
+        StructureId structureId = flashCardSession.currentStructureId();
+        flashCardSession = new FlashCardSession(structureId, true);
+        learningProgress.markReviewed(structureId);
     }
 
     /** Resets Advisor-owned session state while preserving global preferences. */

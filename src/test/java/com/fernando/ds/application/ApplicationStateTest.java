@@ -3,6 +3,7 @@ package com.fernando.ds.application;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Locale;
 
@@ -128,6 +129,62 @@ class ApplicationStateTest {
         assertEquals(
             StructureId.HASH_MAP,
             state.getSelectedStructureId().orElseThrow()
+        );
+    }
+
+    @Test
+    void flashCardSessionAndProgressSurviveExperienceInterruption() {
+        ApplicationState state = new ApplicationState(Locale.US);
+        state.setPreference(QuestionId.SORTED, Preference.YES);
+        state.selectStructure(StructureId.HASH_MAP);
+        state.navigateToQuestion(QuestionId.MEMORY);
+
+        state.setActiveExperience(Experience.LEARN);
+        state.navigateFlashCard(StructureId.QUEUE);
+        state.revealCurrentFlashCard();
+        state.setActiveExperience(Experience.ADVISOR);
+
+        assertEquals(
+            StructureId.QUEUE,
+            state.getFlashCardSession().currentStructureId()
+        );
+        assertEquals(true, state.getFlashCardSession().answerRevealed());
+        assertTrue(
+            state.getLearningProgress().isReviewed(StructureId.QUEUE)
+        );
+        assertEquals(
+            StructureId.HASH_MAP,
+            state.getSelectedStructureId().orElseThrow()
+        );
+        assertEquals(QuestionId.MEMORY, state.getNavigation().questionId());
+        assertEquals(
+            Preference.YES,
+            state.getRecommendationAnswers().getSortedPreference()
+        );
+    }
+
+    @Test
+    void advisorResetPreservesLearnSessionAndProgress() {
+        ApplicationState state = new ApplicationState(Locale.US);
+        state.navigateFlashCard(StructureId.PRIORITY_QUEUE);
+        state.revealCurrentFlashCard();
+        state.setPreference(QuestionId.INDEXED, Preference.YES);
+
+        state.resetAdvisorSession();
+
+        assertEquals(
+            StructureId.PRIORITY_QUEUE,
+            state.getFlashCardSession().currentStructureId()
+        );
+        assertEquals(true, state.getFlashCardSession().answerRevealed());
+        assertTrue(
+            state.getLearningProgress().isReviewed(
+                StructureId.PRIORITY_QUEUE
+            )
+        );
+        assertEquals(
+            Preference.ANY,
+            state.getRecommendationAnswers().getIndexedPreference()
         );
     }
 

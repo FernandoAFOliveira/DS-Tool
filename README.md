@@ -43,6 +43,8 @@ Unlike static documentation, this tool guides users through a decision process u
 - An Explorer experience for browsing the complete shared catalog, including
   concepts, trade-offs, operations, complexity, use cases, and related
   structures without changing Advisor filters
+- Concept-first Flash Cards derived from the shared Knowledge Core, with
+  in-memory review progress and safe resume when switching experiences
 - Built-in explanations:
   - Key concepts
   - API overview
