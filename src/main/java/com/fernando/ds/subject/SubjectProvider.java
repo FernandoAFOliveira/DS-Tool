@@ -1,14 +1,17 @@
 package com.fernando.ds.subject;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
+import com.fernando.ds.knowledge.StructureId;
 import com.fernando.ds.model.DataStructure;
 
 /**
- * Supplies the language-specific data-structure representations for a subject.
+ * Supplies language-specific representations for abstract data-structure
+ * concepts.
  *
- * <p>Providers contain no Swing or JavaFX behavior. Recommendation concepts
- * remain in the existing shared model until the Knowledge Core milestone.</p>
+ * <p>Providers contain no recommendation, Swing, or JavaFX behavior.</p>
  */
 public interface SubjectProvider {
 
@@ -28,4 +31,21 @@ public interface SubjectProvider {
      *         subject is not enabled
      */
     List<DataStructure> getDataStructures();
+
+    /**
+     * Resolves this subject's representation of an abstract structure.
+     *
+     * @param structureId abstract structure to resolve
+     * @return the representation, or empty when this subject does not supply it
+     */
+    default Optional<DataStructure> getRepresentation(
+        StructureId structureId
+    ) {
+        Objects.requireNonNull(structureId, "structureId");
+        return getDataStructures().stream()
+            .filter(structure ->
+                structure.getStructureId() == structureId
+            )
+            .findFirst();
+    }
 }

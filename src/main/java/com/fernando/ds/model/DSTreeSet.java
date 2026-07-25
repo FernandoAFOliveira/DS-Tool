@@ -1,24 +1,14 @@
 package com.fernando.ds.model;
 
+import com.fernando.ds.knowledge.StructureId;
+
 public class DSTreeSet extends DataStructure {
-  
 
     public DSTreeSet() {
         super(
-            "TreeSet",                 // name
-
-            false,                     // keyValue
-            false,                     // allowsDuplicates
-            false,                     // indexed
-            RemovalOrder.ANY,          // removalOrder
-
-            7,                         // lookup
-            7,                         // addDelete
-            5,                         // memory
-            10,                        // sorted
-
-            false                     // legacy
-
+            StructureId.ORDERED_SET,
+            "TreeSet",
+            false
         );
     }
 }

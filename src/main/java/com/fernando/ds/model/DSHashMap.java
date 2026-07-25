@@ -1,24 +1,14 @@
 package com.fernando.ds.model;
 
+import com.fernando.ds.knowledge.StructureId;
+
 public class DSHashMap extends DataStructure {
-
-
 
     public DSHashMap() {
         super(
-            "HashMap",                 // name
-
-            true,                      // keyValue
-            true,                      // allowsDuplicates for values
-            false,                     // indexed
-            RemovalOrder.ANY,          // removalOrder
-
-            10,                        // lookup
-            10,                        // addDelete
-            5,                         // memory
-            0,                         // sorted
-
-            false                   // legacy
+            StructureId.HASH_MAP,
+            "HashMap",
+            false
         );
     }
 }

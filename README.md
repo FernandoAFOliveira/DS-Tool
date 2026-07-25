@@ -24,6 +24,9 @@ Unlike static documentation, this tool guides users through a decision process u
   - ArrayDeque, HashSet, TreeSet
   - HashMap, TreeMap
 
+- Recommend language-neutral data-structure concepts before displaying their
+  Java representations
+
 - Filter by:
   - Key-value mapping
   - Duplicate support

@@ -13,6 +13,7 @@ import com.fernando.ds.application.ApplicationState.Appearance;
 import com.fernando.ds.application.ApplicationState.Experience;
 import com.fernando.ds.application.ApplicationState.NavigationKind;
 import com.fernando.ds.library.QuestionInfo.QuestionId;
+import com.fernando.ds.knowledge.StructureId;
 import com.fernando.ds.model.DSRequirements;
 import com.fernando.ds.model.Preference;
 import com.fernando.ds.model.RemovalOrder;
@@ -30,7 +31,7 @@ class ApplicationStateTest {
         assertEquals(Appearance.LIGHT, state.getAppearance());
         assertEquals(Locale.CANADA, state.getLocale());
         assertEquals(NavigationKind.WELCOME, state.getNavigation().kind());
-        assertFalse(state.getSelectedDataStructureName().isPresent());
+        assertFalse(state.getSelectedStructureId().isPresent());
         assertEquals(Preference.ANY, answers.getKeyValuePreference());
         assertEquals(5, answers.getLookupWeight());
     }
@@ -74,14 +75,14 @@ class ApplicationStateTest {
         state.setAccessibilityPreferences(accessibility);
         state.setPreference(QuestionId.INDEXED, Preference.YES);
         state.setWeight(QuestionId.MEMORY, 1);
-        state.selectDataStructure("ArrayList");
+        state.selectStructure(StructureId.DYNAMIC_ARRAY);
 
         state.resetAdvisorSession();
 
         DSRequirements answers = state.getRecommendationAnswers();
         assertEquals(Preference.ANY, answers.getIndexedPreference());
         assertEquals(5, answers.getMemoryWeight());
-        assertFalse(state.getSelectedDataStructureName().isPresent());
+        assertFalse(state.getSelectedStructureId().isPresent());
         assertEquals(NavigationKind.WELCOME, state.getNavigation().kind());
         assertEquals(Appearance.DARK_BLUE, state.getAppearance());
         assertEquals(Locale.FRANCE, state.getLocale());
@@ -92,7 +93,7 @@ class ApplicationStateTest {
     void navigationChangesDoNotResetUnrelatedState() {
         ApplicationState state = new ApplicationState(Locale.US);
         state.setPreference(QuestionId.INDEXED, Preference.YES);
-        state.selectDataStructure("ArrayList");
+        state.selectStructure(StructureId.DYNAMIC_ARRAY);
 
         state.navigateToQuestion(QuestionId.MEMORY);
 
@@ -103,8 +104,8 @@ class ApplicationStateTest {
             state.getRecommendationAnswers().getIndexedPreference()
         );
         assertEquals(
-            "ArrayList",
-            state.getSelectedDataStructureName().orElseThrow()
+            StructureId.DYNAMIC_ARRAY,
+            state.getSelectedStructureId().orElseThrow()
         );
     }
 

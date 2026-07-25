@@ -11,6 +11,7 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 import com.fernando.ds.model.DataStructure;
+import com.fernando.ds.knowledge.StructureId;
 
 class SubjectProviderRegistryTest {
 
@@ -58,6 +59,30 @@ class SubjectProviderRegistryTest {
             first.stream().map(DataStructure::getName).toList()
         );
         assertNotSame(first.getFirst(), second.getFirst());
+        assertEquals(
+            List.of(
+                StructureId.DYNAMIC_ARRAY,
+                StructureId.STACK,
+                StructureId.QUEUE,
+                StructureId.PRIORITY_QUEUE,
+                StructureId.DEQUE,
+                StructureId.HASH_SET,
+                StructureId.ORDERED_SET,
+                StructureId.HASH_MAP,
+                StructureId.ORDERED_MAP
+            ),
+            first.stream().map(DataStructure::getStructureId).toList()
+        );
+        assertEquals(
+            "ArrayList",
+            java.getRepresentation(StructureId.DYNAMIC_ARRAY)
+                .orElseThrow()
+                .getName()
+        );
+        assertThrows(
+            NullPointerException.class,
+            () -> java.getRepresentation(null)
+        );
     }
 
     @Test
@@ -73,6 +98,23 @@ class SubjectProviderRegistryTest {
             assertFalse(provider.isEnabled());
             assertTrue(provider.getDataStructures().isEmpty());
         }
+    }
+
+    @Test
+    @SuppressWarnings("deprecation")
+    void javaRepresentationsRetainKnowledgeBackedCompatibilityAccessors() {
+        DataStructure arrayList = registry()
+            .get(SubjectId.JAVA)
+            .getRepresentation(StructureId.DYNAMIC_ARRAY)
+            .orElseThrow();
+
+        assertTrue(arrayList.isDuplicates());
+        assertTrue(arrayList.isIndexed());
+        assertFalse(arrayList.isKeys());
+        assertEquals(9, arrayList.getLookup());
+        assertEquals(5, arrayList.getAddDelete());
+        assertEquals(8, arrayList.getMemory());
+        assertEquals(0, arrayList.getSorted());
     }
 
     @Test

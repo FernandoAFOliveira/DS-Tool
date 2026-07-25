@@ -1,6 +1,7 @@
 package com.fernando.ds.gui;
 
 import com.fernando.ds.model.DataStructure;
+import com.fernando.ds.knowledge.StructureId;
 
 import javax.swing.*;
 import java.awt.*;
@@ -44,7 +45,7 @@ public class DSListPanel extends JPanel {
 
     public void updateList(
         List<DataStructure> structures,
-        String selectedDataStructureName
+        StructureId selectedStructureId
     ) {
         updatingList = true;
         try {
@@ -54,7 +55,7 @@ public class DSListPanel extends JPanel {
             for (int index = 0; index < structures.size(); index++) {
                 DataStructure dataStructure = structures.get(index);
                 listModel.addElement(dataStructure);
-                if (dataStructure.getName().equals(selectedDataStructureName)) {
+                if (dataStructure.getStructureId() == selectedStructureId) {
                     selectedIndex = index;
                 }
             }

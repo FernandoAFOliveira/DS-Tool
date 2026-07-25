@@ -46,6 +46,20 @@ mvn javafx:run
 - [ ] After all subject commands, select a Java structure and confirm its explanation and diagram still load.
 - [ ] No subject command changes the active experience or resets locale, accessibility, appearance, navigation, answers, weights, or selection.
 
+## Milestone 4 Knowledge Core
+
+- [ ] On startup, the visible Java recommendation catalog remains exactly ArrayList, Stack, Queue, PriorityQueue, ArrayDeque, HashSet, TreeSet, HashMap, and TreeMap; LinkedList is not added.
+- [ ] With all answers and weights at their defaults, the visible order is HashMap, HashSet, ArrayList, ArrayDeque, TreeMap, TreeSet, Queue, Stack, and PriorityQueue.
+- [ ] Select **Need key-value mapping? > Yes** and **Need sorted order? > Yes**; TreeMap is the only recommendation.
+- [ ] Reset, then select **Need index access? > Yes**; ArrayList is the only recommendation.
+- [ ] Reset, then select **Allow duplicates? > No**; HashSet and TreeSet are the only recommendations in that order.
+- [ ] Reset, then select **Removal order > Priority**; PriorityQueue is the only recommendation.
+- [ ] Select each of the nine Java representations and confirm its existing Java name, explanation, and diagram load without exposing an internal abstract identifier or resource path.
+- [ ] Select a structure, change a weight without making it ineligible, and confirm the same abstract selection remains visibly selected.
+- [ ] Select a structure, navigate to question help, reselect **Subject > Java (active)**, and confirm answers, weights, selection, navigation, and theme remain unchanged.
+- [ ] Try C, C++, and Python after preparing non-default Advisor state; each remains unavailable and none changes the selected abstract structure or unrelated state.
+- [ ] Trigger a controlled representation failure in a development session; confirm the standard generic error, full developer logging, and successful use of another command afterward.
+
 ## Every visible menu command
 
 Dismiss each dialog before continuing.

@@ -1,14 +1,12 @@
 package com.fernando.ds.gui;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import com.fernando.ds.application.ApplicationState;
-import com.fernando.ds.engine.ScoringEngine;
+import com.fernando.ds.application.RecommendationService;
+import com.fernando.ds.knowledge.StructureId;
 import com.fernando.ds.library.QuestionInfo;
 import com.fernando.ds.library.QuestionLibrary;
-import com.fernando.ds.model.DSRequirements;
 import com.fernando.ds.model.DataStructure;
 import com.fernando.ds.model.Preference;
 import com.fernando.ds.model.RemovalOrder;
@@ -21,7 +19,8 @@ import com.fernando.ds.util.MermaidResult;
 public class AppController {
 
     private final ApplicationState state;
-    private final ScoringEngine scoringEngine = new ScoringEngine();
+    private final RecommendationService recommendationService =
+        new RecommendationService();
     private final SubjectProviderRegistry subjectProviders;
     private final DSListPanel dsListPanel;
     private final DiagramPanel diagramPanel;
@@ -57,7 +56,7 @@ public class AppController {
     }
 
     private void showDataStructure(DataStructure dataStructure) {
-        state.selectDataStructure(dataStructure.getName());
+        state.selectStructure(dataStructure.getStructureId());
         renderDataStructure(dataStructure);
     }
 
@@ -88,37 +87,35 @@ public class AppController {
     }
 
     private void refreshDataStructureList() {
-        DSRequirements requirements = state.getRecommendationAnswers();
-        List<DataStructure> valid = new ArrayList<>();
+        SubjectProvider provider = activeSubject();
+        List<DataStructure> valid = recommendationService.recommend(
+            state.getRecommendationAnswers()
+        ).stream()
+            .map(recommendation -> provider.getRepresentation(
+                recommendation.structure().id()
+            ))
+            .flatMap(java.util.Optional::stream)
+            .toList();
 
-        for (DataStructure dataStructure : activeSubject().getDataStructures()) {
-            double score = scoringEngine.calculate(dataStructure, requirements);
-
-            if (score >= 0) {
-                dataStructure.setLastCalculatedScore(score);
-                valid.add(dataStructure);
-            }
-        }
-
-        Collections.sort(valid);
-        String requestedSelection = state.getSelectedDataStructureName().orElse(null);
-        boolean selectedIsAvailable = requestedSelection == null || valid.stream()
-            .anyMatch(dataStructure ->
-                dataStructure.getName().equals(requestedSelection)
+        StructureId requestedSelection = state.getSelectedStructureId()
+            .orElse(null);
+        boolean selectedIsAvailable = requestedSelection == null
+            || valid.stream().anyMatch(dataStructure ->
+                dataStructure.getStructureId() == requestedSelection
             );
-        String selectedName = requestedSelection;
+        StructureId selectedId = requestedSelection;
 
         if (!selectedIsAvailable) {
-            state.clearSelectedDataStructure();
+            state.clearSelectedStructure();
             if (state.getNavigation().kind()
                 == ApplicationState.NavigationKind.DATA_STRUCTURE) {
                 state.navigateToWelcome();
                 renderNavigation();
             }
-            selectedName = null;
+            selectedId = null;
         }
 
-        dsListPanel.updateList(valid, selectedName);
+        dsListPanel.updateList(valid, selectedId);
     }
 
     private void handleQuestionChange(QuestionInfo question) {
@@ -157,7 +154,7 @@ public class AppController {
             case QUESTION -> explanationPanel.showQuestion(
                 findQuestion(navigation.questionId())
             );
-            case DATA_STRUCTURE -> state.getSelectedDataStructureName()
+            case DATA_STRUCTURE -> state.getSelectedStructureId()
                 .flatMap(this::findDataStructure)
                 .ifPresentOrElse(
                     this::renderDataStructure,
@@ -179,10 +176,10 @@ public class AppController {
         throw new IllegalStateException("Unknown question: " + questionId);
     }
 
-    private java.util.Optional<DataStructure> findDataStructure(String name) {
-        return activeSubject().getDataStructures().stream()
-            .filter(dataStructure -> dataStructure.getName().equals(name))
-            .findFirst();
+    private java.util.Optional<DataStructure> findDataStructure(
+        StructureId structureId
+    ) {
+        return activeSubject().getRepresentation(structureId);
     }
 
     private SubjectProvider activeSubject() {

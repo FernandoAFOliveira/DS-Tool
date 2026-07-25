@@ -1,22 +1,14 @@
 package com.fernando.ds.model;
 
+import com.fernando.ds.knowledge.StructureId;
+
 public class DSPriorityQueue extends DataStructure {
 
     public DSPriorityQueue() {
         super(
-            "PriorityQueue",           // name
-
-            false,                      // keyValue
-            true,                       // allowsDuplicates
-            false,                      // indexed
-            RemovalOrder.PRIORITY,      // removalOrder
-
-            2,                          // lookup
-            6,                          // addDelete
-            6,                          // memory
-            0,                          // sorted / priority-based ordering
-
-            false                      // legacy
+            StructureId.PRIORITY_QUEUE,
+            "PriorityQueue",
+            false
         );
     }
-}   
+}

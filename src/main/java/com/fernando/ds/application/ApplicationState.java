@@ -5,6 +5,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 import com.fernando.ds.library.QuestionInfo;
+import com.fernando.ds.knowledge.StructureId;
 import com.fernando.ds.model.DSRequirements;
 import com.fernando.ds.model.Preference;
 import com.fernando.ds.model.RemovalOrder;
@@ -105,7 +106,7 @@ public final class ApplicationState {
     private SubjectId activeSubject = SubjectId.JAVA;
     private Experience activeExperience = Experience.ADVISOR;
     private final DSRequirements recommendationAnswers = new DSRequirements();
-    private String selectedDataStructureName;
+    private StructureId selectedStructureId;
     private Appearance appearance = Appearance.LIGHT;
     private Navigation navigation = Navigation.welcome();
     private AccessibilityPreferences accessibilityPreferences =
@@ -195,20 +196,20 @@ public final class ApplicationState {
         );
     }
 
-    public Optional<String> getSelectedDataStructureName() {
-        return Optional.ofNullable(selectedDataStructureName);
+    public Optional<StructureId> getSelectedStructureId() {
+        return Optional.ofNullable(selectedStructureId);
     }
 
-    public void selectDataStructure(String dataStructureName) {
-        selectedDataStructureName = Objects.requireNonNull(
-            dataStructureName,
-            "dataStructureName"
+    public void selectStructure(StructureId structureId) {
+        selectedStructureId = Objects.requireNonNull(
+            structureId,
+            "structureId"
         );
         navigation = Navigation.dataStructure();
     }
 
-    public void clearSelectedDataStructure() {
-        selectedDataStructureName = null;
+    public void clearSelectedStructure() {
+        selectedStructureId = null;
     }
 
     public Appearance getAppearance() {
@@ -259,7 +260,7 @@ public final class ApplicationState {
     /** Resets Advisor-owned session state while preserving global preferences. */
     public void resetAdvisorSession() {
         recommendationAnswers.reset();
-        selectedDataStructureName = null;
+        selectedStructureId = null;
         navigation = Navigation.welcome();
     }
 }

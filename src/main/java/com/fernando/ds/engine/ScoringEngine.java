@@ -1,61 +1,80 @@
 package com.fernando.ds.engine;
 
 import com.fernando.ds.model.DSRequirements;
-import com.fernando.ds.model.DataStructure;
+import com.fernando.ds.knowledge.DataStructureKnowledge;
 import com.fernando.ds.model.Preference;
 import com.fernando.ds.model.RemovalOrder;
 
-
+/**
+ * Applies Advisor requirements to language-neutral data-structure knowledge.
+ */
 public class ScoringEngine {
 
-    
-    public double calculate(DataStructure ds, DSRequirements req) {
+    /**
+     * Calculates the established Advisor score.
+     *
+     * @return a non-negative score, or {@code -1} when a hard requirement is
+     *         not satisfied
+     */
+    public double calculate(
+        DataStructureKnowledge structure,
+        DSRequirements requirements
+    ) {
         double score = 0.0;
-        
+
         // Key-value mapping
-        if (req.getKeyValuePreference() == Preference.YES && !ds.isKeys()) {
+        if (requirements.getKeyValuePreference() == Preference.YES
+            && !structure.keyValueMapping()) {
             return -1.0;
         }
 
-        if (req.getKeyValuePreference() == Preference.NO && ds.isKeys()) {
+        if (requirements.getKeyValuePreference() == Preference.NO
+            && structure.keyValueMapping()) {
             return -1.0;
         }
 
         // Duplicates
-        if (req.getDuplicatePreference() == Preference.YES && !ds.isDuplicates()) {
+        if (requirements.getDuplicatePreference() == Preference.YES
+            && !structure.allowsDuplicates()) {
             return -1.0;
         }
 
-        if (req.getDuplicatePreference() == Preference.NO && ds.isDuplicates()) {
+        if (requirements.getDuplicatePreference() == Preference.NO
+            && structure.allowsDuplicates()) {
             return -1.0;
         }
         // Indexed access
-        if (req.getIndexedPreference() == Preference.YES && !ds.isIndexed()) {
+        if (requirements.getIndexedPreference() == Preference.YES
+            && !structure.indexedAccess()) {
             return -1.0;
         }
 
-        if (req.getIndexedPreference() == Preference.NO && ds.isIndexed()) {
+        if (requirements.getIndexedPreference() == Preference.NO
+            && structure.indexedAccess()) {
             return -1.0;
         }
 
         // Sorted
-        if (req.getSortedPreference() == Preference.YES && ds.getSorted() == 0) {
+        if (requirements.getSortedPreference() == Preference.YES
+            && !structure.isSorted()) {
             return -1.0;
         }
 
-        if (req.getSortedPreference() == Preference.NO && ds.getSorted() > 0) {
+        if (requirements.getSortedPreference() == Preference.NO
+            && structure.isSorted()) {
             return -1.0;
         }
 
-        if (req.getRemovalOrderPreference() != RemovalOrder.ANY
-            && ds.getRemovalOrder() != req.getRemovalOrderPreference()) {
+        if (requirements.getRemovalOrderPreference() != RemovalOrder.ANY
+            && structure.removalOrder()
+                != requirements.getRemovalOrderPreference()) {
             return -1.0;
         }
 
-
-        score += ds.getLookup() * req.getLookupWeight();
-        score += ds.getAddDelete() * req.getAddDeleteWeight();
-        score += ds.getMemory() * req.getMemoryWeight();
+        score += structure.lookupRating() * requirements.getLookupWeight();
+        score += structure.insertionRemovalRating()
+            * requirements.getAddDeleteWeight();
+        score += structure.memoryRating() * requirements.getMemoryWeight();
 
         return score;
     }

@@ -13,6 +13,7 @@ import com.fernando.ds.application.ApplicationState;
 import com.fernando.ds.application.ApplicationState.AccessibilityPreferences;
 import com.fernando.ds.application.ApplicationState.Appearance;
 import com.fernando.ds.library.QuestionInfo.QuestionId;
+import com.fernando.ds.knowledge.StructureId;
 import com.fernando.ds.model.Preference;
 import com.fernando.ds.subject.JavaSubjectProvider;
 import com.fernando.ds.subject.SubjectId;
@@ -44,8 +45,8 @@ class AppControllerSubjectTest {
             );
             assertEquals(2, state.getRecommendationAnswers().getLookupWeight());
             assertEquals(
-                "ArrayList",
-                state.getSelectedDataStructureName().orElseThrow()
+                StructureId.DYNAMIC_ARRAY,
+                state.getSelectedStructureId().orElseThrow()
             );
             assertEquals(Appearance.DARK_BLUE, state.getAppearance());
             assertEquals(QuestionId.MEMORY, state.getNavigation().questionId());
@@ -70,8 +71,8 @@ class AppControllerSubjectTest {
         assertTrue(selected);
         assertEquals(SubjectId.JAVA, state.getActiveSubject());
         assertEquals(
-            "ArrayList",
-            state.getSelectedDataStructureName().orElseThrow()
+            StructureId.DYNAMIC_ARRAY,
+            state.getSelectedStructureId().orElseThrow()
         );
         assertEquals(
             QuestionId.MEMORY,
@@ -83,7 +84,7 @@ class AppControllerSubjectTest {
         ApplicationState state = new ApplicationState(Locale.US);
         state.setPreference(QuestionId.INDEXED, Preference.YES);
         state.setWeight(QuestionId.LOOKUP, 2);
-        state.selectDataStructure("ArrayList");
+        state.selectStructure(StructureId.DYNAMIC_ARRAY);
         state.navigateToQuestion(QuestionId.MEMORY);
         state.setAppearance(Appearance.DARK_BLUE);
         state.setLocale(Locale.FRANCE);

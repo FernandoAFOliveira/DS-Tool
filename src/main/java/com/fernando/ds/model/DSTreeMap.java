@@ -1,23 +1,14 @@
 package com.fernando.ds.model;
 
+import com.fernando.ds.knowledge.StructureId;
+
 public class DSTreeMap extends DataStructure {
 
     public DSTreeMap() {
         super(
-            "TreeMap",                 // name
-
-            true,                      // keyValue
-            true,                      // allowsDuplicates for values
-            false,                     // indexed
-            RemovalOrder.ANY,          // removalOrder
-
-            7,                         // lookup
-            7,                         // addDelete
-            5,                         // memory
-            10,                        // sorted
-
-            false                     // legacy
-
+            StructureId.ORDERED_MAP,
+            "TreeMap",
+            false
         );
     }
 }

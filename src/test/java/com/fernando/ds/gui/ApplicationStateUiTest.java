@@ -19,6 +19,7 @@ import org.junit.jupiter.api.Test;
 
 import com.fernando.ds.application.ApplicationState;
 import com.fernando.ds.library.QuestionInfo.QuestionId;
+import com.fernando.ds.knowledge.StructureId;
 import com.fernando.ds.model.DSArrayList;
 import com.fernando.ds.model.DSHashMap;
 import com.fernando.ds.model.DataStructure;
@@ -97,7 +98,7 @@ class ApplicationStateUiTest {
             List<DataStructure> structures =
                 List.of(new DSArrayList(), new DSHashMap());
 
-            panel.updateList(structures, "HashMap");
+            panel.updateList(structures, StructureId.HASH_MAP);
 
             JList<?> list = descendants(panel, JList.class).getFirst();
             assertEquals("HashMap", list.getSelectedValue().toString());
