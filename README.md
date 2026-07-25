@@ -40,6 +40,9 @@ Unlike static documentation, this tool guides users through a decision process u
   - Memory efficiency
 
 - Interactive visual diagrams for each structure
+- An Explorer experience for browsing the complete shared catalog, including
+  concepts, trade-offs, operations, complexity, use cases, and related
+  structures without changing Advisor filters
 - Built-in explanations:
   - Key concepts
   - API overview

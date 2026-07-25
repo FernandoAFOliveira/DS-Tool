@@ -55,8 +55,16 @@ public class AppController {
         renderNavigation();
     }
 
+    /** Restores Advisor controls without discarding an Explorer selection. */
+    public void activate() {
+        questionPanel.applyAnswers(state.getRecommendationAnswers());
+        refreshDataStructureList(false);
+        renderNavigation();
+    }
+
     private void showDataStructure(DataStructure dataStructure) {
         state.selectStructure(dataStructure.getStructureId());
+        state.navigateToDataStructure();
         renderDataStructure(dataStructure);
     }
 
@@ -87,6 +95,10 @@ public class AppController {
     }
 
     private void refreshDataStructureList() {
+        refreshDataStructureList(true);
+    }
+
+    private void refreshDataStructureList(boolean clearIneligibleSelection) {
         SubjectProvider provider = activeSubject();
         List<DataStructure> valid = recommendationService.recommend(
             state.getRecommendationAnswers()
@@ -105,13 +117,15 @@ public class AppController {
             );
         StructureId selectedId = requestedSelection;
 
-        if (!selectedIsAvailable) {
+        if (!selectedIsAvailable && clearIneligibleSelection) {
             state.clearSelectedStructure();
             if (state.getNavigation().kind()
                 == ApplicationState.NavigationKind.DATA_STRUCTURE) {
                 state.navigateToWelcome();
                 renderNavigation();
             }
+            selectedId = null;
+        } else if (!selectedIsAvailable) {
             selectedId = null;
         }
 

@@ -60,6 +60,21 @@ mvn javafx:run
 - [ ] Try C, C++, and Python after preparing non-default Advisor state; each remains unavailable and none changes the selected abstract structure or unrelated state.
 - [ ] Trigger a controlled representation failure in a development session; confirm the standard generic error, full developer logging, and successful use of another command afterward.
 
+## Milestone 5 Explorer experience
+
+- [ ] Start with no selected structure, choose **Experience > Explorer**, and confirm Explorer opens with welcome content and no highlighted structure.
+- [ ] Confirm Explorer lists all nine Knowledge Core structures using the Java names ArrayList, Stack, Queue, PriorityQueue, ArrayDeque, HashSet, TreeSet, HashMap, and TreeMap, regardless of the current Advisor answers.
+- [ ] Select each Explorer structure and confirm the concept, Java representation, strengths, weaknesses, supported operations, complexity, memory and iteration information, common use cases, related structures, and diagram appear.
+- [ ] Confirm Explorer content does not expose an internal `StructureId`, resource path, exception detail, or stack trace.
+- [ ] Select a structure in Advisor, enter Explorer, and confirm the same shared structure is highlighted and displayed.
+- [ ] In Advisor, set restrictive answers that exclude some structures. Enter Explorer and confirm excluded recommendations remain available to browse.
+- [ ] Select an Advisor-ineligible structure in Explorer, return to Advisor, and confirm Advisor remains filtered by its existing answers without adding the selected Explorer structure to its recommendation list.
+- [ ] Before entering Explorer, prepare non-default answers, weights, theme, and question-help navigation. Select a structure in Explorer, return to Advisor, and confirm answers, weights, subject, theme, preferences, and the saved Advisor navigation page remain unchanged.
+- [ ] Switch repeatedly between Advisor and Explorer; the active menu label, shared selection, and both experiences remain usable.
+- [ ] Change each theme while Explorer is active; list selection, details, and diagram remain readable and the selection is preserved when returning to Advisor.
+- [ ] Choose **File > Reset selections** while Explorer is active; Explorer returns to welcome, Advisor answers and weights reset, and the active theme remains unchanged.
+- [ ] Trigger a controlled Explorer failure in a development session; confirm the standard generic error, full developer logging, unchanged prior selection, and successful use of Advisor afterward.
+
 ## Every visible menu command
 
 Dismiss each dialog before continuing.
@@ -74,7 +89,8 @@ Dismiss each dialog before continuing.
 ### Experience
 
 - [ ] **Experience > Advisor (active)** displays `Advisor is the active experience.`
-- [ ] **Experience > Explorer** displays exactly `This feature is not enabled yet.`
+- [ ] **Experience > Explorer** opens Explorer and changes its label to **Explorer (active)**.
+- [ ] **Experience > Advisor** returns to Advisor and changes its label to **Advisor (active)**.
 - [ ] **Experience > Learn > Flash Cards** displays exactly `This feature is not enabled yet.`
 - [ ] **Experience > Learn > Timed Quiz** displays exactly `This feature is not enabled yet.`
 

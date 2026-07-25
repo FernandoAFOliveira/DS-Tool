@@ -1,6 +1,7 @@
 package com.fernando.ds.gui;
 
 import java.awt.BorderLayout;
+import java.awt.CardLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 
@@ -10,9 +11,11 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import com.fernando.ds.application.ApplicationState;
+import com.fernando.ds.application.ExplorerService;
 import com.fernando.ds.subject.JavaSubjectProvider;
 import com.fernando.ds.subject.SubjectId;
 import com.fernando.ds.subject.SubjectProvider;
@@ -21,6 +24,19 @@ import com.fernando.ds.subject.UnavailableSubjectProvider;
 import com.fernando.ds.util.ContentLoader;
 
 public class MainFrame extends JFrame {
+
+    private static final String ADVISOR_CARD = "advisor";
+    private static final String EXPLORER_CARD = "explorer";
+
+    private final ApplicationState state = new ApplicationState();
+    private final SubjectProviderRegistry subjectProviders;
+    private final AppController advisorController;
+    private final CardLayout experienceLayout = new CardLayout();
+    private final JPanel experiences = new JPanel(experienceLayout);
+    private ExplorerPanel explorerPanel;
+    private ExplorerController explorerController;
+    private JMenuItem advisorItem;
+    private JMenuItem explorerItem;
 
     public MainFrame() {
         super("Data Structure Advisor");
@@ -36,14 +52,12 @@ public class MainFrame extends JFrame {
             )
         );
 
-        ApplicationState state = new ApplicationState();
-        SubjectProviderRegistry subjectProviders =
-            new SubjectProviderRegistry(java.util.List.of(
-                new JavaSubjectProvider(),
-                new UnavailableSubjectProvider(SubjectId.C, "C"),
-                new UnavailableSubjectProvider(SubjectId.CPP, "C++"),
-                new UnavailableSubjectProvider(SubjectId.PYTHON, "Python")
-            ));
+        subjectProviders = new SubjectProviderRegistry(java.util.List.of(
+            new JavaSubjectProvider(),
+            new UnavailableSubjectProvider(SubjectId.C, "C"),
+            new UnavailableSubjectProvider(SubjectId.CPP, "C++"),
+            new UnavailableSubjectProvider(SubjectId.PYTHON, "Python")
+        ));
 
         QuestionPanel questionPanel = new QuestionPanel();
         DSListPanel dsListPanel = new DSListPanel();
@@ -57,7 +71,7 @@ public class MainFrame extends JFrame {
             explanationPanel
         );
 
-        AppController controller = new AppController(
+        advisorController = new AppController(
             state,
             subjectProviders,
             questionPanel,
@@ -66,36 +80,34 @@ public class MainFrame extends JFrame {
             explanationPanel
         );
 
-        setJMenuBar(createMenuBar(
-            controller,
-            state,
-            subjectProviders
-        ));
-        UiActionGuard.run(this, "Advisor", controller::initialize);
-        add(mainPanel, BorderLayout.CENTER);
+        experiences.add(mainPanel, ADVISOR_CARD);
+        setJMenuBar(createMenuBar());
+        UiActionGuard.run(this, "Advisor", advisorController::initialize);
+        add(experiences, BorderLayout.CENTER);
     }
 
-    private JMenuBar createMenuBar(
-        AppController controller,
-        ApplicationState state,
-        SubjectProviderRegistry subjectProviders
-    ) {
+    private JMenuBar createMenuBar() {
         JMenuBar menuBar = new JMenuBar();
-        menuBar.add(createFileMenu(controller));
-        menuBar.add(createSubjectMenu(controller, state, subjectProviders));
-        menuBar.add(createExperienceMenu(state));
-        menuBar.add(createViewMenu(controller));
+        menuBar.add(createFileMenu());
+        menuBar.add(createSubjectMenu());
+        menuBar.add(createExperienceMenu());
+        menuBar.add(createViewMenu());
         menuBar.add(createHelpMenu());
         return menuBar;
     }
 
-    private JMenu createFileMenu(AppController controller) {
+    private JMenu createFileMenu() {
         JMenu fileMenu = new JMenu("File");
         JMenuItem resetItem = new JMenuItem("Reset selections");
         JMenuItem exitItem = new JMenuItem("Exit");
 
         resetItem.addActionListener(event ->
-            UiActionGuard.run(this, "Reset selections", controller::reset)
+            UiActionGuard.run(this, "Reset selections", () -> {
+                advisorController.reset();
+                if (explorerController != null) {
+                    explorerController.activate();
+                }
+            })
         );
         exitItem.addActionListener(event ->
             UiActionGuard.run(this, "Exit", this::dispose)
@@ -107,11 +119,7 @@ public class MainFrame extends JFrame {
         return fileMenu;
     }
 
-    private JMenu createSubjectMenu(
-        AppController controller,
-        ApplicationState state,
-        SubjectProviderRegistry subjectProviders
-    ) {
+    private JMenu createSubjectMenu() {
         JMenu subjectMenu = new JMenu("Subject");
 
         for (SubjectProvider provider : subjectProviders.getAll()) {
@@ -129,7 +137,7 @@ public class MainFrame extends JFrame {
                 item,
                 provider.displayName(),
                 provider.id(),
-                controller
+                advisorController
             );
             subjectMenu.add(item);
         }
@@ -137,10 +145,10 @@ public class MainFrame extends JFrame {
         return subjectMenu;
     }
 
-    private JMenu createExperienceMenu(ApplicationState state) {
+    private JMenu createExperienceMenu() {
         JMenu experienceMenu = new JMenu("Experience");
-        JMenuItem advisorItem = new JMenuItem("Advisor (active)");
-        JMenuItem explorerItem = new JMenuItem("Explorer");
+        advisorItem = new JMenuItem("Advisor (active)");
+        explorerItem = new JMenuItem("Explorer");
         JMenu learnMenu = new JMenu("Learn");
         JMenuItem flashCardsItem = new JMenuItem("Flash Cards");
         JMenuItem timedQuizItem = new JMenuItem("Timed Quiz");
@@ -148,15 +156,13 @@ public class MainFrame extends JFrame {
         advisorItem.addActionListener(event -> UiActionGuard.run(
             this,
             "Advisor",
-            () -> {
-                state.setActiveExperience(ApplicationState.Experience.ADVISOR);
-                showInformationDialog(
-                    "Advisor",
-                    "Advisor is the active experience."
-                );
-            }
+            this::showAdvisor
         ));
-        addNotEnabledAction(explorerItem, "Explorer");
+        explorerItem.addActionListener(event -> UiActionGuard.run(
+            this,
+            "Explorer",
+            this::showExplorer
+        ));
         addNotEnabledAction(flashCardsItem, "Flash Cards");
         addNotEnabledAction(timedQuizItem, "Timed Quiz");
 
@@ -168,14 +174,14 @@ public class MainFrame extends JFrame {
         return experienceMenu;
     }
 
-    private JMenu createViewMenu(AppController controller) {
+    private JMenu createViewMenu() {
         JMenu viewMenu = new JMenu("View");
         JMenu themeMenu = new JMenu("Theme");
 
-        addThemeItem(themeMenu, "Light", Theme.LIGHT, controller);
-        addThemeItem(themeMenu, "Soft Blue", Theme.SOFT_BLUE, controller);
-        addThemeItem(themeMenu, "Dark", Theme.DARK, controller);
-        addThemeItem(themeMenu, "Dark Blue", Theme.DARK_BLUE, controller);
+        addThemeItem(themeMenu, "Light", Theme.LIGHT);
+        addThemeItem(themeMenu, "Soft Blue", Theme.SOFT_BLUE);
+        addThemeItem(themeMenu, "Dark", Theme.DARK);
+        addThemeItem(themeMenu, "Dark Blue", Theme.DARK_BLUE);
 
         viewMenu.add(themeMenu);
         return viewMenu;
@@ -195,14 +201,13 @@ public class MainFrame extends JFrame {
     private void addThemeItem(
         JMenu menu,
         String label,
-        Theme theme,
-        AppController controller
+        Theme theme
     ) {
         JMenuItem item = new JMenuItem(label);
         item.addActionListener(event -> UiActionGuard.run(
             this,
             label + " theme",
-            () -> applyTheme(theme, controller)
+            () -> applyTheme(theme)
         ));
         menu.add(item);
     }
@@ -235,9 +240,65 @@ public class MainFrame extends JFrame {
         ));
     }
 
-    private void applyTheme(Theme theme, AppController controller) {
+    private void applyTheme(Theme theme) {
         ThemeManager.applyTheme(this, theme);
-        controller.applyTheme(theme);
+        advisorController.applyTheme(theme);
+        if (explorerController != null) {
+            explorerController.applyTheme(theme);
+        }
+    }
+
+    private void showAdvisor() {
+        if (state.getActiveExperience()
+            == ApplicationState.Experience.ADVISOR) {
+            showInformationDialog(
+                "Advisor",
+                "Advisor is the active experience."
+            );
+            return;
+        }
+
+        advisorController.activate();
+        experienceLayout.show(experiences, ADVISOR_CARD);
+        state.setActiveExperience(ApplicationState.Experience.ADVISOR);
+        updateExperienceLabels();
+    }
+
+    private void showExplorer() {
+        if (explorerController == null) {
+            explorerPanel = new ExplorerPanel();
+            explorerController = new ExplorerController(
+                state,
+                subjectProviders,
+                new ExplorerService(),
+                explorerPanel
+            );
+            explorerPanel.setSelectionListener(dataStructure ->
+                UiActionGuard.run(
+                    this,
+                    "Explorer",
+                    () -> explorerController.selectStructure(dataStructure)
+                )
+            );
+            Theme currentTheme = Theme.fromAppearance(state.getAppearance());
+            ThemeManager.applyThemeToComponent(explorerPanel, currentTheme);
+            explorerController.applyTheme(currentTheme);
+            experiences.add(explorerPanel, EXPLORER_CARD);
+        }
+
+        explorerController.activate();
+        experienceLayout.show(experiences, EXPLORER_CARD);
+        state.setActiveExperience(ApplicationState.Experience.EXPLORER);
+        updateExperienceLabels();
+    }
+
+    private void updateExperienceLabels() {
+        boolean advisorActive = state.getActiveExperience()
+            == ApplicationState.Experience.ADVISOR;
+        advisorItem.setText(advisorActive ? "Advisor (active)" : "Advisor");
+        explorerItem.setText(
+            advisorActive ? "Explorer" : "Explorer (active)"
+        );
     }
 
     private void showAboutDialog() {

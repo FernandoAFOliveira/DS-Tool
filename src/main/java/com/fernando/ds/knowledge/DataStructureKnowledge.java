@@ -15,6 +15,10 @@ import com.fernando.ds.model.RemovalOrder;
  *
  * @param id stable language-neutral identifier
  * @param displayName language-neutral concept name
+ * @param description conceptual description
+ * @param strengths principal advantages
+ * @param weaknesses principal trade-offs
+ * @param supportedOperations common abstract operations
  * @param keyValueMapping whether the concept maps unique keys to values
  * @param allowsDuplicates whether stored values may repeat
  * @param indexedAccess whether efficient positional access is characteristic
@@ -33,6 +37,10 @@ import com.fernando.ds.model.RemovalOrder;
 public record DataStructureKnowledge(
     StructureId id,
     String displayName,
+    String description,
+    List<String> strengths,
+    List<String> weaknesses,
+    List<String> supportedOperations,
     boolean keyValueMapping,
     boolean allowsDuplicates,
     boolean indexedAccess,
@@ -52,6 +60,13 @@ public record DataStructureKnowledge(
     public DataStructureKnowledge {
         Objects.requireNonNull(id, "id");
         displayName = requireText(displayName, "displayName");
+        description = requireText(description, "description");
+        strengths = requireTextList(strengths, "strengths");
+        weaknesses = requireTextList(weaknesses, "weaknesses");
+        supportedOperations = requireTextList(
+            supportedOperations,
+            "supportedOperations"
+        );
         Objects.requireNonNull(ordering, "ordering");
         Objects.requireNonNull(removalOrder, "removalOrder");
         requireRating(lookupRating, "lookupRating");
@@ -70,24 +85,11 @@ public record DataStructureKnowledge(
             iterationCharacteristics,
             "iterationCharacteristics"
         );
-        commonUseCases = List.copyOf(
-            Objects.requireNonNull(commonUseCases, "commonUseCases")
-        );
+        commonUseCases = requireTextList(commonUseCases, "commonUseCases");
         relatedStructures = List.copyOf(
             Objects.requireNonNull(relatedStructures, "relatedStructures")
         );
 
-        if (commonUseCases.isEmpty()) {
-            throw new IllegalArgumentException(
-                "commonUseCases must not be empty"
-            );
-        }
-        if (commonUseCases.stream().anyMatch(value ->
-            value == null || value.isBlank())) {
-            throw new IllegalArgumentException(
-                "commonUseCases must contain non-blank text"
-            );
-        }
         if (relatedStructures.contains(id)) {
             throw new IllegalArgumentException(
                 "A structure cannot be related to itself"
@@ -114,5 +116,23 @@ public record DataStructureKnowledge(
                 name + " must be between 0 and 10"
             );
         }
+    }
+
+    private static List<String> requireTextList(
+        List<String> values,
+        String name
+    ) {
+        List<String> copy = List.copyOf(
+            Objects.requireNonNull(values, name)
+        );
+        if (copy.isEmpty()) {
+            throw new IllegalArgumentException(name + " must not be empty");
+        }
+        if (copy.stream().anyMatch(String::isBlank)) {
+            throw new IllegalArgumentException(
+                name + " must contain non-blank text"
+            );
+        }
+        return copy;
     }
 }

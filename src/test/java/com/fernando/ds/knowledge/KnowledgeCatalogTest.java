@@ -40,6 +40,10 @@ class KnowledgeCatalogTest {
 
         for (DataStructureKnowledge knowledge : KnowledgeCatalog.getAll()) {
             assertFalse(knowledge.displayName().isBlank());
+            assertFalse(knowledge.description().isBlank());
+            assertFalse(knowledge.strengths().isEmpty());
+            assertFalse(knowledge.weaknesses().isEmpty());
+            assertFalse(knowledge.supportedOperations().isEmpty());
             assertFalse(knowledge.lookupCost().isBlank());
             assertFalse(knowledge.insertionRemovalCost().isBlank());
             assertFalse(knowledge.memoryConsiderations().isBlank());
@@ -98,6 +102,10 @@ class KnowledgeCatalogTest {
             () -> new DataStructureKnowledge(
                 StructureId.QUEUE,
                 " ",
+                "Description",
+                List.of("Strength"),
+                List.of("Weakness"),
+                List.of("Operation"),
                 false,
                 true,
                 false,
@@ -119,6 +127,10 @@ class KnowledgeCatalogTest {
             () -> new DataStructureKnowledge(
                 StructureId.QUEUE,
                 "Queue",
+                "Description",
+                List.of("Strength"),
+                List.of("Weakness"),
+                List.of("Operation"),
                 false,
                 true,
                 false,

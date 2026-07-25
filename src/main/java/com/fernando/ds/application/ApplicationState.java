@@ -14,14 +14,14 @@ import com.fernando.ds.subject.SubjectId;
 /**
  * Owns the user state shared across DS-Tool experiences and presentation layers.
  *
- * <p>The current desktop application has one functional subject and one
- * experience. Keeping those selections here makes their ownership explicit
- * while subject-specific information is supplied through a provider.</p>
+ * <p>The desktop experiences share this state while subject-specific
+ * information is supplied through a provider.</p>
  */
 public final class ApplicationState {
 
     public enum Experience {
-        ADVISOR
+        ADVISOR,
+        EXPLORER
     }
 
     public enum Appearance {
@@ -205,7 +205,6 @@ public final class ApplicationState {
             structureId,
             "structureId"
         );
-        navigation = Navigation.dataStructure();
     }
 
     public void clearSelectedStructure() {
@@ -230,6 +229,10 @@ public final class ApplicationState {
 
     public void navigateToQuestion(QuestionInfo.QuestionId questionId) {
         navigation = Navigation.question(questionId);
+    }
+
+    public void navigateToDataStructure() {
+        navigation = Navigation.dataStructure();
     }
 
     public void navigateToMessage(String title, String message) {

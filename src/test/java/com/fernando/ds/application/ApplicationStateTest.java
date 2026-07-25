@@ -110,6 +110,28 @@ class ApplicationStateTest {
     }
 
     @Test
+    void explorerSelectionDoesNotReplaceAdvisorNavigationOrAnswers() {
+        ApplicationState state = new ApplicationState(Locale.US);
+        state.setPreference(QuestionId.SORTED, Preference.YES);
+        state.navigateToQuestion(QuestionId.MEMORY);
+        state.setActiveExperience(Experience.EXPLORER);
+
+        state.selectStructure(StructureId.HASH_MAP);
+
+        assertEquals(Experience.EXPLORER, state.getActiveExperience());
+        assertEquals(NavigationKind.QUESTION, state.getNavigation().kind());
+        assertEquals(QuestionId.MEMORY, state.getNavigation().questionId());
+        assertEquals(
+            Preference.YES,
+            state.getRecommendationAnswers().getSortedPreference()
+        );
+        assertEquals(
+            StructureId.HASH_MAP,
+            state.getSelectedStructureId().orElseThrow()
+        );
+    }
+
+    @Test
     void rejectsInvalidUpdates() {
         ApplicationState state = new ApplicationState(Locale.US);
 

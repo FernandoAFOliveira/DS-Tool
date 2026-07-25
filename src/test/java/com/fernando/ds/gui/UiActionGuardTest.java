@@ -52,17 +52,17 @@ class UiActionGuardTest {
     }
 
     @Test
-    void acceptsAnotherActionAfterAFailure() {
+    void advisorRemainsUsableAfterAnExplorerFailure() {
         RecordingPresenter presenter = new RecordingPresenter();
         AtomicBoolean secondActionRan = new AtomicBoolean();
 
         captureGuardLogs(() ->
-            UiActionGuard.run("First feature", () -> {
-                throw new IllegalStateException("first action failed");
+            UiActionGuard.run("Explorer", () -> {
+                throw new IllegalStateException("Explorer action failed");
             }, presenter)
         );
         UiActionGuard.run(
-            "Second feature",
+            "Advisor",
             () -> secondActionRan.set(true),
             presenter
         );
