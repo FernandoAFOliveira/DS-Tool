@@ -12,11 +12,11 @@ import com.fernando.ds.application.ApplicationState.AccessibilityPreferences;
 import com.fernando.ds.application.ApplicationState.Appearance;
 import com.fernando.ds.application.ApplicationState.Experience;
 import com.fernando.ds.application.ApplicationState.NavigationKind;
-import com.fernando.ds.application.ApplicationState.Subject;
 import com.fernando.ds.library.QuestionInfo.QuestionId;
 import com.fernando.ds.model.DSRequirements;
 import com.fernando.ds.model.Preference;
 import com.fernando.ds.model.RemovalOrder;
+import com.fernando.ds.subject.SubjectId;
 
 class ApplicationStateTest {
 
@@ -25,7 +25,7 @@ class ApplicationStateTest {
         ApplicationState state = new ApplicationState(Locale.CANADA);
         DSRequirements answers = state.getRecommendationAnswers();
 
-        assertEquals(Subject.JAVA, state.getActiveSubject());
+        assertEquals(SubjectId.JAVA, state.getActiveSubject());
         assertEquals(Experience.ADVISOR, state.getActiveExperience());
         assertEquals(Appearance.LIGHT, state.getAppearance());
         assertEquals(Locale.CANADA, state.getLocale());

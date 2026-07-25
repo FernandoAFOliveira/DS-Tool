@@ -6,13 +6,15 @@ import java.util.List;
 
 import com.fernando.ds.application.ApplicationState;
 import com.fernando.ds.engine.ScoringEngine;
-import com.fernando.ds.library.DataStructureLibrary;
 import com.fernando.ds.library.QuestionInfo;
 import com.fernando.ds.library.QuestionLibrary;
 import com.fernando.ds.model.DSRequirements;
 import com.fernando.ds.model.DataStructure;
 import com.fernando.ds.model.Preference;
 import com.fernando.ds.model.RemovalOrder;
+import com.fernando.ds.subject.SubjectId;
+import com.fernando.ds.subject.SubjectProvider;
+import com.fernando.ds.subject.SubjectProviderRegistry;
 import com.fernando.ds.util.DiagramTemplateLoader;
 import com.fernando.ds.util.MermaidResult;
 
@@ -20,6 +22,7 @@ public class AppController {
 
     private final ApplicationState state;
     private final ScoringEngine scoringEngine = new ScoringEngine();
+    private final SubjectProviderRegistry subjectProviders;
     private final DSListPanel dsListPanel;
     private final DiagramPanel diagramPanel;
     private final ExplanationPanel explanationPanel;
@@ -27,6 +30,7 @@ public class AppController {
 
     public AppController(
         ApplicationState state,
+        SubjectProviderRegistry subjectProviders,
         QuestionPanel questionPanel,
         DSListPanel dsListPanel,
         DiagramPanel diagramPanel,
@@ -34,6 +38,7 @@ public class AppController {
     ) {
         this.state = state;
         this.questionPanel = questionPanel;
+        this.subjectProviders = subjectProviders;
         this.dsListPanel = dsListPanel;
         this.diagramPanel = diagramPanel;
         this.explanationPanel = explanationPanel;
@@ -86,7 +91,7 @@ public class AppController {
         DSRequirements requirements = state.getRecommendationAnswers();
         List<DataStructure> valid = new ArrayList<>();
 
-        for (DataStructure dataStructure : DataStructureLibrary.getAll()) {
+        for (DataStructure dataStructure : activeSubject().getDataStructures()) {
             double score = scoringEngine.calculate(dataStructure, requirements);
 
             if (score >= 0) {
@@ -175,9 +180,36 @@ public class AppController {
     }
 
     private java.util.Optional<DataStructure> findDataStructure(String name) {
-        return DataStructureLibrary.getAll().stream()
+        return activeSubject().getDataStructures().stream()
             .filter(dataStructure -> dataStructure.getName().equals(name))
             .findFirst();
+    }
+
+    private SubjectProvider activeSubject() {
+        return subjectProviders.get(state.getActiveSubject());
+    }
+
+    /**
+     * Selects an enabled subject without changing state for a placeholder.
+     *
+     * @return {@code true} when the subject is enabled and selected
+     */
+    public boolean selectSubject(SubjectId subjectId) {
+        return selectSubject(state, subjectProviders, subjectId);
+    }
+
+    static boolean selectSubject(
+        ApplicationState state,
+        SubjectProviderRegistry subjectProviders,
+        SubjectId subjectId
+    ) {
+        SubjectProvider provider = subjectProviders.get(subjectId);
+        if (!provider.isEnabled()) {
+            return false;
+        }
+
+        state.setActiveSubject(subjectId);
+        return true;
     }
 
     private void showWelcome() {

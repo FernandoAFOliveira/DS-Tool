@@ -13,6 +13,11 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 
 import com.fernando.ds.application.ApplicationState;
+import com.fernando.ds.subject.JavaSubjectProvider;
+import com.fernando.ds.subject.SubjectId;
+import com.fernando.ds.subject.SubjectProvider;
+import com.fernando.ds.subject.SubjectProviderRegistry;
+import com.fernando.ds.subject.UnavailableSubjectProvider;
 import com.fernando.ds.util.ContentLoader;
 
 public class MainFrame extends JFrame {
@@ -32,6 +37,13 @@ public class MainFrame extends JFrame {
         );
 
         ApplicationState state = new ApplicationState();
+        SubjectProviderRegistry subjectProviders =
+            new SubjectProviderRegistry(java.util.List.of(
+                new JavaSubjectProvider(),
+                new UnavailableSubjectProvider(SubjectId.C, "C"),
+                new UnavailableSubjectProvider(SubjectId.CPP, "C++"),
+                new UnavailableSubjectProvider(SubjectId.PYTHON, "Python")
+            ));
 
         QuestionPanel questionPanel = new QuestionPanel();
         DSListPanel dsListPanel = new DSListPanel();
@@ -47,24 +59,30 @@ public class MainFrame extends JFrame {
 
         AppController controller = new AppController(
             state,
+            subjectProviders,
             questionPanel,
             dsListPanel,
             diagramPanel,
             explanationPanel
         );
 
-        setJMenuBar(createMenuBar(controller, state));
+        setJMenuBar(createMenuBar(
+            controller,
+            state,
+            subjectProviders
+        ));
         UiActionGuard.run(this, "Advisor", controller::initialize);
         add(mainPanel, BorderLayout.CENTER);
     }
 
     private JMenuBar createMenuBar(
         AppController controller,
-        ApplicationState state
+        ApplicationState state,
+        SubjectProviderRegistry subjectProviders
     ) {
         JMenuBar menuBar = new JMenuBar();
         menuBar.add(createFileMenu(controller));
-        menuBar.add(createSubjectMenu(state));
+        menuBar.add(createSubjectMenu(controller, state, subjectProviders));
         menuBar.add(createExperienceMenu(state));
         menuBar.add(createViewMenu(controller));
         menuBar.add(createHelpMenu());
@@ -89,30 +107,33 @@ public class MainFrame extends JFrame {
         return fileMenu;
     }
 
-    private JMenu createSubjectMenu(ApplicationState state) {
+    private JMenu createSubjectMenu(
+        AppController controller,
+        ApplicationState state,
+        SubjectProviderRegistry subjectProviders
+    ) {
         JMenu subjectMenu = new JMenu("Subject");
-        JMenuItem javaItem = new JMenuItem("Java (active)");
-        JMenuItem cItem = new JMenuItem("C");
-        JMenuItem cppItem = new JMenuItem("C++");
-        JMenuItem pythonItem = new JMenuItem("Python");
 
-        javaItem.addActionListener(event -> UiActionGuard.run(
-            this,
-            "Java",
-            () -> {
-                state.setActiveSubject(ApplicationState.Subject.JAVA);
-                showInformationDialog("Java", "Java is the active subject.");
+        for (SubjectProvider provider : subjectProviders.getAll()) {
+            if (provider.id() == SubjectId.C) {
+                subjectMenu.addSeparator();
             }
-        ));
-        addNotEnabledAction(cItem, "C");
-        addNotEnabledAction(cppItem, "C++");
-        addNotEnabledAction(pythonItem, "Python");
 
-        subjectMenu.add(javaItem);
-        subjectMenu.addSeparator();
-        subjectMenu.add(cItem);
-        subjectMenu.add(cppItem);
-        subjectMenu.add(pythonItem);
+            String activeLabel = provider.id() == state.getActiveSubject()
+                ? " (active)"
+                : "";
+            JMenuItem item = new JMenuItem(
+                provider.displayName() + activeLabel
+            );
+            addSubjectAction(
+                item,
+                provider.displayName(),
+                provider.id(),
+                controller
+            );
+            subjectMenu.add(item);
+        }
+
         return subjectMenu;
     }
 
@@ -190,6 +211,28 @@ public class MainFrame extends JFrame {
         item.addActionListener(event ->
             UiActionGuard.showNotEnabled(this, featureName)
         );
+    }
+
+    private void addSubjectAction(
+        JMenuItem item,
+        String subjectName,
+        SubjectId subjectId,
+        AppController controller
+    ) {
+        item.addActionListener(event -> UiActionGuard.run(
+            this,
+            subjectName,
+            () -> {
+                if (!controller.selectSubject(subjectId)) {
+                    UiActionGuard.showNotEnabled(this, subjectName);
+                    return;
+                }
+                showInformationDialog(
+                    subjectName,
+                    subjectName + " is the active subject."
+                );
+            }
+        ));
     }
 
     private void applyTheme(Theme theme, AppController controller) {

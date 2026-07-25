@@ -35,6 +35,17 @@ mvn javafx:run
 - [ ] Choose **File > Reset selections**; answers, weights, selection, and navigation reset while the active theme remains unchanged.
 - [ ] After reset, make another selection successfully.
 
+## Milestone 3 subject providers
+
+- [ ] On startup, Java remains active and the recommendation list contains the existing Java structures: ArrayList, Stack, Queue, PriorityQueue, ArrayDeque, HashSet, TreeSet, HashMap, and TreeMap.
+- [ ] Set non-default answers and weights, select a Java structure, choose a non-default theme, and navigate to question help.
+- [ ] Choose **Subject > Java (active)**; the Java-active dialog appears and all prepared state remains unchanged.
+- [ ] Choose **Subject > C**; the exact standard not-enabled message appears, Java remains active, and all prepared state remains unchanged.
+- [ ] Repeat the preceding check for **C++** and **Python**.
+- [ ] After each unavailable-subject dialog, change an Advisor answer or theme and confirm the application remains usable.
+- [ ] After all subject commands, select a Java structure and confirm its explanation and diagram still load.
+- [ ] No subject command changes the active experience or resets locale, accessibility, appearance, navigation, answers, weights, or selection.
+
 ## Every visible menu command
 
 Dismiss each dialog before continuing.

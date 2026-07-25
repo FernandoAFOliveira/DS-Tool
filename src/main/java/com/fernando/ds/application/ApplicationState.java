@@ -8,19 +8,16 @@ import com.fernando.ds.library.QuestionInfo;
 import com.fernando.ds.model.DSRequirements;
 import com.fernando.ds.model.Preference;
 import com.fernando.ds.model.RemovalOrder;
+import com.fernando.ds.subject.SubjectId;
 
 /**
  * Owns the user state shared across DS-Tool experiences and presentation layers.
  *
- * <p>The current desktop application has one subject and one experience. Keeping
- * those selections here makes their ownership explicit without introducing the
- * subject-provider or knowledge-core contracts planned for later milestones.</p>
+ * <p>The current desktop application has one functional subject and one
+ * experience. Keeping those selections here makes their ownership explicit
+ * while subject-specific information is supplied through a provider.</p>
  */
 public final class ApplicationState {
-
-    public enum Subject {
-        JAVA
-    }
 
     public enum Experience {
         ADVISOR
@@ -105,7 +102,7 @@ public final class ApplicationState {
         }
     }
 
-    private Subject activeSubject = Subject.JAVA;
+    private SubjectId activeSubject = SubjectId.JAVA;
     private Experience activeExperience = Experience.ADVISOR;
     private final DSRequirements recommendationAnswers = new DSRequirements();
     private String selectedDataStructureName;
@@ -123,11 +120,11 @@ public final class ApplicationState {
         this.locale = Objects.requireNonNull(locale, "locale");
     }
 
-    public Subject getActiveSubject() {
+    public SubjectId getActiveSubject() {
         return activeSubject;
     }
 
-    public void setActiveSubject(Subject activeSubject) {
+    public void setActiveSubject(SubjectId activeSubject) {
         this.activeSubject = Objects.requireNonNull(
             activeSubject,
             "activeSubject"
