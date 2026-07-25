@@ -145,6 +145,54 @@ class SubjectProviderRegistryTest {
     }
 
     @Test
+    void enabledProvidersExcludeUnfinishedSubjectsInStableOrder() {
+        assertEquals(
+            List.of(SubjectId.JAVA, SubjectId.C),
+            registry().getEnabled().stream()
+                .map(SubjectProvider::id)
+                .toList()
+        );
+    }
+
+    @Test
+    void enabledProvidersSupplyEducationalContentForEveryConcept() {
+        for (SubjectProvider provider : registry().getEnabled()) {
+            for (StructureId structureId : StructureId.values()) {
+                SubjectStructureContent content = provider
+                    .getEducationalContent(structureId)
+                    .orElseThrow(() -> new AssertionError(
+                        provider.displayName() + " missing " + structureId
+                    ));
+
+                assertFalse(content.sections().isEmpty());
+                assertFalse(content.codeExamples().isEmpty());
+            }
+        }
+    }
+
+    @Test
+    void cContentDescribesStrategiesInsteadOfAStandardFramework() {
+        SubjectProvider c = registry().get(SubjectId.C);
+
+        for (StructureId structureId : StructureId.values()) {
+            SubjectStructureContent content = c
+                .getEducationalContent(structureId)
+                .orElseThrow();
+            String text = content.sections().stream()
+                .map(section -> section.title() + " "
+                    + String.join(" ", section.paragraphs()) + " "
+                    + String.join(" ", section.bulletItems()))
+                .reduce("", (left, right) -> left + " " + right);
+
+            assertTrue(text.contains("C implementation strategy"));
+            assertTrue(
+                text.contains("standard")
+                    || text.contains("application-defined")
+            );
+        }
+    }
+
+    @Test
     @SuppressWarnings("deprecation")
     void javaRepresentationsRetainKnowledgeBackedCompatibilityAccessors() {
         DataStructure arrayList = registry()

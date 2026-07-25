@@ -231,58 +231,48 @@ The user can switch between Java and C while retaining the same abstract data-st
 
 ---
 
-## Milestone 8 — Physical Platform and Module Separation
+## Milestone 8 — Explorer Subject Tabs and Code Examples
 
 ### Goal
 
-Move from the current single-module desktop application to independently developable modules after the interfaces have been proven.
+Restore implementation-oriented educational value to Explorer without moving
+language-specific material into the Knowledge Core.
 
-### Target organization
+### Explorer details
 
-```text
-DS-Tool/
-├── knowledge-core/
-├── application/
-├── subject-java/
-├── subject-c/
-├── experience-advisor/
-├── experience-explorer/
-├── experience-learn/
-├── platform-desktop/
-└── platform-android/
-```
+- the shared abstract diagram remains outside the detail tabs
+- the first detail tab is always **Overview**
+- one subsequent tab appears for each enabled Subject Provider in stable
+  registry order
+- Overview renders only language-neutral Knowledge Core content
+- Subject Providers supply platform-neutral implementation guidance and code
+  examples
+- the active subject continues controlling the left Explorer representation
+  list without controlling the detail tabs
 
-### Constraints
+### Acceptance requirements
 
-- do not perform this reorganization before the contracts have been validated in working code
-- preserve a runnable desktop application throughout the migration
-- avoid circular dependencies
-- keep platform code free of domain and recommendation logic
-
-### Visible result
-
-The desktop application runs from separated modules while preserving existing behavior.
-
----
-
-## Milestone 9 — Android Proof of Concept
-
-### Goal
-
-Create a minimal Android application that consumes the shared application and knowledge layers.
-
-### Initial Android scope
-
-- application shell
-- subject selection
-- Advisor questions
-- recommendation result
-- safe placeholders for unfinished subjects and experiences
-- shared state behavior appropriate to Android lifecycle events
+- current tabs are exactly **Overview**, **Java**, and **C**
+- disabled C++ and Python providers do not create tabs
+- future enabled providers create tabs without Explorer UI hardcoding
+- Java and C provide subject-specific content for all current concepts
+- tab selection remains local presentation state and survives ordinary
+  Explorer refreshes
+- structure selection retains render-before-commit failure behavior
+- Advisor, Learn, the Knowledge Core structure, and existing reset behavior
+  remain unchanged
 
 ### Visible result
 
-A minimal Android build can perform the core Advisor flow using the same non-platform knowledge and application logic as the desktop application.
+The user can keep the abstract concept and diagram in view while moving among
+language-neutral Overview, Java implementation guidance, and C implementation
+guidance.
+
+### Current project boundary
+
+DS-Tool remains a single-module desktop proof of concept. Additional operating
+systems, mobile devices, Android work, and physical platform separation belong
+to a future successor application and are not milestones in this roadmap.
 
 ---
 

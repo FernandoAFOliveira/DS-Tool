@@ -61,4 +61,11 @@ public final class SubjectProviderRegistry {
             )
             .toList();
     }
+
+    /** @return enabled providers in stable subject-identifier order */
+    public List<SubjectProvider> getEnabled() {
+        return getAll().stream()
+            .filter(SubjectProvider::isEnabled)
+            .toList();
+    }
 }

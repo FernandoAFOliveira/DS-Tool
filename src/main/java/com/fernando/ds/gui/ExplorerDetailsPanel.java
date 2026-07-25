@@ -8,11 +8,12 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import com.fernando.ds.application.ExplorerContent;
-import com.fernando.ds.application.ExplorerContent.RelatedStructure;
 import com.fernando.ds.knowledge.DataStructureKnowledge;
+import com.fernando.ds.knowledge.Ordering;
+import com.fernando.ds.model.RemovalOrder;
 import com.fernando.ds.util.ContentLoader;
 
-/** Renders educational Knowledge Core content as themed HTML. */
+/** Renders language-neutral Knowledge Core content as themed HTML. */
 final class ExplorerDetailsPanel extends JPanel {
 
     private static final String CONTENT_STYLE =
@@ -37,7 +38,7 @@ final class ExplorerDetailsPanel extends JPanel {
         setBody("""
             <h1 style="%s">Explore data structures</h1>
             <p>Select a structure to browse its concepts, trade-offs,
-            operations, complexity, and active-subject representation.</p>
+            operations, complexity, and relationships.</p>
             """.formatted(TITLE_STYLE));
     }
 
@@ -45,10 +46,10 @@ final class ExplorerDetailsPanel extends JPanel {
         DataStructureKnowledge knowledge = content.knowledge();
         String body = """
             <h1 style="%s">%s</h1>
-            <h2 style="%s">Concept</h2>
+            <h2 style="%s">Definition</h2>
             <p>%s</p>
-            <h2 style="%s">%s representation</h2>
-            <p>%s</p>
+            <h2 style="%s">Characteristics</h2>
+            %s
             <h2 style="%s">Strengths</h2>
             %s
             <h2 style="%s">Weaknesses</h2>
@@ -56,8 +57,12 @@ final class ExplorerDetailsPanel extends JPanel {
             <h2 style="%s">Supported operations</h2>
             %s
             <h2 style="%s">Complexity</h2>
-            <ul><li><strong>Lookup:</strong> %s</li>
-            <li><strong>Insertion and removal:</strong> %s</li></ul>
+            <table>
+            <tr><th align="left">Operation</th>
+            <th align="left">Typical cost</th></tr>
+            <tr><td>Lookup</td><td>%s</td></tr>
+            <tr><td>Insertion and removal</td><td>%s</td></tr>
+            </table>
             <h2 style="%s">Memory and iteration</h2>
             <p><strong>Memory:</strong> %s</p>
             <p><strong>Iteration:</strong> %s</p>
@@ -71,8 +76,7 @@ final class ExplorerDetailsPanel extends JPanel {
                 SECTION_STYLE,
                 escape(knowledge.description()),
                 SECTION_STYLE,
-                escape(content.subjectDisplayName()),
-                escape(content.representation().getDisplayName()),
+                characteristics(knowledge),
                 SECTION_STYLE,
                 list(knowledge.strengths()),
                 SECTION_STYLE,
@@ -116,15 +120,55 @@ final class ExplorerDetailsPanel extends JPanel {
             + "</ul>";
     }
 
-    private static String relatedList(List<RelatedStructure> related) {
+    private static String characteristics(DataStructureKnowledge knowledge) {
+        return "<ul>"
+            + item("Key-value mapping", yesNo(knowledge.keyValueMapping()))
+            + item("Duplicate values", yesNo(knowledge.allowsDuplicates()))
+            + item("Indexed access", yesNo(knowledge.indexedAccess()))
+            + item("Ordering", ordering(knowledge.ordering()))
+            + item(
+                "Removal behavior",
+                removalOrder(knowledge.removalOrder())
+            )
+            + "</ul>";
+    }
+
+    private static String item(String label, String value) {
+        return "<li><strong>" + escape(label) + ":</strong> "
+            + escape(value) + "</li>";
+    }
+
+    private static String yesNo(boolean value) {
+        return value ? "Yes" : "No";
+    }
+
+    private static String ordering(Ordering ordering) {
+        return switch (ordering) {
+            case NONE -> "No inherent order";
+            case INDEX -> "Index order";
+            case SORTED -> "Sorted order";
+            case LIFO -> "Last-in, first-out";
+            case FIFO -> "First-in, first-out";
+            case PRIORITY -> "Priority order";
+            case DOUBLE_ENDED -> "Double-ended";
+        };
+    }
+
+    private static String removalOrder(RemovalOrder removalOrder) {
+        return switch (removalOrder) {
+            case ANY -> "No fixed removal order";
+            case FIFO -> "First-in, first-out";
+            case LIFO -> "Last-in, first-out";
+            case DOUBLE_ENDED -> "Either end";
+            case PRIORITY -> "Priority order";
+        };
+    }
+
+    private static String relatedList(
+        List<DataStructureKnowledge> related
+    ) {
         return "<ul>" + related.stream()
-            .map(item -> {
-                String representation = item.representation()
-                    .map(value -> " (" + escape(value.getDisplayName()) + ")")
-                    .orElse("");
-                return "<li>" + escape(item.knowledge().displayName())
-                    + representation + "</li>";
-            })
+            .map(item -> "<li>" + escape(item.displayName()) + "</li>")
             .reduce("", String::concat)
             + "</ul>";
     }

@@ -53,7 +53,7 @@ Introducing abstract structure identifiers, mappings, code examples, or a
 Knowledge Core is deferred to Milestone 4.
 
 The repository remains a single Maven module. Physical subject modules are
-deferred to Milestone 8.
+outside the current desktop proof-of-concept roadmap.
 
 ## Consequences
 

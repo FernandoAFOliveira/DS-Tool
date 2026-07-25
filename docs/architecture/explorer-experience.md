@@ -84,8 +84,8 @@ a failed presentation from leaving partially updated shared state.
 
 Learn activities, additional enabled subjects, persistence across launches,
 authoring or editing knowledge, new recommendation filters, new structures,
-shared visualization extraction, physical module separation, and Android are
-not part of Milestone 5.
+and shared visualization extraction are not part of Milestone 5. Physical
+module separation and Android belong to a future successor application.
 
 ## Future tab direction
 
@@ -94,6 +94,9 @@ A future Explorer refinement will separate language-neutral content into an
 **Java**. Additional subject tabs will appear only when their providers become
 functional. This direction does not change the current Explorer layout or the
 Knowledge Core and subject-provider boundaries.
+
+Milestone 8 implements this direction. The follow-up decision is recorded in
+`explorer-subject-tabs.md`.
 
 ## Validation
 

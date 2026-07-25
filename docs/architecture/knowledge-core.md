@@ -114,9 +114,10 @@ refreshes preserve the selected abstract identifier and all unrelated state.
 
 ## Milestone boundary
 
-Explorer, Learn activities, a second enabled subject, structured multi-language
-code examples, physical module separation, shared visualization extraction,
-and Android remain assigned to later roadmap milestones.
+Explorer, Learn activities, a second enabled subject, and structured
+multi-language code examples remain assigned to later roadmap milestones.
+Physical module separation and Android belong to a future successor
+application rather than the current desktop proof-of-concept roadmap.
 
 ## Validation
 

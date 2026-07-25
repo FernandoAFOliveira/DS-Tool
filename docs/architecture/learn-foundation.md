@@ -77,8 +77,9 @@ in-memory only and is not restored after an application restart.
 ## Milestone boundary
 
 Timed Quiz, timers, correctness scoring, persistence, additional functional
-subjects, randomized decks, spaced repetition, Explorer tabs, module
-separation, and Android are not part of Milestone 6.
+subjects, randomized decks, spaced repetition, and Explorer tabs are not part
+of Milestone 6. Module separation and Android belong to a future successor
+application.
 
 ## Validation
 

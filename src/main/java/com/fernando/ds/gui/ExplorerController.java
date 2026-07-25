@@ -1,5 +1,6 @@
 package com.fernando.ds.gui;
 
+import java.util.List;
 import java.util.Objects;
 
 import com.fernando.ds.application.ApplicationState;
@@ -46,23 +47,22 @@ final class ExplorerController {
      */
     void activate(SubjectProvider provider) {
         Objects.requireNonNull(provider, "provider");
+        view.showSubjects(explorerService.getSubjects(enabledProviders()));
         view.showStructures(
             explorerService.getAvailableStructures(provider),
             state.getSelectedStructureId().orElse(null)
         );
         state.getSelectedStructureId()
-            .flatMap(id -> explorerService.getContent(provider, id))
+            .map(id -> explorerService.getContent(enabledProviders(), id))
             .ifPresentOrElse(view::showContent, view::showWelcome);
     }
 
     void selectStructure(DataStructure representation) {
         Objects.requireNonNull(representation, "representation");
         ExplorerContent content = explorerService.getContent(
-            activeSubject(),
+            enabledProviders(),
             representation.getStructureId()
-        ).orElseThrow(() -> new IllegalStateException(
-            "Selected structure has no active-subject representation"
-        ));
+        );
 
         // Render first so a presentation failure cannot commit partial state.
         view.showContent(content);
@@ -72,11 +72,15 @@ final class ExplorerController {
     void applyTheme(Theme theme) {
         view.applyTheme(Objects.requireNonNull(theme, "theme"));
         state.getSelectedStructureId()
-            .flatMap(id -> explorerService.getContent(activeSubject(), id))
+            .map(id -> explorerService.getContent(enabledProviders(), id))
             .ifPresentOrElse(view::showContent, view::showWelcome);
     }
 
     private SubjectProvider activeSubject() {
         return subjectProviders.get(state.getActiveSubject());
+    }
+
+    private List<SubjectProvider> enabledProviders() {
+        return subjectProviders.getEnabled();
     }
 }

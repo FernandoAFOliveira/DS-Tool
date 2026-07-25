@@ -6,52 +6,65 @@ import java.util.Optional;
 
 import com.fernando.ds.knowledge.DataStructureKnowledge;
 import com.fernando.ds.model.DataStructure;
+import com.fernando.ds.subject.SubjectId;
+import com.fernando.ds.subject.SubjectStructureContent;
 
 /**
- * Shared knowledge and active-subject representation for one Explorer view.
+ * Language-neutral Overview and enabled-subject details for one Explorer page.
  *
- * @param subjectDisplayName active subject's user-visible name
  * @param knowledge language-neutral structure knowledge
- * @param representation active-subject representation
- * @param relatedStructures related concepts and any available representations
+ * @param relatedStructures related language-neutral concepts
+ * @param subjectContents enabled subject content in stable provider order
  */
 public record ExplorerContent(
-    String subjectDisplayName,
     DataStructureKnowledge knowledge,
-    DataStructure representation,
-    List<RelatedStructure> relatedStructures
+    List<DataStructureKnowledge> relatedStructures,
+    List<SubjectContent> subjectContents
 ) {
 
     public ExplorerContent {
-        Objects.requireNonNull(subjectDisplayName, "subjectDisplayName");
-        if (subjectDisplayName.isBlank()) {
-            throw new IllegalArgumentException(
-                "subjectDisplayName must not be blank"
-            );
-        }
         Objects.requireNonNull(knowledge, "knowledge");
-        Objects.requireNonNull(representation, "representation");
         relatedStructures = List.copyOf(
             Objects.requireNonNull(relatedStructures, "relatedStructures")
+        );
+        subjectContents = List.copyOf(
+            Objects.requireNonNull(subjectContents, "subjectContents")
         );
     }
 
     /**
-     * One related abstract structure and its optional active-subject name.
+     * Subject-specific content for one enabled provider tab.
      *
-     * @param knowledge related language-neutral knowledge
-     * @param representation active-subject representation when available
+     * @param subjectId stable subject identity
+     * @param subjectDisplayName user-visible tab label
+     * @param representation provider representation when available
+     * @param educationalContent provider educational content when available
      */
-    public record RelatedStructure(
-        DataStructureKnowledge knowledge,
-        Optional<DataStructure> representation
+    public record SubjectContent(
+        SubjectId subjectId,
+        String subjectDisplayName,
+        Optional<DataStructure> representation,
+        Optional<SubjectStructureContent> educationalContent
     ) {
 
-        public RelatedStructure {
-            Objects.requireNonNull(knowledge, "knowledge");
+        public SubjectContent {
+            Objects.requireNonNull(subjectId, "subjectId");
+            Objects.requireNonNull(
+                subjectDisplayName,
+                "subjectDisplayName"
+            );
+            if (subjectDisplayName.isBlank()) {
+                throw new IllegalArgumentException(
+                    "subjectDisplayName must not be blank"
+                );
+            }
             representation = Objects.requireNonNull(
                 representation,
                 "representation"
+            );
+            educationalContent = Objects.requireNonNull(
+                educationalContent,
+                "educationalContent"
             );
         }
     }

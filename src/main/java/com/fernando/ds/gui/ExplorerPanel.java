@@ -9,6 +9,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 import com.fernando.ds.application.ExplorerContent;
+import com.fernando.ds.application.ExplorerSubject;
 import com.fernando.ds.knowledge.StructureId;
 import com.fernando.ds.model.DataStructure;
 import com.fernando.ds.util.DiagramTemplateLoader;
@@ -19,7 +20,8 @@ final class ExplorerPanel extends JPanel implements ExplorerView {
 
     private final DSListPanel structures = new DSListPanel(4, 10, 10);
     private final DiagramPanel diagram = new DiagramPanel();
-    private final ExplorerDetailsPanel details = new ExplorerDetailsPanel();
+    private final ExplorerTabbedDetailsPanel details =
+        new ExplorerTabbedDetailsPanel();
     private Theme currentTheme = Theme.LIGHT;
 
     ExplorerPanel() {
@@ -48,6 +50,11 @@ final class ExplorerPanel extends JPanel implements ExplorerView {
         StructureId selectedStructureId
     ) {
         structures.updateList(available, selectedStructureId);
+    }
+
+    @Override
+    public void showSubjects(List<ExplorerSubject> subjects) {
+        details.showSubjects(subjects);
     }
 
     @Override

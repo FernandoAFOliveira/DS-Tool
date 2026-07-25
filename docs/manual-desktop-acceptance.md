@@ -148,6 +148,58 @@ mvn javafx:run
   developer logging, Java remaining active, all unrelated state remaining
   unchanged, and a successful later subject switch or command.
 
+## Milestone 8 Explorer subject tabs and code examples
+
+- [ ] Open Explorer with no selected structure. The detail tabs are exactly
+  **Overview**, **Java**, and **C**, Overview is selected, and C++ and Python
+  are absent.
+- [ ] Confirm all three welcome tabs prompt for a structure without showing an
+  internal identifier, resource path, or empty content heading.
+- [ ] Select each of the nine structures and confirm all three tabs render
+  successfully.
+- [ ] For every structure, confirm Overview contains only applicable
+  language-neutral definition, characteristics, strengths, weaknesses,
+  operations, complexity, memory and iteration, use cases, and relationships.
+- [ ] Confirm Overview contains no Java class name, Java API, C implementation
+  detail, subject-specific code, or active-subject representation.
+- [ ] Confirm Java provides a representation name, useful implementation/API
+  guidance, common methods, a concise code example, and relevant caveats.
+- [ ] Confirm C provides an implementation strategy, relevant struct or helper
+  guidance, allocation and ownership considerations, a concise code example,
+  and relevant caveats.
+- [ ] Confirm C never implies that its strategies are a standardized
+  collections framework equivalent to Java.
+- [ ] With one structure selected, record the complete Overview, switch the
+  active subject between Java and C, and confirm Overview is unchanged.
+- [ ] Confirm the left Explorer list changes between Java and C terminology
+  while all three detail tabs remain available in the same order.
+- [ ] Move among Overview, Java, and C and confirm the abstract diagram remains
+  unchanged and visible above the tabs.
+- [ ] Select the C tab, then select another structure, change every theme,
+  switch to Advisor and back, and switch the active subject. Confirm the C tab
+  remains selected throughout.
+- [ ] Confirm selecting Java or C detail tabs never changes the active subject
+  menu label or left Explorer representation list.
+- [ ] Choose **File > Reset selections** while a subject tab is selected.
+  Confirm established reset behavior is unchanged and Explorer refreshes to
+  welcome without resetting unrelated state.
+- [ ] Use keyboard navigation to focus and move among all tabs. Focus
+  indicators remain visible and content is reachable without a mouse.
+- [ ] At normal and high-DPI scaling, resize the window and drag the Explorer
+  splitter. Tab labels, prose, tables, and code remain readable and unclipped.
+- [ ] Confirm long code blocks scroll safely without forcing the application
+  beyond its minimum usable size.
+- [ ] Repeat tab and code readability checks in Light, Soft Blue, Dark, and
+  Dark Blue themes.
+- [ ] In a development session, inject an Explorer detail rendering
+  `RuntimeException` during structure selection. Confirm the generic error
+  message, full developer logging, unchanged prior selected structure, and a
+  successful later Explorer or Advisor action.
+- [ ] Confirm Advisor explanations, Flash Cards behavior, Java/C subject
+  switching, and theme preservation remain unchanged.
+- [ ] Confirm **Experience > Learn > Timed Quiz** still displays exactly
+  `This feature is not enabled yet.`
+
 ## Every visible menu command
 
 Dismiss each dialog before continuing.

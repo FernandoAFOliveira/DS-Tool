@@ -14,6 +14,7 @@ import com.fernando.ds.application.ApplicationState;
 import com.fernando.ds.application.ApplicationState.NavigationKind;
 import com.fernando.ds.application.ExplorerContent;
 import com.fernando.ds.application.ExplorerService;
+import com.fernando.ds.application.ExplorerSubject;
 import com.fernando.ds.knowledge.StructureId;
 import com.fernando.ds.library.QuestionInfo.QuestionId;
 import com.fernando.ds.model.DataStructure;
@@ -114,12 +115,55 @@ class ExplorerControllerTest {
         controller.activate(new CSubjectProvider());
 
         assertEquals(SubjectId.JAVA, state.getActiveSubject());
-        assertEquals("C", view.content.subjectDisplayName());
         assertEquals(
             "Hash table",
-            view.content.representation().getDisplayName()
+            view.content.subjectContents().stream()
+                .filter(subject -> subject.subjectId() == SubjectId.C)
+                .findFirst()
+                .orElseThrow()
+                .representation()
+                .orElseThrow()
+                .getDisplayName()
         );
         assertEquals(StructureId.HASH_MAP, view.highlighted);
+        assertEquals(
+            List.of(
+                new ExplorerSubject(SubjectId.JAVA, "Java"),
+                new ExplorerSubject(SubjectId.C, "C")
+            ),
+            view.subjects
+        );
+    }
+
+    @Test
+    void subjectSwitchChangesListButNotNeutralOverview() {
+        ApplicationState state = new ApplicationState(Locale.US);
+        state.selectStructure(StructureId.HASH_MAP);
+        RecordingView view = new RecordingView();
+        ExplorerController controller = controller(state, view);
+
+        controller.activate(javaProvider());
+        ExplorerContent javaActiveContent = view.content;
+        List<String> javaNames = view.structures.stream()
+            .map(DataStructure::getDisplayName)
+            .toList();
+
+        controller.activate(new CSubjectProvider());
+        ExplorerContent cActiveContent = view.content;
+        List<String> cNames = view.structures.stream()
+            .map(DataStructure::getDisplayName)
+            .toList();
+
+        assertEquals(
+            javaActiveContent.knowledge(),
+            cActiveContent.knowledge()
+        );
+        assertEquals(
+            javaActiveContent.relatedStructures(),
+            cActiveContent.relatedStructures()
+        );
+        assertFalse(javaNames.equals(cNames));
+        assertEquals(SubjectId.JAVA, state.getActiveSubject());
     }
 
     private static ExplorerController controller(
@@ -128,7 +172,10 @@ class ExplorerControllerTest {
     ) {
         return new ExplorerController(
             state,
-            new SubjectProviderRegistry(List.of(javaProvider())),
+            new SubjectProviderRegistry(List.of(
+                javaProvider(),
+                new CSubjectProvider()
+            )),
             new ExplorerService(),
             view
         );
@@ -141,10 +188,16 @@ class ExplorerControllerTest {
     private static final class RecordingView implements ExplorerView {
 
         private List<DataStructure> structures = List.of();
+        private List<ExplorerSubject> subjects = List.of();
         private StructureId highlighted;
         private ExplorerContent content;
         private boolean welcomeShown;
         private boolean failContent;
+
+        @Override
+        public void showSubjects(List<ExplorerSubject> values) {
+            subjects = values;
+        }
 
         @Override
         public void showStructures(

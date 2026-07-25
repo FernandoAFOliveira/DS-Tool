@@ -1,6 +1,8 @@
 package com.fernando.ds.subject;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 import com.fernando.ds.knowledge.StructureId;
 import com.fernando.ds.model.DataStructure;
@@ -42,6 +44,14 @@ public final class CSubjectProvider implements SubjectProvider {
             representation(StructureId.HASH_MAP, "Hash table"),
             representation(StructureId.ORDERED_MAP, "Balanced-tree map")
         );
+    }
+
+    @Override
+    public Optional<SubjectStructureContent> getEducationalContent(
+        StructureId structureId
+    ) {
+        Objects.requireNonNull(structureId, "structureId");
+        return Optional.ofNullable(CSubjectContentCatalog.get(structureId));
     }
 
     private static DataStructure representation(

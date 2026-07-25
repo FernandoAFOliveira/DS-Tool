@@ -67,8 +67,9 @@ experiences resolve the committed provider when next activated.
 ## Milestone boundary
 
 Timed Quiz, persistence, C compilation, detailed C code examples, C++ and
-Python providers, new Knowledge Core content, Explorer tabs, physical module
-separation, Android, and unrelated refactoring are outside Milestone 7.
+Python providers, new Knowledge Core content, Explorer tabs, and unrelated
+refactoring are outside Milestone 7. Physical module separation and Android
+belong to a future successor application.
 
 ## Validation
 

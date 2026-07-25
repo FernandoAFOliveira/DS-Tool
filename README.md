@@ -48,6 +48,8 @@ Unlike static documentation, this tool guides users through a decision process u
 - An Explorer experience for browsing the complete shared catalog, including
   concepts, trade-offs, operations, complexity, use cases, and related
   structures without changing Advisor filters
+- Explorer subject tabs that keep a language-neutral Overview beside
+  provider-owned Java and C implementation guidance and code examples
 - Concept-first Flash Cards derived from the shared Knowledge Core, with
   in-memory review progress and safe resume when switching experiences
 - Built-in Java explanations:

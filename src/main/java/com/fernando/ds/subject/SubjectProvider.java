@@ -48,4 +48,21 @@ public interface SubjectProvider {
             )
             .findFirst();
     }
+
+    /**
+     * Resolves implementation-oriented educational content for a concept.
+     *
+     * <p>The content is subject-specific and must not repeat language-neutral
+     * definitions, general complexity, strengths, weaknesses, use cases, or
+     * conceptual relationships from the Knowledge Core.</p>
+     *
+     * @param structureId abstract structure to describe
+     * @return subject-specific content, or empty when none is supplied
+     */
+    default Optional<SubjectStructureContent> getEducationalContent(
+        StructureId structureId
+    ) {
+        Objects.requireNonNull(structureId, "structureId");
+        return Optional.empty();
+    }
 }
