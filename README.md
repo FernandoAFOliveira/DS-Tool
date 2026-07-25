@@ -123,4 +123,4 @@ Ways to help:
 - Report bugs
 - Suggest better ranking logic
 
-Please see [CONTRIBUTING.md](CONTRIBUTING.md) for setup instructions and contribution guidelines.
+Please see [CONTRIBUTING.md](CONTRIBUTING.md) for setup instructions and contribution guidelines. 
