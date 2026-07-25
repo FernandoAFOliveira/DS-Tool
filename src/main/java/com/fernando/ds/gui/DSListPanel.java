@@ -15,6 +15,14 @@ public class DSListPanel extends JPanel {
     private boolean updatingList;
 
     public DSListPanel() {
+        this(2, 8, 2);
+    }
+
+    DSListPanel(
+        int verticalCellPadding,
+        int leftCellPadding,
+        int rightCellPadding
+    ) {
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 8));
 
@@ -26,7 +34,12 @@ public class DSListPanel extends JPanel {
         dsList.setCellRenderer((list, value, index, isSelected, cellHasFocus) -> {
             JLabel label = new JLabel(value.getName());
             label.setOpaque(true);
-            label.setBorder(BorderFactory.createEmptyBorder(2, 8, 2, 2));
+            label.setBorder(BorderFactory.createEmptyBorder(
+                verticalCellPadding,
+                leftCellPadding,
+                verticalCellPadding,
+                rightCellPadding
+            ));
 
             if (isSelected) {
                 label.setBackground(list.getSelectionBackground());

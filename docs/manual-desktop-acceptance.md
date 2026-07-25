@@ -64,7 +64,11 @@ mvn javafx:run
 
 - [ ] Start with no selected structure, choose **Experience > Explorer**, and confirm Explorer opens with welcome content and no highlighted structure.
 - [ ] Confirm Explorer lists all nine Knowledge Core structures using the Java names ArrayList, Stack, Queue, PriorityQueue, ArrayDeque, HashSet, TreeSet, HashMap, and TreeMap, regardless of the current Advisor answers.
+- [ ] Confirm the Explorer list has comfortable row padding while remaining compact; selection, keyboard navigation, and scrolling still work.
 - [ ] Select each Explorer structure and confirm the concept, Java representation, strengths, weaknesses, supported operations, complexity, memory and iteration information, common use cases, related structures, and diagram appear.
+- [ ] Confirm every Explorer diagram is horizontally centered without unexplained empty space on the right.
+- [ ] Drag the Explorer diagram/details splitter in both directions; both panes resize continuously and remain usable.
+- [ ] Confirm Explorer headings and body text are left-aligned, section spacing is clear, and no content section is missing.
 - [ ] Confirm Explorer content does not expose an internal `StructureId`, resource path, exception detail, or stack trace.
 - [ ] Select a structure in Advisor, enter Explorer, and confirm the same shared structure is highlighted and displayed.
 - [ ] In Advisor, set restrictive answers that exclude some structures. Enter Explorer and confirm excluded recommendations remain available to browse.
@@ -72,8 +76,11 @@ mvn javafx:run
 - [ ] Before entering Explorer, prepare non-default answers, weights, theme, and question-help navigation. Select a structure in Explorer, return to Advisor, and confirm answers, weights, subject, theme, preferences, and the saved Advisor navigation page remain unchanged.
 - [ ] Switch repeatedly between Advisor and Explorer; the active menu label, shared selection, and both experiences remain usable.
 - [ ] Change each theme while Explorer is active; list selection, details, and diagram remain readable and the selection is preserved when returning to Advisor.
+- [ ] At normal and high-DPI scaling, repeat the Explorer list, diagram, details, and all-theme checks; text remains readable and unclipped.
 - [ ] Choose **File > Reset selections** while Explorer is active; Explorer returns to welcome, Advisor answers and weights reset, and the active theme remains unchanged.
 - [ ] Trigger a controlled Explorer failure in a development session; confirm the standard generic error, full developer logging, unchanged prior selection, and successful use of Advisor afterward.
+- [ ] Return to Advisor and confirm its answers, filtering, selection, diagram, explanation, and navigation behavior are unchanged.
+- [ ] Recheck Java, C, C++, Python, and a Learn command; active-subject state and exact unavailable-feature behavior are unchanged.
 
 ## Every visible menu command
 

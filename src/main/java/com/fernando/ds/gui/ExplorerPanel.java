@@ -17,7 +17,7 @@ import com.fernando.ds.util.MermaidResult;
 /** Swing composition for the Explorer experience. */
 final class ExplorerPanel extends JPanel implements ExplorerView {
 
-    private final DSListPanel structures = new DSListPanel();
+    private final DSListPanel structures = new DSListPanel(4, 10, 10);
     private final DiagramPanel diagram = new DiagramPanel();
     private final ExplorerDetailsPanel details = new ExplorerDetailsPanel();
     private Theme currentTheme = Theme.LIGHT;

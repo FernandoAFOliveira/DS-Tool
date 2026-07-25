@@ -87,6 +87,14 @@ authoring or editing knowledge, new recommendation filters, new structures,
 shared visualization extraction, physical module separation, and Android are
 not part of Milestone 5.
 
+## Future tab direction
+
+A future Explorer refinement will separate language-neutral content into an
+**Overview** tab and subject-specific content into a subject tab such as
+**Java**. Additional subject tabs will appear only when their providers become
+functional. This direction does not change the current Explorer layout or the
+Knowledge Core and subject-provider boundaries.
+
 ## Validation
 
 Automated tests cover full-catalog enumeration, core/provider content

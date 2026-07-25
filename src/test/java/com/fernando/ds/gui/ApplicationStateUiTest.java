@@ -5,14 +5,17 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.Insets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
+import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 
 import org.junit.jupiter.api.Test;
@@ -107,6 +110,38 @@ class ApplicationStateUiTest {
             list.setSelectedIndex(0);
             assertEquals(1, changes.get());
             assertFalse(list.isSelectionEmpty());
+            return null;
+        });
+    }
+
+    @Test
+    void explorerListSpacingAddsCompactSymmetricCellPadding()
+        throws Exception {
+        onEdt(() -> {
+            DSListPanel panel = new DSListPanel(4, 10, 10);
+            panel.updateList(List.of(new DSArrayList()), null);
+
+            @SuppressWarnings("unchecked")
+            JList<DataStructure> list = (JList<DataStructure>) descendants(
+                panel,
+                JList.class
+            ).getFirst();
+            Component rendered = list.getCellRenderer()
+                .getListCellRendererComponent(
+                    list,
+                    list.getModel().getElementAt(0),
+                    0,
+                    false,
+                    false
+                );
+            JLabel label = (JLabel) rendered;
+            Insets insets = label.getBorder().getBorderInsets(label);
+
+            assertEquals(new Insets(4, 10, 4, 10), insets);
+            assertEquals(
+                ListSelectionModel.SINGLE_SELECTION,
+                list.getSelectionMode()
+            );
             return null;
         });
     }
