@@ -49,9 +49,19 @@ final class FlashCardController {
     }
 
     void activate() {
+        activate(activeSubject());
+    }
+
+    /**
+     * Renders the current card using a requested provider before subject
+     * commit.
+     */
+    void activate(SubjectProvider provider) {
+        Objects.requireNonNull(provider, "provider");
         FlashCardSession session = state.getFlashCardSession();
         int index = indexOf(session.currentStructureId());
         render(
+            provider,
             index,
             session.answerRevealed(),
             state.getLearningProgress().reviewedCount()
@@ -66,7 +76,7 @@ final class FlashCardController {
             + (progress.isReviewed(session.currentStructureId()) ? 0 : 1);
 
         // Render first so a presentation failure cannot commit false progress.
-        render(index, true, reviewed);
+        render(activeSubject(), index, true, reviewed);
         state.revealCurrentFlashCard();
     }
 
@@ -95,6 +105,7 @@ final class FlashCardController {
         LearningQuestion next = questions.get(requested);
         // Render first so a presentation failure cannot move the session.
         render(
+            activeSubject(),
             requested,
             false,
             state.getLearningProgress().reviewedCount()
@@ -102,12 +113,20 @@ final class FlashCardController {
         state.navigateFlashCard(next.structureId());
     }
 
-    private void render(int index, boolean revealed, int reviewed) {
+    private void render(
+        SubjectProvider provider,
+        int index,
+        boolean revealed,
+        int reviewed
+    ) {
         LearningQuestion question = questions.get(index);
         view.showCard(
             new FlashCardContent(
                 question,
-                resolveSubjectRepresentation(question.structureId())
+                resolveSubjectRepresentation(
+                    provider,
+                    question.structureId()
+                )
             ),
             index + 1,
             questions.size(),
@@ -119,16 +138,18 @@ final class FlashCardController {
     }
 
     private Optional<SubjectRepresentation> resolveSubjectRepresentation(
+        SubjectProvider provider,
         StructureId structureId
     ) {
-        SubjectProvider provider = subjectProviders.get(
-            state.getActiveSubject()
-        );
         return provider.getRepresentation(structureId)
             .map(representation -> new SubjectRepresentation(
                 provider.displayName(),
                 representation.getDisplayName()
             ));
+    }
+
+    private SubjectProvider activeSubject() {
+        return subjectProviders.get(state.getActiveSubject());
     }
 
     private int indexOf(StructureId structureId) {

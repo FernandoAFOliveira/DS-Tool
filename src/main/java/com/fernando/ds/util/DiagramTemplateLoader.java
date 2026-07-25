@@ -1,5 +1,6 @@
 package com.fernando.ds.util;
 
+import com.fernando.ds.knowledge.StructureId;
 import com.fernando.ds.gui.Theme;
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,6 +25,31 @@ public final class DiagramTemplateLoader {
         Map<String, String> themeMap = loadThemeAsMap(theme);
         String mmd = performSubstitution(template, themeMap);
         return new MermaidResult(mmd, themeMap.getOrDefault("background", "#FFFFFF"));
+    }
+
+    /**
+     * Loads the shared conceptual diagram for an abstract structure.
+     *
+     * @param structureId abstract structure to display
+     * @param theme active diagram theme
+     * @return processed Mermaid content
+     */
+    public static MermaidResult getProcessedMermaid(
+        StructureId structureId,
+        Theme theme
+    ) {
+        String diagramName = switch (structureId) {
+            case DYNAMIC_ARRAY -> "arraylist";
+            case STACK -> "stack";
+            case QUEUE -> "queue";
+            case PRIORITY_QUEUE -> "priorityqueue";
+            case DEQUE -> "arraydeque";
+            case HASH_SET -> "hashset";
+            case ORDERED_SET -> "treeset";
+            case HASH_MAP -> "hashmap";
+            case ORDERED_MAP -> "treemap";
+        };
+        return getProcessedMermaid(diagramName, theme);
     }
 
         

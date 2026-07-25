@@ -86,11 +86,55 @@ class SubjectProviderRegistryTest {
     }
 
     @Test
+    void cProviderSuppliesImplementationStrategiesForEveryConcept() {
+        SubjectProvider c = registry().get(SubjectId.C);
+
+        List<DataStructure> first = c.getDataStructures();
+        List<DataStructure> second = c.getDataStructures();
+
+        assertTrue(c.isEnabled());
+        assertEquals(
+            List.of(
+                StructureId.DYNAMIC_ARRAY,
+                StructureId.STACK,
+                StructureId.QUEUE,
+                StructureId.PRIORITY_QUEUE,
+                StructureId.DEQUE,
+                StructureId.HASH_SET,
+                StructureId.ORDERED_SET,
+                StructureId.HASH_MAP,
+                StructureId.ORDERED_MAP
+            ),
+            first.stream().map(DataStructure::getStructureId).toList()
+        );
+        assertEquals(
+            List.of(
+                "Dynamic array",
+                "Array-backed stack",
+                "Circular-buffer queue",
+                "Binary heap",
+                "Circular-buffer deque",
+                "Hash-table set",
+                "Balanced-tree set",
+                "Hash table",
+                "Balanced-tree map"
+            ),
+            first.stream().map(DataStructure::getDisplayName).toList()
+        );
+        assertNotSame(first.getFirst(), second.getFirst());
+        assertEquals(
+            "Hash table",
+            c.getRepresentation(StructureId.HASH_MAP)
+                .orElseThrow()
+                .getDisplayName()
+        );
+    }
+
+    @Test
     void unfinishedSubjectsAreUnavailableAndHaveNoStructures() {
         SubjectProviderRegistry registry = registry();
 
         for (SubjectId id : List.of(
-            SubjectId.C,
             SubjectId.CPP,
             SubjectId.PYTHON
         )) {
@@ -138,7 +182,7 @@ class SubjectProviderRegistryTest {
     private static SubjectProviderRegistry registry() {
         return new SubjectProviderRegistry(List.of(
             new JavaSubjectProvider(),
-            new UnavailableSubjectProvider(SubjectId.C, "C"),
+            new CSubjectProvider(),
             new UnavailableSubjectProvider(SubjectId.CPP, "C++"),
             new UnavailableSubjectProvider(SubjectId.PYTHON, "Python")
         ));

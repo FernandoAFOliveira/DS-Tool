@@ -17,7 +17,9 @@ import com.fernando.ds.application.LearningQuestionSource;
 import com.fernando.ds.knowledge.StructureId;
 import com.fernando.ds.library.QuestionInfo.QuestionId;
 import com.fernando.ds.model.Preference;
+import com.fernando.ds.subject.CSubjectProvider;
 import com.fernando.ds.subject.JavaSubjectProvider;
+import com.fernando.ds.subject.SubjectId;
 import com.fernando.ds.subject.SubjectProviderRegistry;
 
 class FlashCardControllerTest {
@@ -103,6 +105,34 @@ class FlashCardControllerTest {
             state.getFlashCardSession().currentStructureId()
         );
         assertEquals(1, state.getLearningProgress().reviewedCount());
+    }
+
+    @Test
+    void canRenderRequestedCContextWithoutCommittingTheSubject() {
+        ApplicationState state = populatedState();
+        RecordingView view = new RecordingView();
+        FlashCardController controller = controller(state, view);
+
+        controller.activate(new CSubjectProvider());
+
+        assertEquals(SubjectId.JAVA, state.getActiveSubject());
+        assertEquals(
+            "C",
+            view.content.subjectRepresentation()
+                .orElseThrow()
+                .subjectDisplayName()
+        );
+        assertEquals(
+            "Dynamic array",
+            view.content.subjectRepresentation()
+                .orElseThrow()
+                .representationDisplayName()
+        );
+        assertEquals(
+            StructureId.HASH_MAP,
+            state.getSelectedStructureId().orElseThrow()
+        );
+        assertEquals(NavigationKind.QUESTION, state.getNavigation().kind());
     }
 
     private static FlashCardController controller(

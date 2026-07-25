@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import com.fernando.ds.knowledge.KnowledgeCatalog;
 import com.fernando.ds.knowledge.StructureId;
+import com.fernando.ds.subject.CSubjectProvider;
 import com.fernando.ds.subject.JavaSubjectProvider;
 
 class ExplorerServiceTest {
@@ -48,6 +49,23 @@ class ExplorerServiceTest {
                 .map(related -> related.knowledge().id())
                 .toList()
         );
+        assertTrue(content.relatedStructures().stream()
+            .allMatch(related -> related.representation().isPresent()));
+    }
+
+    @Test
+    void combinesTheSameKnowledgeWithCImplementationTerminology() {
+        ExplorerContent content = service.getContent(
+            new CSubjectProvider(),
+            StructureId.HASH_MAP
+        ).orElseThrow();
+
+        assertEquals("C", content.subjectDisplayName());
+        assertEquals(
+            KnowledgeCatalog.get(StructureId.HASH_MAP),
+            content.knowledge()
+        );
+        assertEquals("Hash table", content.representation().getDisplayName());
         assertTrue(content.relatedStructures().stream()
             .allMatch(related -> related.representation().isPresent()));
     }

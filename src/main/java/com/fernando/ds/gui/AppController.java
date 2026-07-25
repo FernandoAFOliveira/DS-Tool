@@ -57,25 +57,38 @@ public class AppController {
 
     /** Restores Advisor controls without discarding an Explorer selection. */
     public void activate() {
+        activate(activeSubject());
+    }
+
+    /**
+     * Restores Advisor controls using a requested subject provider.
+     *
+     * <p>This overload supports rendering a subject before it is committed to
+     * shared application state.</p>
+     */
+    public void activate(SubjectProvider provider) {
         questionPanel.applyAnswers(state.getRecommendationAnswers());
-        refreshDataStructureList(false);
-        renderNavigation();
+        refreshDataStructureList(provider, false);
+        renderNavigation(provider);
     }
 
     private void showDataStructure(DataStructure dataStructure) {
         state.selectStructure(dataStructure.getStructureId());
         state.navigateToDataStructure();
-        renderDataStructure(dataStructure);
+        renderDataStructure(activeSubject(), dataStructure);
     }
 
-    private void renderDataStructure(DataStructure dataStructure) {
+    private void renderDataStructure(
+        SubjectProvider provider,
+        DataStructure dataStructure
+    ) {
         MermaidResult result = DiagramTemplateLoader.getProcessedMermaid(
-            dataStructure.getName(),
+            dataStructure.getStructureId(),
             currentTheme()
         );
 
         diagramPanel.showDiagram(result.mmdSource, result.backgroundColor);
-        explanationPanel.showDataStructure(dataStructure);
+        explanationPanel.showDataStructure(provider, dataStructure);
     }
 
     private void updateRemovalOrder(QuestionInfo question, RemovalOrder value) {
@@ -95,11 +108,13 @@ public class AppController {
     }
 
     private void refreshDataStructureList() {
-        refreshDataStructureList(true);
+        refreshDataStructureList(activeSubject(), true);
     }
 
-    private void refreshDataStructureList(boolean clearIneligibleSelection) {
-        SubjectProvider provider = activeSubject();
+    private void refreshDataStructureList(
+        SubjectProvider provider,
+        boolean clearIneligibleSelection
+    ) {
         List<DataStructure> valid = recommendationService.recommend(
             state.getRecommendationAnswers()
         ).stream()
@@ -122,7 +137,7 @@ public class AppController {
             if (state.getNavigation().kind()
                 == ApplicationState.NavigationKind.DATA_STRUCTURE) {
                 state.navigateToWelcome();
-                renderNavigation();
+                renderNavigation(provider);
             }
             selectedId = null;
         } else if (!selectedIsAvailable) {
@@ -145,9 +160,14 @@ public class AppController {
         if (question.getId() == QuestionInfo.QuestionId.KEY_VALUE
             && value == Preference.YES) {
             String title = "Key-value mapping selected";
-            String message = "Keys must be unique in Java maps. Different keys "
-                + "may still point to the same value, so the duplicate question "
-                + "has been set to Any.";
+            String message = activeSubject().id()
+                == SubjectId.JAVA
+                    ? "Keys must be unique in Java maps. Different keys may "
+                        + "still point to the same value, so the duplicate "
+                        + "question has been set to Any."
+                    : "Keys must be unique in key-value mappings. Different "
+                        + "keys may still point to the same value, so the "
+                        + "duplicate question has been set to Any.";
             state.navigateToMessage(title, message);
             explanationPanel.showMessage(title, message);
         }
@@ -161,6 +181,10 @@ public class AppController {
     }
 
     private void renderNavigation() {
+        renderNavigation(activeSubject());
+    }
+
+    private void renderNavigation(SubjectProvider provider) {
         ApplicationState.Navigation navigation = state.getNavigation();
 
         switch (navigation.kind()) {
@@ -169,9 +193,12 @@ public class AppController {
                 findQuestion(navigation.questionId())
             );
             case DATA_STRUCTURE -> state.getSelectedStructureId()
-                .flatMap(this::findDataStructure)
+                .flatMap(provider::getRepresentation)
                 .ifPresentOrElse(
-                    this::renderDataStructure,
+                    representation -> renderDataStructure(
+                        provider,
+                        representation
+                    ),
                     this::showWelcome
                 );
             case MESSAGE -> explanationPanel.showMessage(
@@ -190,37 +217,8 @@ public class AppController {
         throw new IllegalStateException("Unknown question: " + questionId);
     }
 
-    private java.util.Optional<DataStructure> findDataStructure(
-        StructureId structureId
-    ) {
-        return activeSubject().getRepresentation(structureId);
-    }
-
     private SubjectProvider activeSubject() {
         return subjectProviders.get(state.getActiveSubject());
-    }
-
-    /**
-     * Selects an enabled subject without changing state for a placeholder.
-     *
-     * @return {@code true} when the subject is enabled and selected
-     */
-    public boolean selectSubject(SubjectId subjectId) {
-        return selectSubject(state, subjectProviders, subjectId);
-    }
-
-    static boolean selectSubject(
-        ApplicationState state,
-        SubjectProviderRegistry subjectProviders,
-        SubjectId subjectId
-    ) {
-        SubjectProvider provider = subjectProviders.get(subjectId);
-        if (!provider.isEnabled()) {
-            return false;
-        }
-
-        state.setActiveSubject(subjectId);
-        return true;
     }
 
     private void showWelcome() {

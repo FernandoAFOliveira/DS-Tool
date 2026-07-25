@@ -25,7 +25,12 @@ Unlike static documentation, this tool guides users through a decision process u
   - HashMap, TreeMap
 
 - Recommend language-neutral data-structure concepts before displaying their
-  Java representations
+  active-subject representations
+
+- Switch between Java library representations and educational C
+  implementation strategies while preserving the selected concept and other
+  application state. C names such as hash table, binary heap, and balanced tree
+  describe common approaches rather than a standardized collections framework.
 
 - Filter by:
   - Key-value mapping
@@ -45,7 +50,7 @@ Unlike static documentation, this tool guides users through a decision process u
   structures without changing Advisor filters
 - Concept-first Flash Cards derived from the shared Knowledge Core, with
   in-memory review progress and safe resume when switching experiences
-- Built-in explanations:
+- Built-in Java explanations:
   - Key concepts
   - API overview
   - Example code

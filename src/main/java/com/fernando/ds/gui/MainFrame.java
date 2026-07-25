@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.util.EnumMap;
+import java.util.Map;
 
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
@@ -17,6 +19,7 @@ import javax.swing.JScrollPane;
 import com.fernando.ds.application.ApplicationState;
 import com.fernando.ds.application.ExplorerService;
 import com.fernando.ds.application.LearningQuestionSource;
+import com.fernando.ds.subject.CSubjectProvider;
 import com.fernando.ds.subject.JavaSubjectProvider;
 import com.fernando.ds.subject.SubjectId;
 import com.fernando.ds.subject.SubjectProvider;
@@ -32,6 +35,7 @@ public class MainFrame extends JFrame {
 
     private final ApplicationState state = new ApplicationState();
     private final SubjectProviderRegistry subjectProviders;
+    private final SubjectSelectionController subjectSelectionController;
     private final AppController advisorController;
     private final CardLayout experienceLayout = new CardLayout();
     private final JPanel experiences = new JPanel(experienceLayout);
@@ -42,6 +46,8 @@ public class MainFrame extends JFrame {
     private JMenuItem advisorItem;
     private JMenuItem explorerItem;
     private JMenuItem flashCardsItem;
+    private final Map<SubjectId, JMenuItem> subjectItems =
+        new EnumMap<>(SubjectId.class);
 
     public MainFrame() {
         super("Data Structure Advisor");
@@ -59,10 +65,14 @@ public class MainFrame extends JFrame {
 
         subjectProviders = new SubjectProviderRegistry(java.util.List.of(
             new JavaSubjectProvider(),
-            new UnavailableSubjectProvider(SubjectId.C, "C"),
+            new CSubjectProvider(),
             new UnavailableSubjectProvider(SubjectId.CPP, "C++"),
             new UnavailableSubjectProvider(SubjectId.PYTHON, "Python")
         ));
+        subjectSelectionController = new SubjectSelectionController(
+            state,
+            subjectProviders
+        );
 
         QuestionPanel questionPanel = new QuestionPanel();
         DSListPanel dsListPanel = new DSListPanel();
@@ -141,9 +151,9 @@ public class MainFrame extends JFrame {
             addSubjectAction(
                 item,
                 provider.displayName(),
-                provider.id(),
-                advisorController
+                provider.id()
             );
+            subjectItems.put(provider.id(), item);
             subjectMenu.add(item);
         }
 
@@ -230,23 +240,44 @@ public class MainFrame extends JFrame {
     private void addSubjectAction(
         JMenuItem item,
         String subjectName,
-        SubjectId subjectId,
-        AppController controller
+        SubjectId subjectId
     ) {
         item.addActionListener(event -> UiActionGuard.run(
             this,
             subjectName,
             () -> {
-                if (!controller.selectSubject(subjectId)) {
+                if (!subjectSelectionController.select(
+                    subjectId,
+                    this::renderActiveExperience
+                )) {
                     UiActionGuard.showNotEnabled(this, subjectName);
                     return;
                 }
+                updateSubjectLabels();
                 showInformationDialog(
                     subjectName,
                     subjectName + " is the active subject."
                 );
             }
         ));
+    }
+
+    private void renderActiveExperience(SubjectProvider provider) {
+        switch (state.getActiveExperience()) {
+            case ADVISOR -> advisorController.activate(provider);
+            case EXPLORER -> explorerController.activate(provider);
+            case LEARN -> flashCardController.activate(provider);
+        }
+    }
+
+    private void updateSubjectLabels() {
+        for (SubjectProvider provider : subjectProviders.getAll()) {
+            JMenuItem item = subjectItems.get(provider.id());
+            String activeLabel = provider.id() == state.getActiveSubject()
+                ? " (active)"
+                : "";
+            item.setText(provider.displayName() + activeLabel);
+        }
     }
 
     private void applyTheme(Theme theme) {

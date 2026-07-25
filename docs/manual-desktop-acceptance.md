@@ -40,8 +40,11 @@ mvn javafx:run
 - [ ] On startup, Java remains active and the recommendation list contains the existing Java structures: ArrayList, Stack, Queue, PriorityQueue, ArrayDeque, HashSet, TreeSet, HashMap, and TreeMap.
 - [ ] Set non-default answers and weights, select a Java structure, choose a non-default theme, and navigate to question help.
 - [ ] Choose **Subject > Java (active)**; the Java-active dialog appears and all prepared state remains unchanged.
-- [ ] Choose **Subject > C**; the exact standard not-enabled message appears, Java remains active, and all prepared state remains unchanged.
-- [ ] Repeat the preceding check for **C++** and **Python**.
+- [ ] Milestone 7 supersedes the original C placeholder: switch to C and back
+  to Java, confirming the prepared abstract selection and unrelated state
+  remain unchanged.
+- [ ] Choose **C++** and **Python**; the exact standard not-enabled message
+  appears and all prepared state remains unchanged.
 - [ ] After each unavailable-subject dialog, change an Advisor answer or theme and confirm the application remains usable.
 - [ ] After all subject commands, select a Java structure and confirm its explanation and diagram still load.
 - [ ] No subject command changes the active experience or resets locale, accessibility, appearance, navigation, answers, weights, or selection.
@@ -57,7 +60,9 @@ mvn javafx:run
 - [ ] Select each of the nine Java representations and confirm its existing Java name, explanation, and diagram load without exposing an internal abstract identifier or resource path.
 - [ ] Select a structure, change a weight without making it ineligible, and confirm the same abstract selection remains visibly selected.
 - [ ] Select a structure, navigate to question help, reselect **Subject > Java (active)**, and confirm answers, weights, selection, navigation, and theme remain unchanged.
-- [ ] Try C, C++, and Python after preparing non-default Advisor state; each remains unavailable and none changes the selected abstract structure or unrelated state.
+- [ ] Switch Java and C after preparing non-default Advisor state; the selected
+  abstract structure and unrelated state remain unchanged. C++ and Python
+  remain unavailable.
 - [ ] Trigger a controlled representation failure in a development session; confirm the standard generic error, full developer logging, and successful use of another command afterward.
 
 ## Milestone 5 Explorer experience
@@ -80,7 +85,9 @@ mvn javafx:run
 - [ ] Choose **File > Reset selections** while Explorer is active; Explorer returns to welcome, Advisor answers and weights reset, and the active theme remains unchanged.
 - [ ] Trigger a controlled Explorer failure in a development session; confirm the standard generic error, full developer logging, unchanged prior selection, and successful use of Advisor afterward.
 - [ ] Return to Advisor and confirm its answers, filtering, selection, diagram, explanation, and navigation behavior are unchanged.
-- [ ] Recheck Java, C, C++, Python, and a Learn command; active-subject state and exact unavailable-feature behavior are unchanged.
+- [ ] Recheck Java and C switching, C++ and Python unavailable behavior, and a
+  Learn command; active-subject state and exact unavailable-feature behavior
+  are correct.
 
 ## Milestone 6 Learn foundation
 
@@ -97,7 +104,49 @@ mvn javafx:run
 - [ ] Choose **File > Reset selections** while Flash Cards is active; accepted Advisor state resets while the current Flash Card and reviewed progress remain unchanged.
 - [ ] Trigger a controlled Flash Cards rendering failure in a development session; confirm the standard generic error, full developer logging, unchanged card/progress state, and successful Advisor use afterward.
 - [ ] Confirm **Experience > Learn > Timed Quiz** still displays exactly `This feature is not enabled yet.`
-- [ ] Recheck Advisor, Explorer, Java, C, C++, and Python behavior after using Flash Cards.
+- [ ] Recheck Advisor, Explorer, Java and C switching, and C++ and Python
+  unavailable behavior after using Flash Cards.
+
+## Milestone 7 second subject
+
+- [ ] Prepare non-default Advisor answers and weights, select a structure,
+  choose a non-default theme, and navigate to question help.
+- [ ] Enter Explorer, confirm the shared selection, then navigate and reveal a
+  Flash Card so Learn session and progress state are also non-default.
+- [ ] Return to each experience and switch from Java to C. The requested
+  experience renders successfully before **C (active)** appears in the Subject
+  menu.
+- [ ] Confirm the selected abstract structure, Advisor answers and weights,
+  theme, locale and accessibility behavior, Advisor navigation, active
+  experience, current Flash Card, reveal state, and reviewed count are
+  preserved.
+- [ ] In Advisor, confirm recommendation filtering and ordering are unchanged
+  while names use C implementation strategies such as Dynamic array, Binary
+  heap, Circular-buffer queue, Hash table, and Balanced-tree map.
+- [ ] Select each C recommendation. Its conceptual diagram and a compact
+  Knowledge Core-derived explanation load without a Java API page, internal
+  `StructureId`, resource path, or exception detail.
+- [ ] Confirm the C explanation states that its representation is an
+  implementation strategy rather than a standardized library type.
+- [ ] In Explorer, confirm all nine Knowledge Core concepts remain available
+  and show C terminology while conceptual content, relationships, diagrams,
+  and the shared selection remain unchanged.
+- [ ] In Flash Cards, reveal answers and confirm the concept remains primary
+  while supplementary representation text changes from Java to C.
+- [ ] Switch back to Java from Advisor, Explorer, and Flash Cards. Existing
+  Java names, Java explanation pages, selection, session, and progress return
+  without state loss.
+- [ ] Repeat Java/C switching with every theme and at normal and high-DPI
+  scaling; content remains readable, scrollable, and usable.
+- [ ] Choose C++ and Python; each displays exactly
+  `This feature is not enabled yet.` and does not change the active subject or
+  unrelated state.
+- [ ] Confirm Timed Quiz still displays exactly
+  `This feature is not enabled yet.`
+- [ ] In a development session, make the active-experience render step fail
+  during a Java-to-C switch. Confirm the generic feature-error dialog, full
+  developer logging, Java remaining active, all unrelated state remaining
+  unchanged, and a successful later subject switch or command.
 
 ## Every visible menu command
 
@@ -106,7 +155,11 @@ Dismiss each dialog before continuing.
 ### Subject
 
 - [ ] **Subject > Java (active)** displays `Java is the active subject.`
-- [ ] **Subject > C** displays exactly `This feature is not enabled yet.`
+- [ ] **Subject > C** activates C, changes its label to **C (active)**, and
+  updates the current experience without resetting unrelated state.
+- [ ] **Subject > Java** restores Java, changes its label to
+  **Java (active)**, and preserves the same abstract selection and unrelated
+  state.
 - [ ] **Subject > C++** displays exactly `This feature is not enabled yet.`
 - [ ] **Subject > Python** displays exactly `This feature is not enabled yet.`
 

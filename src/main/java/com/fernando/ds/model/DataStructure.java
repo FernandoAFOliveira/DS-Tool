@@ -7,11 +7,10 @@ import com.fernando.ds.knowledge.KnowledgeCatalog;
 import com.fernando.ds.knowledge.StructureId;
 
 /**
- * Java-specific representation of an abstract data-structure concept.
+ * Subject-specific representation of an abstract data-structure concept.
  *
  * <p>Recommendation capabilities and costs belong to the Knowledge Core. This
- * model retains the established Java name and presentation identity used by
- * the desktop application.</p>
+ * model retains the representation name used by the desktop application.</p>
  */
 public abstract class DataStructure implements Comparable<DataStructure> {
 
@@ -30,7 +29,7 @@ public abstract class DataStructure implements Comparable<DataStructure> {
         this.legacy = legacy;
     }
 
-    /** @return the language-neutral concept represented by this Java type */
+    /** @return the language-neutral concept represented by this representation */
     public StructureId getStructureId() {
         return structureId;
     }

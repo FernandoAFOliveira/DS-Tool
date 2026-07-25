@@ -38,7 +38,14 @@ final class ExplorerController {
     }
 
     void activate() {
-        SubjectProvider provider = activeSubject();
+        activate(activeSubject());
+    }
+
+    /**
+     * Renders Explorer using a requested provider before subject commit.
+     */
+    void activate(SubjectProvider provider) {
+        Objects.requireNonNull(provider, "provider");
         view.showStructures(
             explorerService.getAvailableStructures(provider),
             state.getSelectedStructureId().orElse(null)

@@ -18,7 +18,9 @@ import com.fernando.ds.knowledge.StructureId;
 import com.fernando.ds.library.QuestionInfo.QuestionId;
 import com.fernando.ds.model.DataStructure;
 import com.fernando.ds.model.Preference;
+import com.fernando.ds.subject.CSubjectProvider;
 import com.fernando.ds.subject.JavaSubjectProvider;
+import com.fernando.ds.subject.SubjectId;
 import com.fernando.ds.subject.SubjectProviderRegistry;
 
 class ExplorerControllerTest {
@@ -100,6 +102,24 @@ class ExplorerControllerTest {
             StructureId.STACK,
             state.getSelectedStructureId().orElseThrow()
         );
+    }
+
+    @Test
+    void canRenderARequestedCProviderBeforeSubjectCommit() {
+        ApplicationState state = new ApplicationState(Locale.US);
+        state.selectStructure(StructureId.HASH_MAP);
+        RecordingView view = new RecordingView();
+        ExplorerController controller = controller(state, view);
+
+        controller.activate(new CSubjectProvider());
+
+        assertEquals(SubjectId.JAVA, state.getActiveSubject());
+        assertEquals("C", view.content.subjectDisplayName());
+        assertEquals(
+            "Hash table",
+            view.content.representation().getDisplayName()
+        );
+        assertEquals(StructureId.HASH_MAP, view.highlighted);
     }
 
     private static ExplorerController controller(
