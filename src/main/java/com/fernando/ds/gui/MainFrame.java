@@ -47,8 +47,8 @@ public class MainFrame extends JFrame {
     private final AppController advisorController;
     private final CardLayout experienceLayout = new CardLayout();
     private final JPanel experiences = new JPanel(experienceLayout);
-    private final SubjectContextLabel activeSubjectIndicator =
-        new SubjectContextLabel("Active subject: ");
+    private final ActiveLanguageBadge activeLanguageBadge =
+        new ActiveLanguageBadge();
     private ExplorerPanel explorerPanel;
     private ExplorerController explorerController;
     private FlashCardPanel flashCardPanel;
@@ -87,7 +87,8 @@ public class MainFrame extends JFrame {
             state,
             subjectProviders
         );
-        activeSubjectIndicator.showSubject(
+        activeLanguageBadge.showSubject(
+            state.getActiveSubject(),
             subjectProviders.get(state.getActiveSubject()).displayName()
         );
 
@@ -116,17 +117,17 @@ public class MainFrame extends JFrame {
         experiences.add(mainPanel, ADVISOR_CARD);
         setJMenuBar(createMenuBar());
         UiActionGuard.run(this, "Advisor", advisorController::initialize);
-        add(activeSubjectIndicator, BorderLayout.NORTH);
         add(experiences, BorderLayout.CENTER);
     }
 
     private JMenuBar createMenuBar() {
-        JMenuBar menuBar = new JMenuBar();
-        menuBar.add(createFileMenu());
-        menuBar.add(createSubjectMenu());
-        menuBar.add(createExperienceMenu());
-        menuBar.add(createViewMenu());
-        menuBar.add(createHelpMenu());
+        WorkspaceHeaderBar menuBar = new WorkspaceHeaderBar(activeLanguageBadge);
+        menuBar.addPrimaryMenu(createFileMenu());
+        menuBar.addPrimaryMenu(createSubjectMenu());
+        menuBar.addPrimaryMenu(createExperienceMenu());
+        menuBar.addPrimaryMenu(createViewMenu());
+        menuBar.addPrimaryMenu(createHelpMenu());
+        menuBar.anchorActiveLanguageBadge();
         return menuBar;
     }
 
@@ -286,7 +287,8 @@ public class MainFrame extends JFrame {
                     return;
                 }
                 updateSubjectLabels();
-                activeSubjectIndicator.showSubject(
+                activeLanguageBadge.showSubject(
+                    state.getActiveSubject(),
                     subjectProviders.get(state.getActiveSubject())
                         .displayName()
                 );

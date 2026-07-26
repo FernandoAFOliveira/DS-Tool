@@ -49,16 +49,15 @@ class SubjectContextLabelTest {
     }
 
     @Test
-    void advisorContextUsesTheDynamicProviderDisplayName() {
+    void contextLabelUsesTheDynamicProviderDisplayName() {
         SubjectContextLabel label = new SubjectContextLabel(
-            MainPanel.SUBJECT_CONTEXT_PREFIX
+            "Subject context: "
         );
 
         label.showSubject(syntheticProvider().displayName());
 
         assertEquals(
-            "Recommendations and implementation information for: "
-                + "Synthetic Subject",
+            "Subject context: Synthetic Subject",
             label.getText()
         );
     }

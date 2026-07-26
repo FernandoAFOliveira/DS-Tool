@@ -276,9 +276,13 @@ to a future successor application and are not milestones in this roadmap.
 
 ### Post-Milestone-8 subject-context rule
 
-The shared desktop shell visibly identifies the active subject. Advisor,
-Explorer, and Flash Cards explain how that subject affects their content, and
+The shared desktop shell visibly identifies the active subject through a
+slightly taller workspace header and far-right active-language badge with a
+larger icon. Explorer explains how the active subject affects its content, and
 Explorer uses content-aware sizing for its adjustable representation list.
+
+Flash Cards relies on the shared badge for global language context and does not
+repeat a separate subject-context header line.
 
 Timed Quiz is completed by Milestone 9. Its session captures the active
 subject when a quiz begins, displays it throughout the session, and remains

@@ -15,24 +15,23 @@ render-before-commit subject switch.
 
 `ApplicationState.activeSubject` remains the only active-subject state, and
 `SubjectProviderRegistry` remains the source of provider display names. The
-shared `MainFrame` header renders `Active subject: <provider display name>`.
-Advisor, Explorer, and Flash Cards own only presentation labels:
+shared `MainFrame` menu bar renders a slightly taller workspace header with
+menus on the left and a compact, right-aligned active-language badge that
+shows a larger language icon and the active provider display name. Explorer
+owns a presentation label:
 
-- Advisor identifies the subject used for recommendations and implementation
-  information.
 - Explorer identifies the subject controlling its representation list.
-- Flash Cards identifies the subject supplying supplementary representation
-  material.
 
-The labels implement a small display boundary and do not retain a
-`SubjectId`, provider, or second subject model.
+The badge and labels implement display boundaries and do not retain a
+`SubjectId`, provider, or second subject model. Flash Cards no longer repeats
+global language context in its own header.
 
 During a subject switch, each active experience renders all other
 subject-sensitive content before changing its context label. Only after that
 render succeeds does `SubjectSelectionController` commit the active subject.
-The shared header is updated after the selection transaction returns. A
-rendering exception therefore leaves committed state and both visible context
-labels unchanged.
+The shared menu-bar indicator is updated after the selection transaction
+returns. A rendering exception therefore leaves committed state and visible
+context unchanged.
 
 Explorer places the representation list and existing diagram/details content
 in a user-adjustable horizontal split. The preferred list width is measured

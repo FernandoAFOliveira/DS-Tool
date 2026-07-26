@@ -18,8 +18,6 @@ import com.fernando.ds.util.ContentLoader;
 final class FlashCardPanel extends JPanel implements FlashCardView {
 
     private final JEditorPane card = new JEditorPane();
-    private final SubjectContextLabel subjectContext =
-        new SubjectContextLabel("Subject context: ");
     private final JLabel progress = new JLabel("", SwingConstants.CENTER);
     private final JButton previous = new JButton("Previous");
     private final JButton reveal = new JButton("Reveal answer");
@@ -28,13 +26,10 @@ final class FlashCardPanel extends JPanel implements FlashCardView {
 
     FlashCardPanel() {
         setLayout(new BorderLayout(16, 16));
-        setBorder(BorderFactory.createEmptyBorder(28, 48, 28, 48));
+        setBorder(BorderFactory.createEmptyBorder(18, 48, 28, 48));
 
         JLabel title = new JLabel("Flash Cards", SwingConstants.CENTER);
-        JPanel heading = new JPanel(new BorderLayout());
-        heading.add(title, BorderLayout.NORTH);
-        heading.add(subjectContext, BorderLayout.CENTER);
-        add(heading, BorderLayout.NORTH);
+        add(title, BorderLayout.NORTH);
 
         card.setContentType("text/html");
         card.setEditable(false);
@@ -111,7 +106,7 @@ final class FlashCardPanel extends JPanel implements FlashCardView {
 
     @Override
     public void showSubjectContext(String subjectDisplayName) {
-        subjectContext.showSubject(subjectDisplayName);
+        // Global language context is shown in the workspace header badge.
     }
 
     String displayedHtml() {
@@ -132,10 +127,6 @@ final class FlashCardPanel extends JPanel implements FlashCardView {
 
     boolean isNextEnabled() {
         return next.isEnabled();
-    }
-
-    String subjectContextText() {
-        return subjectContext.getText();
     }
 
     private static String supplementaryRepresentation(

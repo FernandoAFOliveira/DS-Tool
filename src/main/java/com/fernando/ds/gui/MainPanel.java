@@ -12,12 +12,6 @@ import javax.swing.SwingUtilities;
 
 public class MainPanel extends JPanel implements SubjectContextView {
 
-    static final String SUBJECT_CONTEXT_PREFIX =
-        "Recommendations and implementation information for: ";
-
-    private final SubjectContextLabel subjectContext =
-        new SubjectContextLabel(SUBJECT_CONTEXT_PREFIX);
-
     public MainPanel(
         QuestionPanel questionPanel,
         DSListPanel dsListPanel,
@@ -25,7 +19,6 @@ public class MainPanel extends JPanel implements SubjectContextView {
         ExplanationPanel explanationPanel
     ) {
         setLayout(new BorderLayout());
-        add(subjectContext, BorderLayout.NORTH);
 
         JPanel leftPanel = new JPanel(new BorderLayout());
         leftPanel.add(questionPanel, BorderLayout.NORTH);
@@ -59,10 +52,6 @@ public class MainPanel extends JPanel implements SubjectContextView {
 
     @Override
     public void showSubjectContext(String subjectDisplayName) {
-        subjectContext.showSubject(subjectDisplayName);
-    }
-
-    String subjectContextText() {
-        return subjectContext.getText();
+        // Advisor no longer displays a dedicated subject-context label.
     }
 }

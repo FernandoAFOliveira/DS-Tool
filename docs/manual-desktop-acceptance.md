@@ -264,28 +264,31 @@ For each selection, confirm menus, panels, text, selections, explanation content
 
 ### Persistent subject indicator
 
-- [ ] `Active subject: Java` or `Active subject: C` remains visible in Advisor,
-  Explorer, and Flash Cards.
-- [ ] Switch Java to C and C to Java; the header updates immediately after
+- [ ] A slightly taller workspace header remains compact and keeps the existing
+  menu order and keyboard access.
+- [ ] A right-aligned menu-bar language badge remains visible with a larger icon
+  and the active language name (for example, Java or C).
+- [ ] Switch Java to C and C to Java; the menu-bar badge updates immediately after
   each successful switch.
 - [ ] Check Light, Soft Blue, Dark, and Dark Blue; the indicator remains
   readable and does not dominate the window.
 - [ ] Trigger a controlled subject-rendering failure; the generic failure
-  message appears and the previous header and active subject remain unchanged.
+  message appears and the previous menu-bar indicator and active subject remain
+  unchanged.
 
 ### Experience-specific context
 
-- [ ] Advisor clearly identifies the subject used for recommendations and
-  implementation information; recommendations are unchanged except for
-  provider representation names.
+- [ ] Advisor recommendations remain unchanged except for provider
+  representation names.
 - [ ] Explorer states that the active subject controls the representation
   list, while Overview explicitly says `Language-neutral concept overview`.
 - [ ] Explorer tabs remain exactly Overview, Java, and C; Java and C tabs,
   shared diagram, and selected local tab continue to work and survive subject
   switches.
-- [ ] Flash Cards shows `Subject context: Java` or `Subject context: C`;
-  supplementary representation material changes with the subject while the
-  current card, reveal state, reviewed progress, and navigation are preserved.
+- [ ] Flash Cards does not repeat a `Subject context: ...` header line;
+  supplementary representation material still changes with the subject while
+  the current card, reveal state, reviewed progress, and navigation are
+  preserved.
 
 ### Timed Quiz and general regression
 

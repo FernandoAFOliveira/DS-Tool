@@ -3,9 +3,12 @@ package com.fernando.ds.gui;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.awt.Component;
+import java.awt.Container;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
+import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 
 import org.junit.jupiter.api.Test;
@@ -48,9 +51,8 @@ class FlashCardPanelTest {
         assertFalse(panel.displayedHtml().contains("ArrayList"));
         assertTrue(panel.progressText().contains("Card 1 of 9"));
         assertTrue(panel.progressText().contains("0 reviewed"));
-        assertTrue(panel.subjectContextText().contains(
-            "Subject context: Java"
-        ));
+        assertFalse(containsLabelText(panel, "Subject context:"));
+        assertTrue(containsLabelText(panel, "Flash Cards"));
         assertFalse(panel.isPreviousEnabled());
         assertTrue(panel.isRevealEnabled());
         assertTrue(panel.isNextEnabled());
@@ -65,8 +67,21 @@ class FlashCardPanelTest {
         assertTrue(panel.displayedHtml().contains("ArrayList"));
         assertTrue(panel.progressText().contains("1 reviewed"));
         assertFalse(panel.isRevealEnabled());
-        assertTrue(panel.subjectContextText().contains(
-            "Subject context: Java"
-        ));
+        assertFalse(containsLabelText(panel, "Subject context:"));
+    }
+
+    private static boolean containsLabelText(Container root, String textPrefix) {
+        for (Component component : root.getComponents()) {
+            if (component instanceof JLabel label
+                && label.getText() != null
+                && label.getText().startsWith(textPrefix)) {
+                return true;
+            }
+            if (component instanceof Container container
+                && containsLabelText(container, textPrefix)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
