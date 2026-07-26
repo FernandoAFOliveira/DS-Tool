@@ -80,11 +80,10 @@ final class ExplorerPanel extends JPanel implements ExplorerView {
 
     @Override
     public void showContent(ExplorerContent content) {
-        MermaidResult result = DiagramTemplateLoader.getProcessedMermaid(
+        diagram.showStructure(
             content.knowledge().id(),
             currentTheme
         );
-        diagram.showDiagram(result.mmdSource, result.backgroundColor);
         details.showContent(content);
     }
 

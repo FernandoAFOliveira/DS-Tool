@@ -38,9 +38,9 @@ Explorer continues composing Knowledge Core content with the active provider.
 Flash Cards remain concept-first and show the provider representation only as
 supplementary revealed content.
 
-Existing diagrams are conceptual assets despite their legacy Java-derived file
-names. Presentation resolves them from `StructureId`, so subject display names
-are not resource identifiers.
+Shared diagrams are language-neutral conceptual assets. Presentation resolves
+their primary and optional views from `StructureId`, so subject display names
+and provider representation names are never resource identifiers.
 
 ## Subject switching
 

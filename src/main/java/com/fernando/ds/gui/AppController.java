@@ -80,21 +80,19 @@ public class AppController {
     }
 
     private void showDataStructure(DataStructure dataStructure) {
+        renderDataStructure(activeSubject(), dataStructure);
         state.selectStructure(dataStructure.getStructureId());
         state.navigateToDataStructure();
-        renderDataStructure(activeSubject(), dataStructure);
     }
 
     private void renderDataStructure(
         SubjectProvider provider,
         DataStructure dataStructure
     ) {
-        MermaidResult result = DiagramTemplateLoader.getProcessedMermaid(
+        diagramPanel.showStructure(
             dataStructure.getStructureId(),
             currentTheme()
         );
-
-        diagramPanel.showDiagram(result.mmdSource, result.backgroundColor);
         explanationPanel.showDataStructure(provider, dataStructure);
     }
 

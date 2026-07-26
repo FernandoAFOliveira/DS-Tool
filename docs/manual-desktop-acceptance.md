@@ -295,6 +295,81 @@ For each selection, confirm menus, panels, text, selections, explanation content
   high-DPI scaling, window resizing, clipping, and representation-list
   scrolling.
 
+## Diagram Content Expansion
+
+### Every concept
+
+- [ ] Open all nine concepts in Advisor and Explorer; every primary diagram
+  loads and the selected abstract structure remains unchanged.
+- [ ] Confirm shared diagrams contain no Java collection class, Java-specific
+  API, C allocation function, C struct identifier, import, or include.
+- [ ] Confirm every title and label is readable and each primary communicates
+  its concept without relying on color alone.
+
+### Visual consistency
+
+- [ ] Compare all diagrams: stored data, focus, operations, notes, warnings,
+  and containers use the same semantic styles.
+- [ ] Confirm solid arrows consistently mean structural relationships and
+  dotted arrows consistently mean operations, movement, or annotations.
+- [ ] Confirm titles, typography, spacing, and annotation placement remain
+  consistent across the complete set.
+
+### Multi-diagram concepts
+
+- [ ] Dynamic array, queue, priority queue, ordered set, hash map, and ordered
+  map show a compact Diagram selector; stack, deque, and hash set do not.
+- [ ] Each selector defaults to Structure, switches to its secondary view, and
+  returns to Structure using mouse and keyboard.
+- [ ] Changing diagrams preserves the selected `StructureId`, active subject,
+  Advisor state, and selected Explorer detail tab.
+- [ ] Switch Java and C, change theme, and leave/return to the experience; the
+  locally selected diagram remains selected where it is still available.
+- [ ] With a controlled missing optional resource in a development session,
+  the primary diagram appears and the application remains usable.
+
+### Themes and layout
+
+- [ ] Inspect all diagrams in Light, Soft Blue, Dark, and Dark Blue.
+- [ ] At the minimum, ordinary, and maximized window sizes, resize the diagram
+  area and confirm there is no clipping, unreadable text, excessive whitespace,
+  or unexpected horizontal scrolling.
+
+### Required visual-polish pass
+
+- [ ] At 100% and 150% display scaling, open Hash Map in Advisor. Confirm the
+  Structure view fills the available diagram area reasonably, its title and
+  subtitle stay centered and naturally wrapped, and all labels are readable.
+- [ ] In Advisor, switch Hash Map to Collision handling with mouse and
+  keyboard. Confirm the selector stays compact and the secondary view refits
+  without clipping, scrolling, distortion, or selection/state changes.
+- [ ] Repeat both Hash Map views in Explorer. Their scale is comparable to
+  Advisor, and Overview, Java, C, the selected tab, and `StructureId` remain
+  unchanged.
+- [ ] Open Stack in both experiences. Confirm the entire selector row and its
+  spacing are absent while the diagram remains centered and uses the
+  available area.
+- [ ] Inspect every primary and secondary diagram at ordinary, maximized, and
+  narrow supported sizes. Confirm titles, labels, centering, and spacing;
+  record any excessive unused area or narrow layout.
+- [ ] Resize the window and move the Advisor and Explorer diagram splitters.
+  Confirm the current SVG continuously refits with one aspect ratio, reasonable
+  margins, no clipping, and no normal-use scrollbars.
+- [ ] Switch every theme, switch Advisor/Explorer, and switch Java/C while a
+  secondary diagram is selected. Confirm the diagram refits and local
+  selection is preserved.
+- [ ] Confirm concept views do not show the legacy Data Structure Advisor
+  banner or logo. Confirm welcome retains compact branding and application
+  identity remains in the shell/window title.
+
+### Failure handling
+
+- [ ] With a controlled invalid primary mapping in a development session,
+  confirm the generic failure dialog, full feature-context logging, unchanged
+  prior structure/subject state, and successful later diagram action.
+- [ ] Confirm Advisor, Explorer tabs, Java/C switching, Flash Cards, and the
+  Timed Quiz placeholder retain their established behavior.
+
 ## Reliability and recovery
 
 - [ ] After dismissing every not-enabled dialog, immediately run a working action such as changing the theme; it succeeds.

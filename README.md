@@ -44,7 +44,8 @@ Unlike static documentation, this tool guides users through a decision process u
   - Add/remove speed
   - Memory efficiency
 
-- Interactive visual diagrams for each structure
+- Consistent language-neutral static diagrams for each concept, with a small
+  number of high-value secondary views
 - An Explorer experience for browsing the complete shared catalog, including
   concepts, trade-offs, operations, complexity, use cases, and related
   structures without changing Advisor filters
@@ -124,5 +125,8 @@ Ways to help:
 - Improve diagrams and themes
 - Report bugs
 - Suggest better ranking logic
+
+Static diagram contributors should also follow
+[the diagram authoring guide](docs/diagram-authoring.md).
 
 Please see [CONTRIBUTING.md](CONTRIBUTING.md) for setup instructions and contribution guidelines. 

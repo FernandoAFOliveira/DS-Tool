@@ -1,0 +1,9 @@
+%% @title Hash map
+%% @subtitle Keys select buckets that store key-value entries
+flowchart LR
+
+    Lookup["look up key: blue<br/>hash selects bucket"]:::action
+    Lookup -.-> Bucket["bucket 2"]:::focus
+    Bucket --> Entry["key: blue<br/>value: 42"]:::data
+    Entry -.-> Result["return 42"]:::focus
+    Rule["keys are unique;<br/>values may repeat"]:::note -.-> Entry

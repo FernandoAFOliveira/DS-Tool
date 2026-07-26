@@ -1,0 +1,14 @@
+%% @title Circular-buffer queue
+%% @subtitle Rear wraps to reused capacity
+flowchart LR
+
+    subgraph Buffer["fixed slots arranged conceptually in a ring"]
+        direction LR
+        S0["slot 0<br/><b>D</b><br/>rear"]:::focus --> S1["slot 1<br/>empty"]:::note
+        S1 --> S2["slot 2<br/><b>A</b><br/>front"]:::focus
+        S2 --> S3["slot 3<br/><b>B</b>"]:::data --> S4["slot 4<br/><b>C</b>"]:::data
+        S4 --> S0
+    end
+    Dequeue["dequeue advances front"]:::action -.-> S2
+    Enqueue["enqueue advances rear"]:::action -.-> S0
+    class Buffer container

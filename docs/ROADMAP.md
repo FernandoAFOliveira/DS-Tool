@@ -288,6 +288,43 @@ the global switch while retaining the quiz's captured subject.
 
 ---
 
+## Diagram Content Expansion
+
+### Goal
+
+Improve the educational clarity and consistency of the desktop's static
+concept diagrams before the proof of concept is closed.
+
+### Scope
+
+- provide one strong language-neutral primary diagram for every
+  `StructureId`;
+- define one shared visual language for nodes, operations, focus, containers,
+  arrows, titles, typography, and theme colors;
+- add only selected high-value secondary views for resize/copy,
+  circular-buffer storage, heap array layout, hash collisions, and search-tree
+  balancing;
+- keep mapping concept-owned and `StructureId`-based;
+- keep optional diagram selection local, keyboard accessible, and
+  non-persistent; and
+- preserve Advisor, Explorer, subject-provider, Knowledge Core, Learn, and
+  guarded failure behavior.
+
+### Boundary
+
+This milestone does not add interactive or animated diagrams, a diagram
+editor, a rendering framework, touch or classroom features, mobile support,
+or provider-specific diagram sets. Semantic, animated, data-driven diagrams
+belong to the Flutter successor project.
+
+### Visible result
+
+Advisor and Explorer present consistent concept-first diagrams. Selected
+concepts offer one compact secondary static view without changing application
+or subject state.
+
+---
+
 ## Standard Development Cycle
 
 Every milestone follows this sequence:
