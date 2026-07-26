@@ -56,20 +56,15 @@ through `UiActionGuard`. The controller renders before changing current-card,
 answer, or progress state. A runtime presentation failure therefore produces
 the standard generic error without committing false progress or navigation.
 
-Previous and Next use stable Knowledge Core order and stop at the ends. Timed
-Quiz remains intentionally unavailable.
+Previous and Next use stable Knowledge Core order and stop at the ends.
 
-## Future Timed Quiz subject invariant
+## Timed Quiz successor milestone
 
-A future Timed Quiz session captures the active subject when the quiz begins
-and displays that subject throughout the session. A later global subject
-change must not silently alter the subject of an active quiz.
-
-The eventual interaction design may either prevent global subject switching
-while a quiz is active or allow the global change while keeping the current
-quiz bound to its captured subject. This invariant defines future behavior
-only; Timed Quiz remains the unchanged intentionally unavailable placeholder,
-and no quiz session logic is introduced here.
+Milestone 9 implements the subject invariant established here: a Timed Quiz
+captures the active subject when it begins, displays that subject throughout
+the session, and remains bound when the global subject changes. Its independent
+session, scoring, timing, and failure behavior are recorded in
+[`timed-quiz.md`](timed-quiz.md).
 
 ## Reset and persistence
 
@@ -88,10 +83,10 @@ in-memory only and is not restored after an application restart.
 
 ## Milestone boundary
 
-Timed Quiz, timers, correctness scoring, persistence, additional functional
-subjects, randomized decks, spaced repetition, and Explorer tabs are not part
-of Milestone 6. Module separation and Android belong to a future successor
-application.
+At Milestone 6, Timed Quiz, timers, correctness scoring, persistence,
+additional functional subjects, randomized decks, spaced repetition, and
+Explorer tabs were outside that milestone. Module separation and Android
+remain successor-application concerns.
 
 ## Validation
 

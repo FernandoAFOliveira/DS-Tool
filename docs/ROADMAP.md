@@ -280,11 +280,9 @@ The shared desktop shell visibly identifies the active subject. Advisor,
 Explorer, and Flash Cards explain how that subject affects their content, and
 Explorer uses content-aware sizing for its adjustable representation list.
 
-Timed Quiz remains intentionally unavailable. Its future session model must
-capture the active subject when a quiz begins, display it throughout the
-session, and never silently change it mid-session when the global subject
-changes. A later design may prevent global switching during a quiz or allow
-the global switch while retaining the quiz's captured subject.
+Timed Quiz is completed by Milestone 9. Its session captures the active
+subject when a quiz begins, displays it throughout the session, and remains
+bound when the global subject changes.
 
 ---
 
@@ -322,6 +320,51 @@ belong to the Flutter successor project.
 Advisor and Explorer present consistent concept-first diagrams. Selected
 concepts offer one compact secondary static view without changing application
 or subject state.
+
+---
+
+## Milestone 9 â€” Timed Quiz
+
+### Goal
+
+Complete one small, usable quiz experience for the proof-of-concept release
+without creating a generalized assessment platform.
+
+### Scope
+
+- one deterministic ten-question session;
+- five language-neutral concept questions and five captured-subject
+  representation questions derived from existing knowledge;
+- Java or C captured when the session starts and retained for its duration;
+- one elapsed session timer without countdown or automatic failure;
+- immediate feedback followed by deliberate Next navigation;
+- one point per correct answer, final percentage, correct/incorrect totals,
+  and elapsed time; and
+- in-memory quiz progress independent from Flash Cards and shared application
+  state.
+
+### Acceptance requirements
+
+- the active quiz subject never silently changes after a global subject switch;
+- question and session logic remain presentation-neutral and deterministic;
+- controller transitions render before commit and recover after a failure;
+- radio-button interaction, focus order, keyboard activation, themes, scaling,
+  and resizing remain usable;
+- resetting Timed Quiz changes only its session; and
+- Advisor, Explorer, Flash Cards, diagrams, and unavailable-subject behavior
+  remain unchanged.
+
+### Boundary
+
+Difficulty, categories, adaptive behavior, question history, persistence,
+analytics, achievements, streaks, leaderboards, per-question countdowns,
+animation, sound, additional quiz modes, and mobile work are outside this
+release.
+
+### Visible result
+
+The user can complete a subject-bound Java or C quiz, review every answer, see
+a transparent timed score, and immediately start a new session.
 
 ---
 

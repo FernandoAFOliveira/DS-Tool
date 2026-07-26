@@ -103,7 +103,8 @@ mvn javafx:run
 - [ ] At normal and high-DPI scaling, resize the window and confirm card content remains readable, scrollable, and unclipped.
 - [ ] Choose **File > Reset selections** while Flash Cards is active; accepted Advisor state resets while the current Flash Card and reviewed progress remain unchanged.
 - [ ] Trigger a controlled Flash Cards rendering failure in a development session; confirm the standard generic error, full developer logging, unchanged card/progress state, and successful Advisor use afterward.
-- [ ] Confirm **Experience > Learn > Timed Quiz** still displays exactly `This feature is not enabled yet.`
+- [ ] Open and return from Timed Quiz; Flash Cards restores the same card,
+  reveal state, and reviewed count.
 - [ ] Recheck Advisor, Explorer, Java and C switching, and C++ and Python
   unavailable behavior after using Flash Cards.
 
@@ -141,8 +142,8 @@ mvn javafx:run
 - [ ] Choose C++ and Python; each displays exactly
   `This feature is not enabled yet.` and does not change the active subject or
   unrelated state.
-- [ ] Confirm Timed Quiz still displays exactly
-  `This feature is not enabled yet.`
+- [ ] Start a Java quiz, switch to C, and confirm the quiz remains bound to
+  Java while Flash Cards uses C after navigation.
 - [ ] In a development session, make the active-experience render step fail
   during a Java-to-C switch. Confirm the generic feature-error dialog, full
   developer logging, Java remaining active, all unrelated state remaining
@@ -197,8 +198,8 @@ mvn javafx:run
   successful later Explorer or Advisor action.
 - [ ] Confirm Advisor explanations, Flash Cards behavior, Java/C subject
   switching, and theme preservation remain unchanged.
-- [ ] Confirm **Experience > Learn > Timed Quiz** still displays exactly
-  `This feature is not enabled yet.`
+- [ ] Confirm Timed Quiz opens without changing Explorer tab selection,
+  content, or shared structure selection.
 
 ## Every visible menu command
 
@@ -221,7 +222,8 @@ Dismiss each dialog before continuing.
 - [ ] **Experience > Explorer** opens Explorer and changes its label to **Explorer (active)**.
 - [ ] **Experience > Advisor** returns to Advisor and changes its label to **Advisor (active)**.
 - [ ] **Experience > Learn > Flash Cards** opens or restores Flash Cards and changes its label to **Flash Cards (active)**.
-- [ ] **Experience > Learn > Timed Quiz** displays exactly `This feature is not enabled yet.`
+- [ ] **Experience > Learn > Timed Quiz** opens or restores Timed Quiz and
+  changes its label to **Timed Quiz (active)**.
 
 ### View
 
@@ -287,10 +289,10 @@ For each selection, confirm menus, panels, text, selections, explanation content
 
 ### Timed Quiz and general regression
 
-- [ ] **Experience > Learn > Timed Quiz** still displays exactly
-  `This feature is not enabled yet.`
-- [ ] Confirm the roadmap and Learn ADR record that a future quiz captures its
-  subject at session start and cannot silently change subject mid-session.
+- [ ] **Experience > Learn > Timed Quiz** opens the pre-session screen and
+  displays the current subject and ten-question length.
+- [ ] Confirm the roadmap and quiz ADR record that a session captures its
+  subject at start and cannot silently change subject mid-session.
 - [ ] Recheck keyboard navigation, visible focus, every theme, normal and
   high-DPI scaling, window resizing, clipping, and representation-list
   scrolling.
@@ -368,7 +370,74 @@ For each selection, confirm menus, panels, text, selections, explanation content
   confirm the generic failure dialog, full feature-context logging, unchanged
   prior structure/subject state, and successful later diagram action.
 - [ ] Confirm Advisor, Explorer tabs, Java/C switching, Flash Cards, and the
-  Timed Quiz placeholder retain their established behavior.
+  working Timed Quiz retain their established behavior.
+
+## Milestone 9 Timed Quiz
+
+### Start
+
+- [ ] With Java active, choose **Experience > Learn > Timed Quiz**. Confirm
+  the pre-session screen explains the purpose, previews Java, states
+  **10 questions**, and shows **Start Quiz**.
+- [ ] Start the quiz. Confirm the label becomes **Quiz subject: Java**, the
+  timer begins at 0:00, and Question 1 of 10 appears.
+- [ ] Reset or complete the session, switch globally to C, return to the
+  pre-session screen, and confirm a new quiz captures C.
+
+### During quiz
+
+- [ ] Complete several questions using the mouse. Selecting a radio choice
+  enables Submit but does not submit automatically.
+- [ ] Submit once. Confirm immediate Correct/Incorrect feedback, the correct
+  answer, and a concise explanation appear.
+- [ ] Confirm the selected answers are disabled after submission and a
+  deliberate **Next** action is required.
+- [ ] Attempt repeated activation after submission; the score and position do
+  not change twice.
+- [ ] Confirm progress advances exactly one question after Next and the
+  elapsed session timer updates without a countdown or automatic failure.
+
+### Subject switching
+
+- [ ] Begin a Java quiz, then choose **Subject > C**. Confirm the global
+  indicator changes to C but the quiz label, questions, score, position, and
+  timer remain bound to Java.
+- [ ] Visit Advisor, Explorer, and Flash Cards; confirm each uses C normally.
+  Return to Timed Quiz and confirm its Java session remains intact.
+- [ ] Complete that quiz and choose **Start New Quiz**. Confirm the new session
+  captures the now-active C subject.
+
+### Completion and reset
+
+- [ ] Submit the tenth answer. Confirm the elapsed time stops and **View
+  Results** is required before the summary.
+- [ ] Confirm final score, percentage, correct count, incorrect count, and
+  elapsed time agree with the submitted answers.
+- [ ] Choose **Start New Quiz** and confirm score, progress, answers, and time
+  reset for a fresh session.
+- [ ] During an active quiz choose **File > Reset selections**. Confirm only
+  Timed Quiz returns to its pre-session screen; Advisor answers, Explorer
+  selection, Flash Cards session/progress, subject, and theme remain unchanged.
+
+### State isolation and failure recovery
+
+- [ ] Before starting, prepare non-default Advisor answers/navigation,
+  Explorer selection/tab, Flash Cards card/reveal/progress, and theme. Start,
+  answer, complete, reset, and restart quizzes; all prepared state remains.
+- [ ] Trigger a controlled Timed Quiz rendering failure. Confirm the generic
+  feature error, full developer log, unchanged prior quiz state, and a
+  successful retry or another command immediately afterward.
+
+### Accessibility and layout
+
+- [ ] Complete an entire quiz without a mouse. Tab order is logical; arrow
+  keys move within the radio group; Space selects; Enter/Space activates the
+  expected focused/default button; and focus moves to the next useful control.
+- [ ] Repeat the pre-session, question, feedback, and summary screens in
+  Light, Soft Blue, Dark, and Dark Blue themes.
+- [ ] At normal and high-DPI scaling, resize from the minimum supported window
+  through maximized size. The title, subject, progress, timer, question,
+  choices, feedback, and controls remain readable, scrollable, and unclipped.
 
 ## Reliability and recovery
 

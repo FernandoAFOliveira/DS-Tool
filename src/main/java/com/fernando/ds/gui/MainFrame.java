@@ -19,6 +19,8 @@ import javax.swing.JScrollPane;
 import com.fernando.ds.application.ApplicationState;
 import com.fernando.ds.application.ExplorerService;
 import com.fernando.ds.application.LearningQuestionSource;
+import com.fernando.ds.application.quiz.QuizQuestionSource;
+import com.fernando.ds.application.quiz.TimeSource;
 import com.fernando.ds.subject.CSubjectProvider;
 import com.fernando.ds.subject.JavaSubjectProvider;
 import com.fernando.ds.subject.SubjectId;
@@ -32,6 +34,12 @@ public class MainFrame extends JFrame {
     private static final String ADVISOR_CARD = "advisor";
     private static final String EXPLORER_CARD = "explorer";
     private static final String FLASH_CARDS_CARD = "flashCards";
+    private static final String TIMED_QUIZ_CARD = "timedQuiz";
+
+    private enum LearnActivity {
+        FLASH_CARDS,
+        TIMED_QUIZ
+    }
 
     private final ApplicationState state = new ApplicationState();
     private final SubjectProviderRegistry subjectProviders;
@@ -45,9 +53,13 @@ public class MainFrame extends JFrame {
     private ExplorerController explorerController;
     private FlashCardPanel flashCardPanel;
     private FlashCardController flashCardController;
+    private TimedQuizPanel timedQuizPanel;
+    private TimedQuizController timedQuizController;
+    private LearnActivity activeLearnActivity = LearnActivity.FLASH_CARDS;
     private JMenuItem advisorItem;
     private JMenuItem explorerItem;
     private JMenuItem flashCardsItem;
+    private JMenuItem timedQuizItem;
     private final Map<SubjectId, JMenuItem> subjectItems =
         new EnumMap<>(SubjectId.class);
 
@@ -125,6 +137,10 @@ public class MainFrame extends JFrame {
 
         resetItem.addActionListener(event ->
             UiActionGuard.run(this, "Reset selections", () -> {
+                if (isTimedQuizActive()) {
+                    timedQuizController.reset();
+                    return;
+                }
                 advisorController.reset();
                 if (explorerController != null) {
                     explorerController.activate();
@@ -132,13 +148,18 @@ public class MainFrame extends JFrame {
             })
         );
         exitItem.addActionListener(event ->
-            UiActionGuard.run(this, "Exit", this::dispose)
+            UiActionGuard.run(this, "Exit", this::exitApplication)
         );
 
         fileMenu.add(resetItem);
         fileMenu.addSeparator();
         fileMenu.add(exitItem);
         return fileMenu;
+    }
+
+    private void exitApplication() {
+        deactivateTimedQuiz();
+        dispose();
     }
 
     private JMenu createSubjectMenu() {
@@ -173,7 +194,7 @@ public class MainFrame extends JFrame {
         explorerItem = new JMenuItem("Explorer");
         JMenu learnMenu = new JMenu("Learn");
         flashCardsItem = new JMenuItem("Flash Cards");
-        JMenuItem timedQuizItem = new JMenuItem("Timed Quiz");
+        timedQuizItem = new JMenuItem("Timed Quiz");
 
         advisorItem.addActionListener(event -> UiActionGuard.run(
             this,
@@ -190,7 +211,11 @@ public class MainFrame extends JFrame {
             "Flash Cards",
             this::showFlashCards
         ));
-        addNotEnabledAction(timedQuizItem, "Timed Quiz");
+        timedQuizItem.addActionListener(event -> UiActionGuard.run(
+            this,
+            "Timed Quiz",
+            this::showTimedQuiz
+        ));
 
         learnMenu.add(flashCardsItem);
         learnMenu.add(timedQuizItem);
@@ -277,7 +302,13 @@ public class MainFrame extends JFrame {
         switch (state.getActiveExperience()) {
             case ADVISOR -> advisorController.activate(provider);
             case EXPLORER -> explorerController.activate(provider);
-            case LEARN -> flashCardController.activate(provider);
+            case LEARN -> {
+                if (activeLearnActivity == LearnActivity.TIMED_QUIZ) {
+                    timedQuizController.activate(provider);
+                } else {
+                    flashCardController.activate(provider);
+                }
+            }
         }
     }
 
@@ -300,6 +331,12 @@ public class MainFrame extends JFrame {
         if (flashCardController != null) {
             flashCardController.applyTheme(theme);
         }
+        if (timedQuizController != null) {
+            timedQuizController.applyTheme(theme);
+            if (!isTimedQuizActive()) {
+                timedQuizController.deactivate();
+            }
+        }
     }
 
     private void showAdvisor() {
@@ -312,6 +349,7 @@ public class MainFrame extends JFrame {
             return;
         }
 
+        deactivateTimedQuiz();
         advisorController.activate();
         experienceLayout.show(experiences, ADVISOR_CARD);
         state.setActiveExperience(ApplicationState.Experience.ADVISOR);
@@ -340,6 +378,7 @@ public class MainFrame extends JFrame {
             experiences.add(explorerPanel, EXPLORER_CARD);
         }
 
+        deactivateTimedQuiz();
         explorerController.activate();
         experienceLayout.show(experiences, EXPLORER_CARD);
         state.setActiveExperience(ApplicationState.Experience.EXPLORER);
@@ -379,8 +418,61 @@ public class MainFrame extends JFrame {
             experiences.add(flashCardPanel, FLASH_CARDS_CARD);
         }
 
+        deactivateTimedQuiz();
         flashCardController.activate();
         experienceLayout.show(experiences, FLASH_CARDS_CARD);
+        activeLearnActivity = LearnActivity.FLASH_CARDS;
+        state.setActiveExperience(ApplicationState.Experience.LEARN);
+        updateExperienceLabels();
+    }
+
+    private void showTimedQuiz() {
+        if (timedQuizController == null) {
+            timedQuizPanel = new TimedQuizPanel();
+            timedQuizController = new TimedQuizController(
+                state,
+                subjectProviders,
+                new QuizQuestionSource(),
+                TimeSource.system(),
+                timedQuizPanel
+            );
+            timedQuizPanel.setStartListener(() -> UiActionGuard.run(
+                this,
+                "Timed Quiz",
+                timedQuizController::startQuiz
+            ));
+            timedQuizPanel.setSubmitListener(answer -> UiActionGuard.run(
+                this,
+                "Timed Quiz",
+                () -> timedQuizController.submitAnswer(answer)
+            ));
+            timedQuizPanel.setNextListener(() -> UiActionGuard.run(
+                this,
+                "Timed Quiz",
+                timedQuizController::showNext
+            ));
+            timedQuizPanel.setStartNewListener(() -> UiActionGuard.run(
+                this,
+                "Timed Quiz",
+                timedQuizController::startNewQuiz
+            ));
+            timedQuizPanel.setTimerTickListener(() -> UiActionGuard.run(
+                this,
+                "Timed Quiz timer",
+                timedQuizController::refreshElapsedTime
+            ));
+            Theme currentTheme = Theme.fromAppearance(state.getAppearance());
+            ThemeManager.applyThemeToComponent(
+                timedQuizPanel,
+                currentTheme
+            );
+            timedQuizController.applyTheme(currentTheme);
+            experiences.add(timedQuizPanel, TIMED_QUIZ_CARD);
+        }
+
+        timedQuizController.activate();
+        experienceLayout.show(experiences, TIMED_QUIZ_CARD);
+        activeLearnActivity = LearnActivity.TIMED_QUIZ;
         state.setActiveExperience(ApplicationState.Experience.LEARN);
         updateExperienceLabels();
     }
@@ -397,8 +489,30 @@ public class MainFrame extends JFrame {
             explorerActive ? "Explorer (active)" : "Explorer"
         );
         flashCardsItem.setText(
-            learnActive ? "Flash Cards (active)" : "Flash Cards"
+            learnActive
+                && activeLearnActivity == LearnActivity.FLASH_CARDS
+                ? "Flash Cards (active)"
+                : "Flash Cards"
         );
+        timedQuizItem.setText(
+            learnActive
+                && activeLearnActivity == LearnActivity.TIMED_QUIZ
+                ? "Timed Quiz (active)"
+                : "Timed Quiz"
+        );
+    }
+
+    private boolean isTimedQuizActive() {
+        return state.getActiveExperience()
+            == ApplicationState.Experience.LEARN
+            && activeLearnActivity == LearnActivity.TIMED_QUIZ
+            && timedQuizController != null;
+    }
+
+    private void deactivateTimedQuiz() {
+        if (isTimedQuizActive()) {
+            timedQuizController.deactivate();
+        }
     }
 
     private void showAboutDialog() {

@@ -53,6 +53,8 @@ Unlike static documentation, this tool guides users through a decision process u
   provider-owned Java and C implementation guidance and code examples
 - Concept-first Flash Cards derived from the shared Knowledge Core, with
   in-memory review progress and safe resume when switching experiences
+- A ten-question Timed Quiz with Java- or C-bound sessions, immediate
+  feedback, transparent scoring, and one low-pressure elapsed session timer
 - Built-in Java explanations:
   - Key concepts
   - API overview
