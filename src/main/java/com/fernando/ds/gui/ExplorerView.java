@@ -8,7 +8,7 @@ import com.fernando.ds.knowledge.StructureId;
 import com.fernando.ds.model.DataStructure;
 
 /** Presentation boundary used by the display-independent Explorer controller. */
-interface ExplorerView {
+interface ExplorerView extends SubjectContextView {
 
     void showSubjects(List<ExplorerSubject> subjects);
 

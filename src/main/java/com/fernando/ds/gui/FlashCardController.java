@@ -66,6 +66,7 @@ final class FlashCardController {
             session.answerRevealed(),
             state.getLearningProgress().reviewedCount()
         );
+        view.showSubjectContext(provider.displayName());
     }
 
     void revealAnswer() {

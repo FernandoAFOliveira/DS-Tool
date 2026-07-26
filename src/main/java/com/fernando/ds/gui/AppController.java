@@ -26,6 +26,7 @@ public class AppController {
     private final DiagramPanel diagramPanel;
     private final ExplanationPanel explanationPanel;
     private final QuestionPanel questionPanel;
+    private final SubjectContextView subjectContextView;
 
     public AppController(
         ApplicationState state,
@@ -33,7 +34,8 @@ public class AppController {
         QuestionPanel questionPanel,
         DSListPanel dsListPanel,
         DiagramPanel diagramPanel,
-        ExplanationPanel explanationPanel
+        ExplanationPanel explanationPanel,
+        SubjectContextView subjectContextView
     ) {
         this.state = state;
         this.questionPanel = questionPanel;
@@ -41,6 +43,7 @@ public class AppController {
         this.dsListPanel = dsListPanel;
         this.diagramPanel = diagramPanel;
         this.explanationPanel = explanationPanel;
+        this.subjectContextView = subjectContextView;
 
         dsListPanel.setSelectionListener(this::showDataStructure);
         questionPanel.setQuestionSelectionListener(this::handleQuestionChange);
@@ -53,6 +56,9 @@ public class AppController {
         questionPanel.applyAnswers(state.getRecommendationAnswers());
         refreshDataStructureList();
         renderNavigation();
+        subjectContextView.showSubjectContext(
+            activeSubject().displayName()
+        );
     }
 
     /** Restores Advisor controls without discarding an Explorer selection. */
@@ -70,6 +76,7 @@ public class AppController {
         questionPanel.applyAnswers(state.getRecommendationAnswers());
         refreshDataStructureList(provider, false);
         renderNavigation(provider);
+        subjectContextView.showSubjectContext(provider.displayName());
     }
 
     private void showDataStructure(DataStructure dataStructure) {

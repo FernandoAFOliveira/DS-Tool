@@ -126,6 +126,7 @@ class ExplorerControllerTest {
                 .getDisplayName()
         );
         assertEquals(StructureId.HASH_MAP, view.highlighted);
+        assertEquals("C", view.subjectContext);
         assertEquals(
             List.of(
                 new ExplorerSubject(SubjectId.JAVA, "Java"),
@@ -166,6 +167,24 @@ class ExplorerControllerTest {
         assertEquals(SubjectId.JAVA, state.getActiveSubject());
     }
 
+    @Test
+    void failedSubjectRenderingPreservesPreviousContext() {
+        ApplicationState state = new ApplicationState(Locale.US);
+        state.selectStructure(StructureId.HASH_MAP);
+        RecordingView view = new RecordingView();
+        ExplorerController controller = controller(state, view);
+        controller.activate();
+        view.failContent = true;
+
+        assertThrows(
+            IllegalStateException.class,
+            () -> controller.activate(new CSubjectProvider())
+        );
+
+        assertEquals("Java", view.subjectContext);
+        assertEquals(SubjectId.JAVA, state.getActiveSubject());
+    }
+
     private static ExplorerController controller(
         ApplicationState state,
         RecordingView view
@@ -193,6 +212,7 @@ class ExplorerControllerTest {
         private ExplorerContent content;
         private boolean welcomeShown;
         private boolean failContent;
+        private String subjectContext;
 
         @Override
         public void showSubjects(List<ExplorerSubject> values) {
@@ -225,6 +245,11 @@ class ExplorerControllerTest {
 
         @Override
         public void applyTheme(Theme theme) {
+        }
+
+        @Override
+        public void showSubjectContext(String subjectDisplayName) {
+            subjectContext = subjectDisplayName;
         }
     }
 }

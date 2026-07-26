@@ -36,6 +36,7 @@ final class ExplorerDetailsPanel extends JPanel {
 
     void showWelcome() {
         setBody("""
+            <p><strong>Language-neutral concept overview</strong></p>
             <h1 style="%s">Explore data structures</h1>
             <p>Select a structure to browse its concepts, trade-offs,
             operations, complexity, and relationships.</p>
@@ -45,6 +46,7 @@ final class ExplorerDetailsPanel extends JPanel {
     void showContent(ExplorerContent content) {
         DataStructureKnowledge knowledge = content.knowledge();
         String body = """
+            <p><strong>Language-neutral concept overview</strong></p>
             <h1 style="%s">%s</h1>
             <h2 style="%s">Definition</h2>
             <p>%s</p>

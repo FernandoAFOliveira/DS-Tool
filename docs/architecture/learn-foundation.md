@@ -59,6 +59,18 @@ the standard generic error without committing false progress or navigation.
 Previous and Next use stable Knowledge Core order and stop at the ends. Timed
 Quiz remains intentionally unavailable.
 
+## Future Timed Quiz subject invariant
+
+A future Timed Quiz session captures the active subject when the quiz begins
+and displays that subject throughout the session. A later global subject
+change must not silently alter the subject of an active quiz.
+
+The eventual interaction design may either prevent global subject switching
+while a quiz is active or allow the global change while keeping the current
+quiz bound to its captured subject. This invariant defines future behavior
+only; Timed Quiz remains the unchanged intentionally unavailable placeholder,
+and no quiz session logic is introduced here.
+
 ## Reset and persistence
 
 **File > Reset selections** retains its established Advisor-owned semantics and

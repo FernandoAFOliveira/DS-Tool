@@ -1,9 +1,22 @@
 package com.fernando.ds.gui;
 
-import java.awt.*;
-import javax.swing.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Font;
 
-public class MainPanel extends JPanel {
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JSplitPane;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
+
+public class MainPanel extends JPanel implements SubjectContextView {
+
+    static final String SUBJECT_CONTEXT_PREFIX =
+        "Recommendations and implementation information for: ";
+
+    private final SubjectContextLabel subjectContext =
+        new SubjectContextLabel(SUBJECT_CONTEXT_PREFIX);
 
     public MainPanel(
         QuestionPanel questionPanel,
@@ -12,15 +25,17 @@ public class MainPanel extends JPanel {
         ExplanationPanel explanationPanel
     ) {
         setLayout(new BorderLayout());
+        add(subjectContext, BorderLayout.NORTH);
 
-    JPanel leftPanel = new JPanel(new BorderLayout());
+        JPanel leftPanel = new JPanel(new BorderLayout());
+        leftPanel.add(questionPanel, BorderLayout.NORTH);
+        leftPanel.add(dsListPanel, BorderLayout.CENTER);
+        add(leftPanel, BorderLayout.WEST);
 
-    leftPanel.add(questionPanel, BorderLayout.NORTH);
-    leftPanel.add(dsListPanel, BorderLayout.CENTER);
-
-    add(leftPanel, BorderLayout.WEST);
-
-        JLabel resizeHint = new JLabel("↕ Drag to resize diagram", SwingConstants.CENTER);
+        JLabel resizeHint = new JLabel(
+            "\u2195 Drag to resize diagram",
+            SwingConstants.CENTER
+        );
         resizeHint.setFont(new Font("SansSerif", Font.PLAIN, 12));
         resizeHint.setForeground(Color.GRAY);
 
@@ -33,13 +48,21 @@ public class MainPanel extends JPanel {
             diagramContainer,
             explanationPanel
         );
-
         rightPanel.setResizeWeight(0.55);
         rightPanel.setOneTouchExpandable(true);
         rightPanel.setContinuousLayout(true);
-
-        SwingUtilities.invokeLater(() -> rightPanel.setDividerLocation(0.55));
-
+        SwingUtilities.invokeLater(() ->
+            rightPanel.setDividerLocation(0.55)
+        );
         add(rightPanel, BorderLayout.CENTER);
+    }
+
+    @Override
+    public void showSubjectContext(String subjectDisplayName) {
+        subjectContext.showSubject(subjectDisplayName);
+    }
+
+    String subjectContextText() {
+        return subjectContext.getText();
     }
 }

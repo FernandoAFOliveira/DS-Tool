@@ -40,6 +40,7 @@ class FlashCardControllerTest {
         assertEquals(1, view.position);
         assertEquals(9, view.total);
         assertEquals(0, view.reviewed);
+        assertEquals("Java", view.subjectContext);
         assertEquals(
             "ArrayList",
             view.content.subjectRepresentation()
@@ -122,6 +123,7 @@ class FlashCardControllerTest {
                 .orElseThrow()
                 .subjectDisplayName()
         );
+        assertEquals("C", view.subjectContext);
         assertEquals(
             "Dynamic array",
             view.content.subjectRepresentation()
@@ -133,6 +135,47 @@ class FlashCardControllerTest {
             state.getSelectedStructureId().orElseThrow()
         );
         assertEquals(NavigationKind.QUESTION, state.getNavigation().kind());
+    }
+
+    @Test
+    void subjectRefreshPreservesCardRevealAndProgress() {
+        ApplicationState state = populatedState();
+        RecordingView view = new RecordingView();
+        FlashCardController controller = controller(state, view);
+        controller.showNext();
+        controller.revealAnswer();
+
+        controller.activate(new CSubjectProvider());
+
+        assertEquals(StructureId.STACK, state.getFlashCardSession()
+            .currentStructureId());
+        assertTrue(state.getFlashCardSession().answerRevealed());
+        assertEquals(1, state.getLearningProgress().reviewedCount());
+        assertEquals(2, view.position);
+        assertTrue(view.answerRevealed);
+        assertEquals("C", view.subjectContext);
+        assertEquals(
+            "Array-backed stack",
+            view.content.subjectRepresentation().orElseThrow()
+                .representationDisplayName()
+        );
+    }
+
+    @Test
+    void failedSubjectRefreshPreservesPreviousContext() {
+        ApplicationState state = populatedState();
+        RecordingView view = new RecordingView();
+        FlashCardController controller = controller(state, view);
+        controller.activate();
+        view.failRendering = true;
+
+        assertThrows(
+            IllegalStateException.class,
+            () -> controller.activate(new CSubjectProvider())
+        );
+
+        assertEquals("Java", view.subjectContext);
+        assertEquals(SubjectId.JAVA, state.getActiveSubject());
     }
 
     private static FlashCardController controller(
@@ -163,6 +206,7 @@ class FlashCardControllerTest {
         private int reviewed;
         private boolean answerRevealed;
         private boolean failRendering;
+        private String subjectContext;
 
         @Override
         public void showCard(
@@ -186,6 +230,11 @@ class FlashCardControllerTest {
 
         @Override
         public void applyTheme(Theme theme) {
+        }
+
+        @Override
+        public void showSubjectContext(String subjectDisplayName) {
+            subjectContext = subjectDisplayName;
         }
     }
 }

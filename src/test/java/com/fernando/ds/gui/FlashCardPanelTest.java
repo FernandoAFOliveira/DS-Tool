@@ -48,6 +48,9 @@ class FlashCardPanelTest {
         assertFalse(panel.displayedHtml().contains("ArrayList"));
         assertTrue(panel.progressText().contains("Card 1 of 9"));
         assertTrue(panel.progressText().contains("0 reviewed"));
+        assertTrue(panel.subjectContextText().contains(
+            "Subject context: Java"
+        ));
         assertFalse(panel.isPreviousEnabled());
         assertTrue(panel.isRevealEnabled());
         assertTrue(panel.isNextEnabled());
@@ -62,5 +65,8 @@ class FlashCardPanelTest {
         assertTrue(panel.displayedHtml().contains("ArrayList"));
         assertTrue(panel.progressText().contains("1 reviewed"));
         assertFalse(panel.isRevealEnabled());
+        assertTrue(panel.subjectContextText().contains(
+            "Subject context: Java"
+        ));
     }
 }

@@ -3,7 +3,7 @@ package com.fernando.ds.gui;
 import com.fernando.ds.application.FlashCardContent;
 
 /** Presentation boundary used by the display-independent Flash Cards controller. */
-interface FlashCardView {
+interface FlashCardView extends SubjectContextView {
 
     void showCard(
         FlashCardContent content,

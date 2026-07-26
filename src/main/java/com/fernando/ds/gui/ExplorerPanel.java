@@ -22,11 +22,16 @@ final class ExplorerPanel extends JPanel implements ExplorerView {
     private final DiagramPanel diagram = new DiagramPanel();
     private final ExplorerTabbedDetailsPanel details =
         new ExplorerTabbedDetailsPanel();
+    private final SubjectContextLabel subjectContext =
+        new SubjectContextLabel(
+            "Active subject controls the representation list: "
+        );
+    private final ContentAwareSplitPane explorerSplit;
     private Theme currentTheme = Theme.LIGHT;
 
     ExplorerPanel() {
         setLayout(new BorderLayout());
-        add(structures, BorderLayout.WEST);
+        add(subjectContext, BorderLayout.NORTH);
 
         JSplitPane content = new JSplitPane(
             JSplitPane.VERTICAL_SPLIT,
@@ -37,7 +42,12 @@ final class ExplorerPanel extends JPanel implements ExplorerView {
         content.setOneTouchExpandable(true);
         content.setContinuousLayout(true);
         SwingUtilities.invokeLater(() -> content.setDividerLocation(0.48));
-        add(content, BorderLayout.CENTER);
+
+        explorerSplit = new ContentAwareSplitPane(
+            structures,
+            content
+        );
+        add(explorerSplit, BorderLayout.CENTER);
     }
 
     void setSelectionListener(Consumer<DataStructure> listener) {
@@ -50,6 +60,7 @@ final class ExplorerPanel extends JPanel implements ExplorerView {
         StructureId selectedStructureId
     ) {
         structures.updateList(available, selectedStructureId);
+        refreshListWidth();
     }
 
     @Override
@@ -81,5 +92,32 @@ final class ExplorerPanel extends JPanel implements ExplorerView {
     public void applyTheme(Theme theme) {
         currentTheme = theme;
         details.applyTheme(theme);
+    }
+
+    @Override
+    public void showSubjectContext(String subjectDisplayName) {
+        subjectContext.showSubject(subjectDisplayName);
+    }
+
+    int preferredListWidth() {
+        return structures.preferredContentWidth();
+    }
+
+    int listDividerLocation() {
+        return explorerSplit.getDividerLocation();
+    }
+
+    void setListDividerLocation(int location) {
+        explorerSplit.setDividerLocation(location);
+    }
+
+    String subjectContextText() {
+        return subjectContext.getText();
+    }
+
+    private void refreshListWidth() {
+        explorerSplit.refreshPreferredLeftWidth(
+            structures.preferredContentWidth()
+        );
     }
 }

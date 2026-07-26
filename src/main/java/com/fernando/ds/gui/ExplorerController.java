@@ -55,6 +55,7 @@ final class ExplorerController {
         state.getSelectedStructureId()
             .map(id -> explorerService.getContent(enabledProviders(), id))
             .ifPresentOrElse(view::showContent, view::showWelcome);
+        view.showSubjectContext(provider.displayName());
     }
 
     void selectStructure(DataStructure representation) {

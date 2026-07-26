@@ -245,6 +245,56 @@ For each selection, confirm menus, panels, text, selections, explanation content
 
 `Learn` and `Theme` are navigation submenus, not feature commands; their leaf items are the commands validated above.
 
+## Post-Milestone-8 UI context polish
+
+### Explorer representation list
+
+- [ ] With Java active, all nine representation names are readable without
+  unexpected horizontal scrolling.
+- [ ] With C active, all nine representation names, including the longest
+  array-, queue-, set-, and map-oriented labels, are readable.
+- [ ] Drag the divider between the representation list and Explorer content;
+  it remains adjustable and both sides remain usable.
+- [ ] Switch Java and C repeatedly; the preferred left width refreshes and
+  never leaves the list cramped.
+- [ ] Manually move the divider, switch subjects, and confirm the manual
+  position is not immediately overwritten.
+
+### Persistent subject indicator
+
+- [ ] `Active subject: Java` or `Active subject: C` remains visible in Advisor,
+  Explorer, and Flash Cards.
+- [ ] Switch Java to C and C to Java; the header updates immediately after
+  each successful switch.
+- [ ] Check Light, Soft Blue, Dark, and Dark Blue; the indicator remains
+  readable and does not dominate the window.
+- [ ] Trigger a controlled subject-rendering failure; the generic failure
+  message appears and the previous header and active subject remain unchanged.
+
+### Experience-specific context
+
+- [ ] Advisor clearly identifies the subject used for recommendations and
+  implementation information; recommendations are unchanged except for
+  provider representation names.
+- [ ] Explorer states that the active subject controls the representation
+  list, while Overview explicitly says `Language-neutral concept overview`.
+- [ ] Explorer tabs remain exactly Overview, Java, and C; Java and C tabs,
+  shared diagram, and selected local tab continue to work and survive subject
+  switches.
+- [ ] Flash Cards shows `Subject context: Java` or `Subject context: C`;
+  supplementary representation material changes with the subject while the
+  current card, reveal state, reviewed progress, and navigation are preserved.
+
+### Timed Quiz and general regression
+
+- [ ] **Experience > Learn > Timed Quiz** still displays exactly
+  `This feature is not enabled yet.`
+- [ ] Confirm the roadmap and Learn ADR record that a future quiz captures its
+  subject at session start and cannot silently change subject mid-session.
+- [ ] Recheck keyboard navigation, visible focus, every theme, normal and
+  high-DPI scaling, window resizing, clipping, and representation-list
+  scrolling.
+
 ## Reliability and recovery
 
 - [ ] After dismissing every not-enabled dialog, immediately run a working action such as changing the theme; it succeeds.

@@ -10,8 +10,13 @@ import java.util.function.Consumer;
 
 public class DSListPanel extends JPanel {
 
+    static final int MIN_CONTENT_WIDTH = 220;
+    static final int MAX_CONTENT_WIDTH = 340;
+
     private final DefaultListModel<DataStructure> listModel;
     private final JList<DataStructure> dsList;
+    private final JLabel title;
+    private final JScrollPane scrollPane;
     private boolean updatingList;
 
     public DSListPanel() {
@@ -26,7 +31,7 @@ public class DSListPanel extends JPanel {
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 8));
 
-        JLabel title = new JLabel("Data Structures", JLabel.CENTER);
+        title = new JLabel("Data Structures", JLabel.CENTER);
         add(title, BorderLayout.NORTH);
 
         listModel = new DefaultListModel<>();
@@ -53,7 +58,8 @@ public class DSListPanel extends JPanel {
         });
 
         dsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        add(new JScrollPane(dsList), BorderLayout.CENTER);
+        scrollPane = new JScrollPane(dsList);
+        add(scrollPane, BorderLayout.CENTER);
     }
 
     public void updateList(
@@ -91,5 +97,40 @@ public class DSListPanel extends JPanel {
                 }
             }
         });
+    }
+
+    /**
+     * Measures current rendered rows and title, including padding, scroll-bar
+     * allowance, borders, and panel insets.
+     */
+    int preferredContentWidth() {
+        int rowWidth = 0;
+        ListCellRenderer<? super DataStructure> renderer =
+            dsList.getCellRenderer();
+        for (int index = 0; index < listModel.size(); index++) {
+            Component component = renderer.getListCellRendererComponent(
+                dsList,
+                listModel.get(index),
+                index,
+                false,
+                false
+            );
+            rowWidth = Math.max(
+                rowWidth,
+                component.getPreferredSize().width
+            );
+        }
+
+        Insets panelInsets = getInsets();
+        Insets scrollInsets = scrollPane.getInsets();
+        int chromeWidth = panelInsets.left + panelInsets.right
+            + scrollInsets.left + scrollInsets.right
+            + scrollPane.getVerticalScrollBar().getPreferredSize().width;
+        int measured = Math.max(rowWidth, title.getPreferredSize().width)
+            + chromeWidth;
+        return Math.max(
+            MIN_CONTENT_WIDTH,
+            Math.min(MAX_CONTENT_WIDTH, measured)
+        );
     }
 }

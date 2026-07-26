@@ -39,6 +39,8 @@ public class MainFrame extends JFrame {
     private final AppController advisorController;
     private final CardLayout experienceLayout = new CardLayout();
     private final JPanel experiences = new JPanel(experienceLayout);
+    private final SubjectContextLabel activeSubjectIndicator =
+        new SubjectContextLabel("Active subject: ");
     private ExplorerPanel explorerPanel;
     private ExplorerController explorerController;
     private FlashCardPanel flashCardPanel;
@@ -73,6 +75,9 @@ public class MainFrame extends JFrame {
             state,
             subjectProviders
         );
+        activeSubjectIndicator.showSubject(
+            subjectProviders.get(state.getActiveSubject()).displayName()
+        );
 
         QuestionPanel questionPanel = new QuestionPanel();
         DSListPanel dsListPanel = new DSListPanel();
@@ -92,12 +97,14 @@ public class MainFrame extends JFrame {
             questionPanel,
             dsListPanel,
             diagramPanel,
-            explanationPanel
+            explanationPanel,
+            mainPanel
         );
 
         experiences.add(mainPanel, ADVISOR_CARD);
         setJMenuBar(createMenuBar());
         UiActionGuard.run(this, "Advisor", advisorController::initialize);
+        add(activeSubjectIndicator, BorderLayout.NORTH);
         add(experiences, BorderLayout.CENTER);
     }
 
@@ -254,6 +261,10 @@ public class MainFrame extends JFrame {
                     return;
                 }
                 updateSubjectLabels();
+                activeSubjectIndicator.showSubject(
+                    subjectProviders.get(state.getActiveSubject())
+                        .displayName()
+                );
                 showInformationDialog(
                     subjectName,
                     subjectName + " is the active subject."

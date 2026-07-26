@@ -37,6 +37,9 @@ class ExplorerDetailsPanelTest {
 
         String displayed = html.get();
         assertTrue(displayed.contains("Definition"));
+        assertTrue(displayed.contains(
+            "Language-neutral concept overview"
+        ));
         assertTrue(displayed.contains("Characteristics"));
         assertTrue(displayed.contains("Key-value mapping"));
         assertTrue(displayed.contains("Strengths"));
@@ -141,6 +144,9 @@ class ExplorerDetailsPanelTest {
         });
 
         assertTrue(overview.get().contains("Select a structure"));
+        assertTrue(overview.get().contains(
+            "Language-neutral concept overview"
+        ));
         assertTrue(java.get().contains("Select a structure"));
         assertTrue(c.get().contains("Select a structure"));
     }

@@ -274,6 +274,18 @@ DS-Tool remains a single-module desktop proof of concept. Additional operating
 systems, mobile devices, Android work, and physical platform separation belong
 to a future successor application and are not milestones in this roadmap.
 
+### Post-Milestone-8 subject-context rule
+
+The shared desktop shell visibly identifies the active subject. Advisor,
+Explorer, and Flash Cards explain how that subject affects their content, and
+Explorer uses content-aware sizing for its adjustable representation list.
+
+Timed Quiz remains intentionally unavailable. Its future session model must
+capture the active subject when a quiz begins, display it throughout the
+session, and never silently change it mid-session when the global subject
+changes. A later design may prevent global switching during a quiz or allow
+the global switch while retaining the quiz's captured subject.
+
 ---
 
 ## Standard Development Cycle
