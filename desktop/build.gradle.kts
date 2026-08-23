@@ -1,6 +1,6 @@
 plugins {
     application
-    id("org.openjfx.javafxplugin") version "0.1.0"
+    id("org.openjfx.javafxplugin")
 }
 
 java {
@@ -31,4 +31,6 @@ dependencies {
 
 tasks.test {
     useJUnitPlatform()
+    systemProperty("java.awt.headless", "true")
+    jvmArgs("--enable-native-access=javafx.graphics,javafx.web")
 }
