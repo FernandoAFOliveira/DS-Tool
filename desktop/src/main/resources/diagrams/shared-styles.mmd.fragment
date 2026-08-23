@@ -1,0 +1,6 @@
+classDef data fill:{{dataFill}},stroke:{{dataStroke}},color:{{dataText}},stroke-width:2px,font-size:17px;
+classDef focus fill:{{focusFill}},stroke:{{focusStroke}},color:{{focusText}},stroke-width:3px,font-size:17px;
+classDef action fill:{{actionFill}},stroke:{{actionStroke}},color:{{actionText}},stroke-width:2px,font-size:17px;
+classDef note fill:{{noteFill}},stroke:{{noteStroke}},color:{{noteText}},stroke-width:2px,font-size:16px;
+classDef warning fill:{{warningFill}},stroke:{{warningStroke}},color:{{warningText}},stroke-width:2px,font-size:16px;
+classDef container fill:{{mainBkg}},stroke:{{borderColor}},color:{{dataText}},stroke-width:2px;

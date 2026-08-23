@@ -1,0 +1,7 @@
+flowchart LR
+    Q["1<br/><b>Answer questions</b>"]:::action
+    F["2<br/><b>Filter concepts</b>"]:::data
+    S["3<br/><b>Select one</b>"]:::focus
+    L["4<br/><b>Explore and learn</b>"]:::action
+
+    Q --> F --> S --> L

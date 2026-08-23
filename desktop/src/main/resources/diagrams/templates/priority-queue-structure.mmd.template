@@ -1,0 +1,15 @@
+%% @title Priority queue
+%% @subtitle The next priority stays at the root
+flowchart TB
+
+    subgraph Heap["min-heap tree"]
+        direction TB
+        Root["root<br/><b>1</b>"]:::focus --> L["3"]:::data
+        Root --> R["2"]:::data
+        L --> LL["5"]:::data
+        L --> LR["4"]:::data
+    end
+    Add["insert 0<br/>restore heap order"]:::action -.-> Root
+    Remove["remove next: 1"]:::action -.-> Root
+    Rule["Parents precede children;<br/>the whole heap is not sorted"]:::note -.-> Heap
+    class Heap container

@@ -1,0 +1,14 @@
+%% @title Ordered set
+%% @subtitle Unique values in search-tree order
+flowchart TB
+
+    subgraph Tree["balanced search tree"]
+        direction TB
+        Root["5"]:::focus --> L["3"]:::data
+        Root --> R["8"]:::data
+        L --> LL["1"]:::data
+        L --> LR["4"]:::data
+    end
+    Rule["left &lt; node &lt; right"]:::note -.-> Root
+    Walk["in-order traversal<br/>1, 3, 4, 5, 8"]:::action -.-> LL
+    class Tree container

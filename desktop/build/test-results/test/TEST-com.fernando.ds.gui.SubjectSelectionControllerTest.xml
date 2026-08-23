@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.fernando.ds.gui.SubjectSelectionControllerTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-08-23T04:04:59" hostname="TONY-PC" time="0.002">
+  <properties/>
+  <testcase name="rendersCBeforeCommitAndPreservesUnrelatedState()" classname="com.fernando.ds.gui.SubjectSelectionControllerTest" time="0.001"/>
+  <testcase name="unavailableSubjectsDoNotRenderOrChangeState()" classname="com.fernando.ds.gui.SubjectSelectionControllerTest" time="0.001"/>
+  <testcase name="renderingFailureDoesNotCommitAndLaterSelectionStillWorks()" classname="com.fernando.ds.gui.SubjectSelectionControllerTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

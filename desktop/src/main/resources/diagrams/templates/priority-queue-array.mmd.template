@@ -1,0 +1,13 @@
+%% @title Heap array layout
+%% @subtitle Tree relationships derived from indexes
+flowchart LR
+
+    subgraph Array["contiguous storage"]
+        direction LR
+        I0["0<br/><b>1</b>"]:::focus --- I1["1<br/><b>3</b>"]:::data
+        I1 --- I2["2<br/><b>2</b>"]:::data --- I3["3<br/><b>5</b>"]:::data
+        I3 --- I4["4<br/><b>4</b>"]:::data
+    end
+    Parent["parent of index i<br/>floor((i - 1) / 2)"]:::note -.-> I0
+    Children["children of index i<br/>2i + 1 and 2i + 2"]:::note -.-> I1
+    class Array container
