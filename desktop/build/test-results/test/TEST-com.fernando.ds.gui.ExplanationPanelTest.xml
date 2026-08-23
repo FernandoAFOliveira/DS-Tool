@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.fernando.ds.gui.ExplanationPanelTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-08-23T04:04:59" hostname="TONY-PC" time="0.05">
-  <properties/>
-  <testcase name="rendersCAsAConceptFirstImplementationStrategy()" classname="com.fernando.ds.gui.ExplanationPanelTest" time="0.037"/>
-  <testcase name="preservesTheExistingJavaExplanationResource()" classname="com.fernando.ds.gui.ExplanationPanelTest" time="0.013"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>

@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.fernando.ds.gui.ExplorerSizingTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-08-23T04:04:59" hostname="TONY-PC" time="0.006">
-  <properties/>
-  <testcase name="longestRenderedNameInfluencesWidthWithinMinimumAndMaximum()" classname="com.fernando.ds.gui.ExplorerSizingTest" time="0.003"/>
-  <testcase name="refreshedContentWidthMovesOnlyAnUntouchedDivider()" classname="com.fernando.ds.gui.ExplorerSizingTest" time="0.003"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>

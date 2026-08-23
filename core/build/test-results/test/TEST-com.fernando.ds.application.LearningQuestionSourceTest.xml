@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.fernando.ds.application.LearningQuestionSourceTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-08-23T04:04:47" hostname="TONY-PC" time="0.003">
-  <properties/>
-  <testcase name="returnsAnImmutableQuestionList()" classname="com.fernando.ds.application.LearningQuestionSourceTest" time="0.002"/>
-  <testcase name="derivesOneConceptFirstQuestionPerKnowledgeEntryInStableOrder()" classname="com.fernando.ds.application.LearningQuestionSourceTest" time="0.001"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>
