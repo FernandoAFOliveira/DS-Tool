@@ -22,7 +22,6 @@ import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.key.*
-import androidx.compose.ui.input.pointer.PointerButton
 import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.isPrimaryPressed
 import androidx.compose.ui.input.pointer.isSecondaryPressed
@@ -275,9 +274,7 @@ fun TreeCanvasScreen(onNavigateBack: () -> Unit = {}) {
                                         pressStartScreenPos = screenPos
                                         pressStartWorldPos = worldPos
 
-                                        val isRightOrMiddle = event.button == PointerButton.Secondary ||
-                                                event.button == PointerButton.Tertiary ||
-                                                event.buttons.isSecondaryPressed ||
+                                        val isRightOrMiddle = event.buttons.isSecondaryPressed ||
                                                 event.buttons.isTertiaryPressed
 
                                         if (isRightOrMiddle) {
