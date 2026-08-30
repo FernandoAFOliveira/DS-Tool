@@ -1,0 +1,18 @@
+%% @title Dynamic array resize
+%% @subtitle Allocate, copy, then append
+flowchart TB
+
+    subgraph Old["old storage / capacity 3"]
+        direction LR
+        O0["A"]:::data --- O1["B"]:::data --- O2["C"]:::data
+    end
+    Grow["capacity reached<br/>allocate larger storage"]:::action
+    subgraph New["new storage / capacity 6"]
+        direction LR
+        N0["A"]:::data --- N1["B"]:::data --- N2["C"]:::data
+        N2 --- N3["D"]:::focus --- N4["empty"]:::note --- N5["empty"]:::note
+    end
+
+    Old -. copy values .-> Grow
+    Grow -.-> New
+    class Old,New container

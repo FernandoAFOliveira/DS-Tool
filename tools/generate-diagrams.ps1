@@ -4,8 +4,12 @@
 $ErrorActionPreference = "Stop"
 
 $templateDir = "src/main/resources/diagrams/templates"
-$themeDir = "tools/diagram-themes"
+$themeDir = "src/main/resources/diagrams/themes"
 $tempDir = "target/generated-diagram-mmd"
+$sharedInit = Get-Content `
+    "src/main/resources/diagrams/shared-init.mmd.fragment" -Raw
+$sharedStyles = Get-Content `
+    "src/main/resources/diagrams/shared-styles.mmd.fragment" -Raw
 
 New-Item -ItemType Directory -Force -Path $tempDir | Out-Null
 
@@ -15,14 +19,15 @@ $templates = Get-ChildItem $templateDir -Filter "*.mmd.template"
 foreach ($themeFile in $themes) {
     $themeName = [System.IO.Path]::GetFileNameWithoutExtension($themeFile.Name)
     Write-Host "`nGenerating theme: $themeName"
-    $outDir = "src/main/resources/diagrams/$themeName"
+    $outDir = "target/generated-diagram-svg/$themeName"
     New-Item -ItemType Directory -Force -Path $outDir | Out-Null
 
     $theme = Get-Content $themeFile.FullName -Raw | ConvertFrom-Json
 
     foreach ($templateFile in $templates) {
         $diagramName = $templateFile.BaseName -replace '\.mmd$', ''
-        $text = Get-Content $templateFile.FullName -Raw
+        $body = Get-Content $templateFile.FullName -Raw
+        $text = $sharedInit + "`n" + $body + "`n" + $sharedStyles
 
     foreach ($property in $theme.PSObject.Properties) {
         $placeholder = "{{" + $property.Name + "}}"
@@ -41,12 +46,12 @@ foreach ($themeFile in $themes) {
     $svgText = $svgText -replace '<filter[\s\S]*?</filter>', ''
     $svgText = $svgText -replace '\sfilter="url\([^"]+\)"', ''
 
-    $svgText = $svgText -replace 'stroke:url\([^)]+\)', "stroke:$($theme.primaryBorderColor)"
+    $svgText = $svgText -replace 'stroke:url\([^)]+\)', "stroke:$($theme.borderColor)"
     $svgText = $svgText -replace 'fill:url\([^)]+\)', "fill:$($theme.primaryColor)"
-    $svgText = $svgText -replace 'stroke:hsl\([^)]+\)', "stroke:$($theme.primaryBorderColor)"
+    $svgText = $svgText -replace 'stroke:hsl\([^)]+\)', "stroke:$($theme.borderColor)"
     $svgText = $svgText -replace 'filter:drop-shadow\([^;]+\);?', ''
     $svgText = $svgText -replace 'display:inline-block;', ''
-    $svgText = $svgText -replace 'stroke:revert;', "stroke:$($theme.primaryBorderColor);"
+    $svgText = $svgText -replace 'stroke:revert;', "stroke:$($theme.borderColor);"
     $svgText = $svgText -replace 'stroke-width:revert;', 'stroke-width:1px;'
 
     # Remove invalid empty rects Mermaid/Batik may dislike.

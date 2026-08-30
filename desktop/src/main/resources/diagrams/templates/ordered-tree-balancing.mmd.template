@@ -1,0 +1,18 @@
+%% @title Search-tree balancing
+%% @subtitle Rotation restores a shallow shape
+flowchart LR
+
+    subgraph Before["before"]
+        direction TB
+        A["3"]:::warning --> B["5"]:::warning
+        B --> C["8"]:::warning
+    end
+    Rotate["rotate around 5"]:::action
+    subgraph After["after"]
+        direction TB
+        M["5"]:::focus --> L["3"]:::data
+        M --> R["8"]:::data
+    end
+    Before -.-> Rotate -.-> After
+    Height["Ordering is preserved;<br/>height is reduced"]:::note -.-> After
+    class Before,After container

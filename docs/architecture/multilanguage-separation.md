@@ -1,5 +1,10 @@
 # Multilanguage Application Separation
 
+> Historical direction: this document records the separation principles that
+> shaped the desktop proof of concept. Additional operating-system and mobile
+> applications are now successor-application concerns and are not milestones
+> in the current DS-Tool roadmap.
+
 ## Purpose
 
 DS-Tool currently presents Java data structures through a Java desktop application. As the project expands into an Android application supporting C/C++, Java, and Python, the user interface must not be duplicated for every programming language.

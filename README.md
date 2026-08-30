@@ -24,6 +24,14 @@ Unlike static documentation, this tool guides users through a decision process u
   - ArrayDeque, HashSet, TreeSet
   - HashMap, TreeMap
 
+- Recommend language-neutral data-structure concepts before displaying their
+  active-subject representations
+
+- Switch between Java library representations and educational C
+  implementation strategies while preserving the selected concept and other
+  application state. C names such as hash table, binary heap, and balanced tree
+  describe common approaches rather than a standardized collections framework.
+
 - Filter by:
   - Key-value mapping
   - Duplicate support
@@ -36,8 +44,18 @@ Unlike static documentation, this tool guides users through a decision process u
   - Add/remove speed
   - Memory efficiency
 
-- Interactive visual diagrams for each structure
-- Built-in explanations:
+- Consistent language-neutral static diagrams for each concept, with a small
+  number of high-value secondary views
+- An Explorer experience for browsing the complete shared catalog, including
+  concepts, trade-offs, operations, complexity, use cases, and related
+  structures without changing Advisor filters
+- Explorer subject tabs that keep a language-neutral Overview beside
+  provider-owned Java and C implementation guidance and code examples
+- Concept-first Flash Cards derived from the shared Knowledge Core, with
+  in-memory review progress and safe resume when switching experiences
+- A ten-question Timed Quiz with Java- or C-bound sessions, immediate
+  feedback, transparent scoring, and one low-pressure elapsed session timer
+- Built-in Java explanations:
   - Key concepts
   - API overview
   - Example code
@@ -110,4 +128,7 @@ Ways to help:
 - Report bugs
 - Suggest better ranking logic
 
-Please see [CONTRIBUTING.md](CONTRIBUTING.md) for setup instructions and contribution guidelines.
+Static diagram contributors should also follow
+[the diagram authoring guide](docs/diagram-authoring.md).
+
+Please see [CONTRIBUTING.md](CONTRIBUTING.md) for setup instructions and contribution guidelines. 

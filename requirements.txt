@@ -1,0 +1,26 @@
+# DS-Tool 2.0 developer workstation requirements
+# This file documents required tools; it is not a Python dependency file.
+
+Required:
+- Git 2.40 or newer
+- JDK 21 LTS
+- Maven 3.9 or newer
+- Visual Studio Code
+
+Required VS Code extensions:
+- vscjava.vscode-java-pack
+- vscjava.vscode-maven
+- redhat.vscode-xml
+- redhat.vscode-yaml
+- EditorConfig.EditorConfig
+
+Recommended VS Code extensions:
+- eamodio.gitlens
+- yzhang.markdown-all-in-one
+- streetsidesoftware.code-spell-checker
+
+Future Android development:
+- Android Studio
+- Android SDK
+- Android SDK Platform Tools
+- Kotlin and Compose tooling as selected by the Android implementation ADR
