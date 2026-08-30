@@ -3,12 +3,11 @@ package com.fernando.ds.canvas
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.focusable
-import androidx.compose.foundation.gestures.detectDragGestures
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.focus.FocusRequester
@@ -23,10 +22,15 @@ import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.key.*
+import androidx.compose.ui.input.pointer.PointerButton
 import androidx.compose.ui.input.pointer.PointerEventType
+import androidx.compose.ui.input.pointer.isPrimaryPressed
 import androidx.compose.ui.input.pointer.isSecondaryPressed
+import androidx.compose.ui.input.pointer.isTertiaryPressed
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.layout.positionInWindow
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
@@ -45,6 +49,7 @@ import java.util.UUID
 import kotlin.math.hypot
 import kotlin.math.roundToInt
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun TreeCanvasScreen(onNavigateBack: () -> Unit = {}) {
     val handlers = remember { listOf(AvlTreeHandler(), BstHandler(), MinHeapHandler(), TrieHandler()) }
@@ -68,6 +73,10 @@ fun TreeCanvasScreen(onNavigateBack: () -> Unit = {}) {
     var selectedNodeIds by remember { mutableStateOf(setOf<String>()) }
     var selectedEdgeId by remember { mutableStateOf<String?>(null) }
     var moveSubtreeMode by remember { mutableStateOf(activeHandler.supportsSubtreeMovement) }
+
+    var ghostShape by remember { mutableStateOf<NodeShape?>(null) }
+    var ghostCanvasPos by remember { mutableStateOf<Offset?>(null) }
+    var canvasWindowTopLeft by remember { mutableStateOf(Offset.Zero) }
 
     var marqueeStart by remember { mutableStateOf<Offset?>(null) }
     var marqueeEnd by remember { mutableStateOf<Offset?>(null) }
@@ -172,13 +181,11 @@ fun TreeCanvasScreen(onNavigateBack: () -> Unit = {}) {
                 if (list.size == 2 && activeHandler.canConnect(list[0], list[1], edges)) {
                     edges.add(CanvasEdge(fromNodeId = list[0], toNodeId = list[1]))
                 }
-                selectedNodeIds = emptySet()
             },
             onCutEdge = {
                 val list = selectedNodeIds.toList()
                 if (list.size == 2) {
                     edges.removeAll { (it.fromNodeId == list[0] && it.toNodeId == list[1]) || (it.fromNodeId == list[1] && it.toNodeId == list[0]) }
-                    selectedNodeIds = emptySet()
                 } else if (selectedEdgeId != null) {
                     edges.removeAll { it.id == selectedEdgeId }
                     selectedEdgeId = null
@@ -218,21 +225,38 @@ fun TreeCanvasScreen(onNavigateBack: () -> Unit = {}) {
                     primarySelectedNode?.annotation = it
                 },
                 viewport = viewport,
+                canvasWindowTopLeft = canvasWindowTopLeft,
+                onDraggingGhost = { shape, canvasMousePos ->
+                    ghostShape = shape
+                    ghostCanvasPos = canvasMousePos
+                },
                 onAddSpawnedNode = { nodes.add(it) }
             )
 
+            // Primary Canvas Viewport
             Box(
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxHeight()
                     .clipToBounds()
                     .background(Color(0xFFF1F8E9))
+                    .onGloballyPositioned { coordinates ->
+                        canvasWindowTopLeft = coordinates.positionInWindow()
+                    }
                     .onSizeChanged { viewport.viewportSize = it.toSize() }
-                    // 1. Mouse Scroll Wheel Listener (Pass-through without blocking taps)
-                    .pointerInput(viewport.scale, viewport.offset) {
+                    .pointerInput(Unit) {
                         awaitPointerEventScope {
+                            var draggedNodeId: String? = null
+                            var isPanning = false
+                            var isMarqueeActive = false
+                            var pressStartScreenPos = Offset.Zero
+                            var pressStartWorldPos = Offset.Zero
+                            var isLeftButtonPressed = false
+
                             while (true) {
                                 val event = awaitPointerEvent()
+
+                                // 1. Mouse Scroll Wheel Zoom
                                 if (event.type == PointerEventType.Scroll) {
                                     val delta = event.changes.firstOrNull()?.scrollDelta?.y ?: 0f
                                     if (delta != 0f) {
@@ -241,49 +265,160 @@ fun TreeCanvasScreen(onNavigateBack: () -> Unit = {}) {
                                         viewport.zoomAt(cursor, factor)
                                     }
                                 }
+
+                                val change = event.changes.firstOrNull() ?: continue
+                                val screenPos = change.position
+                                val worldPos = (screenPos - viewport.offset) / viewport.scale
+
+                                when (event.type) {
+                                    PointerEventType.Press -> {
+                                        pressStartScreenPos = screenPos
+                                        pressStartWorldPos = worldPos
+
+                                        val isRightOrMiddle = event.button == PointerButton.Secondary ||
+                                                event.button == PointerButton.Tertiary ||
+                                                event.buttons.isSecondaryPressed ||
+                                                event.buttons.isTertiaryPressed
+
+                                        if (isRightOrMiddle) {
+                                            isPanning = true
+                                            isLeftButtonPressed = false
+                                            isMarqueeActive = false
+                                            draggedNodeId = null
+                                        } else {
+                                            isPanning = false
+                                            isLeftButtonPressed = true
+                                            isMarqueeActive = false
+
+                                            // Hit-test nodes (radius 42px)
+                                            val hitNode = nodes.findLast { node ->
+                                                hypot(worldPos.x - node.position.x, worldPos.y - node.position.y) <= 42f
+                                            }
+
+                                            if (hitNode != null) {
+                                                draggedNodeId = hitNode.id
+                                            } else {
+                                                draggedNodeId = null
+                                                // Hit-test edges
+                                                val nodeMap = nodes.associateBy { it.id }
+                                                val hitEdge = edges.find { edge ->
+                                                    val p1 = nodeMap[edge.fromNodeId]?.position ?: return@find false
+                                                    val p2 = nodeMap[edge.toNodeId]?.position ?: return@find false
+                                                    distanceToSegment(worldPos, p1, p2) <= 25f
+                                                }
+
+                                                if (hitEdge != null) {
+                                                    selectedEdgeId = hitEdge.id
+                                                    selectedNodeIds = emptySet()
+                                                }
+                                            }
+                                        }
+                                        change.consume()
+                                    }
+
+                                    PointerEventType.Move -> {
+                                        // Ignore movements when no mouse button is actively held down
+                                        val hasButtonsPressed = change.pressed ||
+                                                event.buttons.isPrimaryPressed ||
+                                                event.buttons.isSecondaryPressed ||
+                                                event.buttons.isTertiaryPressed
+
+                                        if (!hasButtonsPressed) {
+                                            isPanning = false
+                                            isLeftButtonPressed = false
+                                            isMarqueeActive = false
+                                            draggedNodeId = null
+                                            marqueeStart = null
+                                            marqueeEnd = null
+                                            continue
+                                        }
+
+                                        val dragDistance = (screenPos - pressStartScreenPos).getDistance()
+
+                                        if (isPanning) {
+                                            val delta = change.position - change.previousPosition
+                                            viewport.panBy(delta)
+                                            change.consume()
+                                        } else if (isLeftButtonPressed) {
+                                            if (draggedNodeId != null) {
+                                                // Dragging node(s)
+                                                val activeId = draggedNodeId
+                                                val scaledDelta = (change.position - change.previousPosition) / viewport.scale
+                                                val targets = if (activeId in selectedNodeIds && selectedNodeIds.size > 1) {
+                                                    selectedNodeIds
+                                                } else if (moveSubtreeMode) {
+                                                    getSubtreeIds(activeId)
+                                                } else {
+                                                    setOf(activeId)
+                                                }
+
+                                                targets.forEach { targetId ->
+                                                    nodes.find { it.id == targetId }?.let { targetNode ->
+                                                        targetNode.position = Offset(
+                                                            x = (targetNode.position.x + scaledDelta.x).coerceIn(40f, viewport.worldWidth - 40f),
+                                                            y = (targetNode.position.y + scaledDelta.y).coerceIn(40f, viewport.worldHeight - 40f)
+                                                        )
+                                                    }
+                                                }
+                                                change.consume()
+                                            } else if (dragDistance > 6f) {
+                                                // Dragging selection box on empty canvas
+                                                if (!isMarqueeActive) {
+                                                    isMarqueeActive = true
+                                                    marqueeStart = pressStartWorldPos
+                                                }
+                                                marqueeEnd = worldPos
+                                                change.consume()
+                                            }
+                                        }
+                                    }
+
+                                    PointerEventType.Release -> {
+                                        val dragDistance = (screenPos - pressStartScreenPos).getDistance()
+
+                                        if (isMarqueeActive) {
+                                            val s = marqueeStart
+                                            val e = marqueeEnd
+                                            if (s != null && e != null) {
+                                                val rect = Rect(minOf(s.x, e.x), minOf(s.y, e.y), maxOf(s.x, e.x), maxOf(s.y, e.y))
+                                                if (rect.width > 10f || rect.height > 10f) {
+                                                    selectedNodeIds = nodes.filter { rect.contains(it.position) }.map { it.id }.toSet()
+                                                }
+                                            }
+                                        } else if (!isPanning && dragDistance <= 5f) {
+                                            // Single Tap / Click
+                                            val hitNode = nodes.findLast { node ->
+                                                hypot(worldPos.x - node.position.x, worldPos.y - node.position.y) <= 42f
+                                            }
+                                            if (hitNode != null) {
+                                                selectedNodeIds = if (hitNode.id in selectedNodeIds) {
+                                                    selectedNodeIds - hitNode.id
+                                                } else {
+                                                    selectedNodeIds + hitNode.id
+                                                }
+                                                selectedEdgeId = null
+                                            } else {
+                                                // Tap on empty space -> deselect all
+                                                selectedNodeIds = emptySet()
+                                                selectedEdgeId = null
+                                            }
+                                        }
+
+                                        // Reset all drag states
+                                        isPanning = false
+                                        isLeftButtonPressed = false
+                                        isMarqueeActive = false
+                                        draggedNodeId = null
+                                        marqueeStart = null
+                                        marqueeEnd = null
+                                        change.consume()
+                                    }
+                                }
                             }
                         }
                     }
-                    // 2. Right-Click Drag to Pan & Tap-Outside Deselect
-                    .pointerInput(viewport.scale, viewport.offset) {
-                        detectTapGestures(
-                            onTap = {
-                                selectedNodeIds = emptySet()
-                                selectedEdgeId = null
-                            }
-                        )
-                    }
-                    .pointerInput(viewport.scale, viewport.offset) {
-                        detectDragGestures(
-                            onDragStart = { startPos ->
-                                marqueeStart = (startPos - viewport.offset) / viewport.scale
-                                marqueeEnd = marqueeStart
-                            },
-                            onDrag = { change, dragAmount ->
-                                change.consume()
-                                if (change.pressed && change.type.toString().contains("Mouse")) {
-                                    // Secondary/Right-Click or Middle-Click Pan
-                                    viewport.panBy(dragAmount)
-                                } else {
-                                    marqueeEnd = (change.position - viewport.offset) / viewport.scale
-                                }
-                            },
-                            onDragEnd = {
-                                val s = marqueeStart
-                                val e = marqueeEnd
-                                if (s != null && e != null) {
-                                    val rect = Rect(minOf(s.x, e.x), minOf(s.y, e.y), maxOf(s.x, e.x), maxOf(s.y, e.y))
-                                    if (rect.width > 15f || rect.height > 15f) {
-                                        selectedNodeIds = nodes.filter { rect.contains(it.position) }.map { it.id }.toSet()
-                                    }
-                                }
-                                marqueeStart = null
-                                marqueeEnd = null
-                            }
-                        )
-                    }
             ) {
-                // Transformed World Space
+                // Transformed World Layer
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
@@ -295,7 +430,6 @@ fun TreeCanvasScreen(onNavigateBack: () -> Unit = {}) {
                             translationY = viewport.offset.y
                         }
                 ) {
-                    // Page Grid & Guidelines
                     Canvas(modifier = Modifier.fillMaxSize()) {
                         val pageWidth = viewport.viewportSize.width
                         val pageHeight = viewport.viewportSize.height
@@ -332,23 +466,7 @@ fun TreeCanvasScreen(onNavigateBack: () -> Unit = {}) {
                         )
                     }
 
-                    // Tree Edges & Marquee Overlay
-                    Canvas(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .pointerInput(edges.size) {
-                                detectTapGestures { tapOffset ->
-                                    val nodeMap = nodes.associateBy { it.id }
-                                    val hit = edges.find { edge ->
-                                        val p1 = nodeMap[edge.fromNodeId]?.position ?: return@find false
-                                        val p2 = nodeMap[edge.toNodeId]?.position ?: return@find false
-                                        distanceToSegment(tapOffset, p1, p2) <= 30f
-                                    }
-                                    selectedEdgeId = hit?.id
-                                    if (hit != null) selectedNodeIds = emptySet()
-                                }
-                            }
-                    ) {
+                    Canvas(modifier = Modifier.fillMaxSize()) {
                         val nodeMap = nodes.associateBy { it.id }
                         edges.forEach { edge ->
                             val from = nodeMap[edge.fromNodeId]
@@ -365,6 +483,7 @@ fun TreeCanvasScreen(onNavigateBack: () -> Unit = {}) {
                             }
                         }
 
+                        // Draw Marquee Box only while actively dragging
                         val s = marqueeStart
                         val e = marqueeEnd
                         if (s != null && e != null) {
@@ -379,7 +498,6 @@ fun TreeCanvasScreen(onNavigateBack: () -> Unit = {}) {
                         }
                     }
 
-                    // Canvas Nodes with Pure Direct Gesture Dispatching
                     nodes.forEach { node ->
                         val isSelected = node.id in selectedNodeIds
                         val isCharcoal = node.color == Color(0xFF263238)
@@ -391,41 +509,6 @@ fun TreeCanvasScreen(onNavigateBack: () -> Unit = {}) {
                                         (node.position.x - 38.dp.toPx()).roundToInt(),
                                         (node.position.y - 38.dp.toPx()).roundToInt()
                                     )
-                                }
-                                .pointerInput(node.id) {
-                                    detectTapGestures(
-                                        onTap = {
-                                            selectedEdgeId = null
-                                            selectedNodeIds = if (selectedNodeIds.contains(node.id)) {
-                                                selectedNodeIds - node.id
-                                            } else {
-                                                selectedNodeIds + node.id
-                                            }
-                                        }
-                                    )
-                                }
-                                .pointerInput(node.id, moveSubtreeMode, viewport.scale, selectedNodeIds) {
-                                    detectDragGestures { change, dragAmount ->
-                                        change.consume()
-                                        val scaled = dragAmount / viewport.scale
-
-                                        val targets = if (node.id in selectedNodeIds && selectedNodeIds.size > 1) {
-                                            selectedNodeIds
-                                        } else if (moveSubtreeMode) {
-                                            getSubtreeIds(node.id)
-                                        } else {
-                                            setOf(node.id)
-                                        }
-
-                                        targets.forEach { targetId ->
-                                            nodes.find { it.id == targetId }?.let { targetNode ->
-                                                targetNode.position = Offset(
-                                                    x = (targetNode.position.x + scaled.x).coerceIn(40f, viewport.worldWidth - 40f),
-                                                    y = (targetNode.position.y + scaled.y).coerceIn(40f, viewport.worldHeight - 40f)
-                                                )
-                                            }
-                                        }
-                                    }
                                 }
                         ) {
                             Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -460,7 +543,30 @@ fun TreeCanvasScreen(onNavigateBack: () -> Unit = {}) {
                     }
                 }
 
-                // Interactive Scrollbars on top layer
+                if (ghostShape != null && ghostCanvasPos != null) {
+                    Box(
+                        modifier = Modifier
+                            .offset {
+                                IntOffset(
+                                    (ghostCanvasPos!!.x - 38.dp.toPx()).roundToInt(),
+                                    (ghostCanvasPos!!.y - 38.dp.toPx()).roundToInt()
+                                )
+                            }
+                            .size(76.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Canvas(modifier = Modifier.fillMaxSize()) {
+                            drawNodeShape(ghostShape!!, activeColor.copy(alpha = 0.65f), Color.DarkGray, 2.5f)
+                        }
+                        Text(
+                            text = sidebarValueText,
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color(0xFF1B5E20).copy(alpha = 0.7f)
+                        )
+                    }
+                }
+
                 CanvasScrollbars(viewport)
             }
         }

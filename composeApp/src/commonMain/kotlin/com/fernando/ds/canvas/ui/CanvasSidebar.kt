@@ -16,6 +16,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.positionInWindow
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -36,6 +38,8 @@ fun CanvasSidebar(
     sidebarAnnotationText: String,
     onAnnotationChange: (String) -> Unit,
     viewport: CanvasViewportState,
+    canvasWindowTopLeft: Offset,
+    onDraggingGhost: (NodeShape?, Offset?) -> Unit,
     onAddSpawnedNode: (CanvasNode) -> Unit
 ) {
     Card(
@@ -57,12 +61,16 @@ fun CanvasSidebar(
                 Text("Shapes", fontSize = 11.sp, fontWeight = FontWeight.Bold)
 
                 NodeShape.values().forEach { shape ->
-                    var spawnOffset by remember { mutableStateOf(Offset.Zero) }
+                    var itemWindowPos by remember { mutableStateOf(Offset.Zero) }
+                    var currentDragOffset by remember { mutableStateOf(Offset.Zero) }
                     val isShapeSelected = selectedShapeType == shape
 
                     Box(
                         modifier = Modifier
                             .size(46.dp)
+                            .onGloballyPositioned { coordinates ->
+                                itemWindowPos = coordinates.positionInWindow()
+                            }
                             .border(
                                 width = if (isShapeSelected) 2.5.dp else 0.dp,
                                 color = if (isShapeSelected) MaterialTheme.colorScheme.primary else Color.Transparent,
@@ -71,28 +79,46 @@ fun CanvasSidebar(
                             .pointerInput(shape) {
                                 detectTapGestures(onTap = { onSelectShape(shape) })
                             }
-                            .pointerInput(shape, activeColor, sidebarValueText, sidebarAnnotationText, viewport.scale, viewport.offset) {
+                            .pointerInput(shape, activeColor, sidebarValueText, sidebarAnnotationText, viewport.scale, viewport.offset, canvasWindowTopLeft) {
                                 detectDragGestures(
-                                    onDragStart = { startOffset -> spawnOffset = startOffset },
+                                    onDragStart = { startOffset ->
+                                        currentDragOffset = startOffset
+                                        val windowMouse = itemWindowPos + startOffset
+                                        val canvasMouse = windowMouse - canvasWindowTopLeft
+                                        onDraggingGhost(shape, canvasMouse)
+                                    },
                                     onDrag = { change, dragAmount ->
                                         change.consume()
-                                        spawnOffset += dragAmount
+                                        currentDragOffset += dragAmount
+                                        val windowMouse = itemWindowPos + currentDragOffset
+                                        val canvasMouse = windowMouse - canvasWindowTopLeft
+                                        onDraggingGhost(shape, canvasMouse)
                                     },
                                     onDragEnd = {
-                                        if (spawnOffset.x > 80f) {
-                                            val worldX = (spawnOffset.x + 140f - viewport.offset.x) / viewport.scale
-                                            val worldY = (spawnOffset.y.coerceAtLeast(80f) - viewport.offset.y) / viewport.scale
+                                        val windowMouse = itemWindowPos + currentDragOffset
+                                        val canvasMouse = windowMouse - canvasWindowTopLeft
+
+                                        if (canvasMouse.x > 0f) {
+                                            val worldX = (canvasMouse.x - viewport.offset.x) / viewport.scale
+                                            val worldY = (canvasMouse.y - viewport.offset.y) / viewport.scale
 
                                             onAddSpawnedNode(
                                                 CanvasNode(
                                                     value = sidebarValueText,
                                                     annotation = sidebarAnnotationText,
-                                                    position = Offset(worldX, worldY),
+                                                    position = Offset(
+                                                        x = worldX.coerceIn(40f, viewport.worldWidth - 40f),
+                                                        y = worldY.coerceIn(40f, viewport.worldHeight - 40f)
+                                                    ),
                                                     shape = shape,
                                                     color = activeColor
                                                 )
                                             )
                                         }
+                                        onDraggingGhost(null, null)
+                                    },
+                                    onDragCancel = {
+                                        onDraggingGhost(null, null)
                                     }
                                 )
                             },
