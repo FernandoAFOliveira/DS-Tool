@@ -1,36 +1,15 @@
 plugins {
-    application
-    id("org.openjfx.javafxplugin")
-}
-
-java {
-    toolchain {
-        languageVersion.set(JavaLanguageVersion.of(21))
-    }
-}
-
-javafx {
-    version = "21.0.11"
-    modules = listOf("javafx.controls", "javafx.web", "javafx.swing")
-}
-
-application {
-    mainClass.set("com.fernando.ds.GuiMain")
-    applicationDefaultJvmArgs = listOf(
-        "--enable-native-access=javafx.graphics,javafx.web"
-    )
+    kotlin("jvm")
+    id("org.jetbrains.compose")
 }
 
 dependencies {
-    implementation(project(":core"))
-
-    testImplementation(platform("org.junit:junit-bom:5.11.4"))
-    testImplementation("org.junit.jupiter:junit-jupiter")
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    implementation(project(":composeApp"))
+    implementation(compose.desktop.currentOs)
 }
 
-tasks.test {
-    useJUnitPlatform()
-    systemProperty("java.awt.headless", "true")
-    jvmArgs("--enable-native-access=javafx.graphics,javafx.web")
+compose.desktop {
+    application {
+        mainClass = "com.fernando.ds.desktop.MainKt"
+    }
 }
